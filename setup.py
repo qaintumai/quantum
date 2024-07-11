@@ -8,12 +8,12 @@ setup(
     name="quantum-project",
     version="0.1.0",
     author="Sophie Choe, Alexander Olivas, Arjun Subedi",
-    author_email="sophchoe@gmail.com",
+    author_email="sophie.choe@qaintum.ai",
     description="A project containing Quantum Neural Networks and Quantum Transformers.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/quantum-project",  # Update with your project's URL
-    packages=find_packages(include=["qnn", "qnn.*", "qt", "qt.*", "common", "common.*"]),
+    url="https://github.com/qaintum.ai/quantum",  # Update with your project's URL
+    packages=find_packages(include=["quantum_neural_networks", "quantum_neural_networks.*", "quantum_transformers", "quantum_transformers.*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
