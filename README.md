@@ -1,4 +1,4 @@
-# quantum
+# Photonic Analog Quantum Computing
 This folder contains the code for quantum neural networks and quantum transformers based on Photonic Analog Quantum Computing. 
 
 Quantum computing is a method of computation that utilizes physical mediums operating on the principles of quantum mechanics. There are two types of quantum computing: 
