@@ -19,7 +19,7 @@ Photonic Analog Quantum Computing has the following benefits:
 
 National Science Foundation (NSF) and Department of Energy (DOE) have been designing a blueprint for Quantum Internet on top of classical internet infrastructure as seen in these papers:
 * [Development of Quantum InterConnects (QuICs) for Next-Generation Information Technologies, 2019](https://arxiv.org/pdf/1912.06642)
-* [A Roadmap for Quantum Interconnects, 2022]([https://arxiv.org/pdf/1912.06642](https://publications.anl.gov/anlpubs/2022/12/179439.pdf))
+* [A Roadmap for Quantum Interconnects, 2022] (https://publications.anl.gov/anlpubs/2022/12/179439.pdf)
 
 Quantum InterConnects are composed of 
 * Quantum Communications
