@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="quantum-project",
     version="0.1.0",
-    author="Your Name",
+    author="Sophie Choe, Alexander Olivas, Arjun Subedi",
     author_email="sophchoe@gmail.com",
     description="A project containing Quantum Neural Networks and Quantum Transformers.",
     long_description=long_description,
