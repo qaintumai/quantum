@@ -1,1 +1,35 @@
 
+# Define the DecoderBlock class
+import torch.nn as nn
+from models import FeedForwardBlock, MultiHeadedAttention
+
+class DecoderBlock(nn.Module):
+    def __init__(self, embed_len, num_heads, batch_size, dropout=0.1, mask=None):
+        super(DecoderBlock, self).__init__()
+        self.embed_len = embed_len
+        self.multihead_self_attention = MultiHeadedAttention(
+            num_heads, embed_len, batch_size, mask)
+        self.multihead_enc_dec_attention = MultiHeadedAttention(
+            num_heads, embed_len, batch_size, mask)
+        self.first_norm = nn.LayerNorm(self.embed_len)
+        self.second_norm = nn.LayerNorm(self.embed_len)
+        self.third_norm = nn.LayerNorm(self.embed_len)
+        self.dropout_layer = nn.Dropout(p=dropout)
+        self.feed_forward_block = FeedForwardBlock(embed_len, dropout)
+
+    def forward(self, target, encoder_output):
+        # Self attention
+        self_attention_output = self.multihead_self_attention(
+            target, target, target)
+        self_attention_output = self.dropout_layer(self_attention_output)
+        first_sublayer_output = self.first_norm(self_attention_output + target)
+
+        # Encoder-decoder attention
+        enc_dec_attention_output = self.multihead_enc_dec_attention(
+            first_sublayer_output, encoder_output, encoder_output)
+        enc_dec_attention_output = self.dropout_layer(enc_dec_attention_output)
+        second_sublayer_output = self.second_norm(
+            enc_dec_attention_output + first_sublayer_output)
+
+        # Feed-forward
+        return self.feed_forward_block(second_sublayer_output)
