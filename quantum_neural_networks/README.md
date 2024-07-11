@@ -3,8 +3,7 @@
 This implementation of quantum neural networks (QNN) utilizes the Continuous-Variable (CV) model of Quantum Computing. 
 One key advantage of quantum computing is its inherent parallel processing capability, enabled by the superposition 
 property of computational basis states. This advantage is further enhanced in Analog (CV) Quantum Computing (AQC), 
-which offers a higher number of basis states compared to Digital (qubit-based or discrete) Quantum Computing (DQC) 
-To see the difference between AQC and DQC, refer to [Quantum computing overview](https://arxiv.org/pdf/2206.07246).
+which offers a higher number of basis states compared to Digital (qubit-based or discrete) Quantum Computing (DQC).
 
 The Quantum Neural Network (QNN) architecture used in this repository is based on 
 [Continuous variable quantum neural networks](https://arxiv.org/pdf/1806.06871v1.pdf). The key features in this 
