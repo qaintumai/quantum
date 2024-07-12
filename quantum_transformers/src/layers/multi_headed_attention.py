@@ -1,57 +1,45 @@
-import torch
 import torch.nn as nn
-from .scaled_dot_product import scaled_dot_product_attention
+from .scaled_dot_product import ScaledDotProduct
 
-def multi_headed_attention(queries, keys, values, num_heads, embed_len, batch_size, mask=None):
-    """
-    Perform multi-headed attention.
+# Define the MultiHeadedAttention class
 
-    Parameters:
-    queries (Tensor): Query tensor.
-    keys (Tensor): Key tensor.
-    values (Tensor): Value tensor.
-    num_heads (int): Number of attention heads.
-    embed_len (int): Embedding length (dimension of keys and queries).
-    batch_size (int): Batch size.
-    mask (Tensor, optional): Mask tensor for masking certain positions.
 
-    Returns:
-    Tensor: The result of the multi-headed attention mechanism applied to the values.
-    """
-    head_length = embed_len // num_heads
+class MultiHeadedAttention(nn.Module):
+    def __init__(self, num_heads, embed_len, batch_size, mask=None):
+        super(MultiHeadedAttention, self).__init__()
+        self.num_heads = num_heads
+        self.embed_len = embed_len
+        self.batch_size = batch_size
+        self.mask = mask
+        self.head_length = int(self.embed_len / self.num_heads)
+        self.q_in = self.v_in = self.k_in = self.embed_len
 
-    q_linear = nn.Linear(embed_len, embed_len)
-    k_linear = nn.Linear(embed_len, embed_len)
-    v_linear = nn.Linear(embed_len, embed_len)
-    output_linear = nn.Linear(embed_len, embed_len)
+        self.q_linear = nn.Linear(int(self.q_in), int(self.q_in))
+        self.k_linear = nn.Linear(int(self.k_in), int(self.k_in))
+        self.v_linear = nn.Linear(int(self.v_in), int(self.v_in))
 
-    queries = q_linear(queries).reshape(batch_size, -1, num_heads, head_length)
-    queries = queries.transpose(1, 2)
+        if self.mask is not None:
+            self.attention = ScaledDotProduct(
+                embed_len=self.head_length, mask=True)
+        else:
+            self.attention = ScaledDotProduct(embed_len=self.head_length)
 
-    keys = k_linear(keys).reshape(batch_size, -1, num_heads, head_length)
-    keys = keys.transpose(1, 2)
+        self.output_linear = nn.Linear(self.q_in, self.q_in)
 
-    values = v_linear(values).reshape(batch_size, -1, num_heads, head_length)
-    values = values.transpose(1, 2)
+    def forward(self, queries, keys, values):
+        queries = self.q_linear(queries).reshape(
+            self.batch_size, -1, self.num_heads, self.head_length)
+        queries = queries.transpose(1, 2)
 
-    sdp_output = scaled_dot_product_attention(queries, keys, values, head_length, mask)
-    sdp_output = sdp_output.transpose(1, 2).reshape(batch_size, -1, num_heads * head_length)
+        keys = self.k_linear(keys).reshape(
+            self.batch_size, -1, self.num_heads, self.head_length)
+        keys = keys.transpose(1, 2)
 
-    return output_linear(sdp_output)
+        values = self.v_linear(values).reshape(
+            self.batch_size, -1, self.num_heads, self.head_length)
+        values = values.transpose(1, 2)
 
-# Example usage
-if __name__ == "__main__":
-    # Sample input tensors
-    batch_size = 32
-    seq_len = 50
-    embed_len = 64
-    num_heads = 8
+        sdp_output = self.attention(queries, keys, values).transpose(
+            1, 2).reshape(self.batch_size, -1, self.num_heads * self.head_length)
 
-    queries = torch.randn(batch_size, seq_len, embed_len)
-    keys = torch.randn(batch_size, seq_len, embed_len)
-    values = torch.randn(batch_size, seq_len, embed_len)
-    mask = torch.ones(batch_size, seq_len, seq_len)  # Example mask
-
-    # Perform multi-headed attention
-    result = multi_headed_attention(queries, keys, values, num_heads, embed_len, batch_size, mask)
-    print(result.shape)  # Should output torch.Size([32, 50, 64])
+        return self.output_linear(sdp_output)
