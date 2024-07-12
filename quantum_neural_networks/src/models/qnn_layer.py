@@ -1,17 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-qnn.py
+qnn_layer.py
 
-quantum neural network layer developed in Pennylane.
+Quantum neural network (QNN) layer developed in Pennylane. This file contains
+- Data encoding circuit: converting classical data into quantum states
+- QNN layer: 
+  * weight matrix: Interferometer + Squeezers + Interferometer
+  * bias addition: Displacement Gates
+  * nonlinear activation function: Kerr Gates
+- Initializing weights: the parameters to the quantum gates are initialized for training
 """
 
 import numpy as np
 import pennylane as qml
 
 def data_encoding(x):
-    num_wires=8
-    num_features = len(x)
+    """
+    Converting classical data into quantum states to be operated on
+    Input: classical data
+    No output: quantum states after the operation of parameterized encoding gates with the data used as parameters
+    """
+    num_wires = 8           # 1 ~ 8 available wires based on Xanadu's X8, because of the decorator for the quantum circuit function, it cannot be passes as an argument. 
+    num_features = len(x)   # The input data are considered as the features.
 
     for i in range(0, min(num_features, num_wires * 2), 2):
         qml.Squeezing(x[i], x[i + 1], wires=i // 2)
@@ -47,7 +58,15 @@ def data_encoding(x):
             qml.Rotation(x[idx], wires=i)
 
 def qnn_layer(v):
-    num_wires=8
+    """
+    QNN layer: 
+     * weight matrix: Interferometer + Squeezers + Interferometer
+     * bias addition: Displacement Gates
+     * nonlinear activation function: Kerr Gates
+    Input: the initialized parameters (weights)
+    No output: quantum states after the operation of parameterized QNN gates 
+    """
+    num_wires = 8
     num_params = len(v)
 
     for i in range(num_wires - 1):
@@ -90,6 +109,14 @@ def qnn_layer(v):
             qml.Kerr(v[idx], wires=i)
 
 def init_weights(layers, num_wires, active_sd=0.0001, passive_sd=0.1):
+    """
+    The weights (parameters) needed are for
+     * for weight matrix: Interferometer + Squeezers + Interferometer
+     * for bias addition: Displacement Gates
+     * for nonlinear activation function: Kerr Gates
+    Input: number of layers and number of wires
+    Output: concatenated weights
+    """
     M = (num_wires-1)*2 + num_wires
 
     int1_weights = np.random.normal(size=[layers, M], scale=passive_sd)
