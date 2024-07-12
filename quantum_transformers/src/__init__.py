@@ -10,7 +10,7 @@ from .layers import (
     MultiHeadedAttention,
     QuantumDataEncoding,
     QuantumFeedForward,
-    ScaledDotProductAttention,
+    ScaledDotProduct,
     WeightInitializer
 )
 
@@ -27,7 +27,7 @@ __all__ = [
     'MultiHeadedAttention',
     'QuantumDataEncoding',
     'QuantumFeedForward',
-    'ScaledDotProductAttention',
+    'ScaledDotProduct',
     'WeightInitializer',
     # Models
     'QuantumDecoder',
