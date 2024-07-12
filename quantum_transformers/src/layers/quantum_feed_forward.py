@@ -5,22 +5,21 @@ from quantum_neural_networks.src.models.qnn_model import QuantumNeuralNetwork
 from models import DataEncoding, QuantumLayer, WeightInitializer
 
 # Think through the output
-num_modes = 6
+num_wires = 6
 num_basis = 2
 
-# Select a device
-dev = qml.device("strawberryfields.fock", wires=num_modes, cutoff_dim=num_basis)
+# select a device
+# "strawberryfields.fock" is needed for analog (continuous variable) computing
+dev = qml.device("strawberryfields.fock", wires=num_wires, cutoff_dim=num_basis)
 
 @qml.qnode(dev, interface="torch")
 def quantum_nn(inputs, var):
-    num_wires = 6
-    encoder = DataEncoding(num_wires)
-    encoder.encode(inputs)
+    # convert classical inputs into quantum states
+    data_encoding(inputs)
 
-    # Iterative quantum layers
-    q_layer = QuantumLayer(num_wires)
+    # iterative quantum layers
     for v in var:
-        q_layer.apply_layer(v)
+        qnn_layer(v)
 
     # Return the probabilities
     return qml.probs(wires=[0, 1, 2, 3, 4, 5])
