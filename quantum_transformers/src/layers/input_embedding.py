@@ -1,30 +1,41 @@
 import torch
 import torch.nn as nn
 
-# Define the InputEmbedding class
+def input_embedding(input, input_vocab_size, embed_len, dropout=0.1, device='cpu'):
+    """
+    Classical data embedding function that performs embedding and positional encoding.
 
+    Parameters:
+    input (Tensor): Input tensor to be embedded.
+    input_vocab_size (int): Vocabulary size for embedding.
+    embed_len (int): Length of the embedding vector.
+    dropout (float): Dropout rate.
+    device (str): Device to run the embedding on (default is 'cpu').
 
-class InputEmbedding(nn.Module):
-    def __init__(self, input_vocab_size, embed_len, dropout=0.1, device='cpu'):
-        super(InputEmbedding, self).__init__()
-        self.input_vocab_size = input_vocab_size
-        self.embed_len = embed_len
-        self.dropout = dropout
-        self.device = device
+    Returns:
+    Tensor: The embedded and positionally encoded tensor.
+    """
+    # Define the embedding layers and dropout layer
+    first_embedding_layer = nn.Embedding(input_vocab_size, embed_len).to(device)
+    second_embedding_layer = nn.Embedding(input_vocab_size, embed_len).to(device)
+    dropout_layer = nn.Dropout(p=dropout)
 
-        self.firstEmbedding = nn.Embedding(
-            self.input_vocab_size, self.embed_len).to(self.device)
-        self.secondEmbedding = nn.Embedding(
-            self.input_vocab_size, self.embed_len).to(self.device)
-        self.dropoutLayer = nn.Dropout(p=self.dropout)
+    # Perform the embedding and positional encoding
+    first_embedding = first_embedding_layer(input).to(device)
+    batch_size, seq_len = input.shape
 
-    def forward(self, input):
-        first_embedding = self.firstEmbedding(input).to(self.device)
-        batch_size, seq_len = input.shape
+    positions_vector = torch.arange(0, seq_len).expand(batch_size, seq_len).to(device)
+    positional_encoding = second_embedding_layer(positions_vector).to(device)
 
-        positions_vector = torch.arange(0, seq_len).expand(
-            batch_size, seq_len).to(self.device)
-        positional_encoding = self.secondEmbedding(
-            positions_vector).to(self.device)
+    return dropout_layer(first_embedding + positional_encoding)
 
-        return self.dropoutLayer(first_embedding + positional_encoding)
+# Example usage
+if __name__ == "__main__":
+    # Sample input tensor
+    input_vocab_size = 100
+    embed_len = 64
+    input_tensor = torch.randint(0, input_vocab_size, (32, 50))  # Batch size of 32, sequence length of 50
+
+    # Perform classical data embedding
+    embedded_tensor = classical_data_embedding(input_tensor, input_vocab_size, embed_len, dropout=0.1, device='cpu')
+    print(embedded_tensor.shape)  # Should output torch.Size([32, 50, 64])
