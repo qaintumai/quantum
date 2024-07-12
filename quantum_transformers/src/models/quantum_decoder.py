@@ -1,11 +1,11 @@
 
-# Define the DecoderBlock class
+# Define the QuantumDecoder class
 import torch.nn as nn
-from models import FeedForwardBlock, MultiHeadedAttention
+from layers import QuantumFeedForward, MultiHeadedAttention
 
-class DecoderBlock(nn.Module):
+class QuantumDecoder(nn.Module):
     def __init__(self, embed_len, num_heads, batch_size, dropout=0.1, mask=None):
-        super(DecoderBlock, self).__init__()
+        super(QuantumDecoder, self).__init__()
         self.embed_len = embed_len
         self.multihead_self_attention = MultiHeadedAttention(
             num_heads, embed_len, batch_size, mask)
@@ -15,7 +15,7 @@ class DecoderBlock(nn.Module):
         self.second_norm = nn.LayerNorm(self.embed_len)
         self.third_norm = nn.LayerNorm(self.embed_len)
         self.dropout_layer = nn.Dropout(p=dropout)
-        self.feed_forward_block = FeedForwardBlock(embed_len, dropout)
+        self.quantum_feed_forward = QuantumFeedForward(embed_len, dropout)
 
     def forward(self, target, encoder_output):
         # Self attention
@@ -31,5 +31,5 @@ class DecoderBlock(nn.Module):
         second_sublayer_output = self.second_norm(
             enc_dec_attention_output + first_sublayer_output)
 
-        # Feed-forward
-        return self.feed_forward_block(second_sublayer_output)
+        # Quantum Feed-forward
+        return self.quantum_feed_forward(second_sublayer_output)
