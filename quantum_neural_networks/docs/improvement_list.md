@@ -1,1 +1,2 @@
 * We are able to encapsulate functions in Quantum Transformers but data_encoding was throwing error here. We want to clean up the code to encapsulate in quantum_neural_networks as well.
+* We can reorganize directories to use the data encoding, initializing weights, and quantum layers and building quantum circuits functions across files. We can create two different quantum circuits: one with a single value output and the other with a large size output by using qml.prob.
