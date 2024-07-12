@@ -46,7 +46,7 @@ pip install -r requirements.txt
 
 ```sh
 pip install -e . 
-./examples/torch_qnn.py
+./scripts/financial_binary_classification.py
 ```
 
 You should see the following output:
