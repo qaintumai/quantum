@@ -1,12 +1,36 @@
 """
-Quantum Transformers (QT) package.
+Package for Quantum Transformers (QT).
 
-This package provides functionalities for building and training quantum transformers.
+This package includes various layer and model implementations for QTs.
 """
 
-# Import sub-packages
-from . import layers
-from . import models
-from . import utils
+# Import layers
+from .layers import (
+    InputEmbedding,
+    MultiHeadedAttention,
+    QuantumDataEncoding,
+    QuantumFeedForward,
+    ScaledDotProductAttention,
+    WeightInitializer
+)
 
-__all__ = ['layers', 'models', 'utils']
+# Import models
+from .models import (
+    QuantumDecoder,
+    QuantumEncoder,
+    QuantumTransformer
+)
+
+__all__ = [
+    # Layers
+    'InputEmbedding',
+    'MultiHeadedAttention',
+    'QuantumDataEncoding',
+    'QuantumFeedForward',
+    'ScaledDotProductAttention',
+    'WeightInitializer',
+    # Models
+    'QuantumDecoder',
+    'QuantumEncoder',
+    'QuantumTransformer'
+]
