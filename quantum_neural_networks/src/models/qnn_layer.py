@@ -90,7 +90,7 @@ def qnn_layer(v):
             qml.Kerr(v[idx], wires=i)
 
 def init_weights(layers, num_wires, active_sd=0.0001, passive_sd=0.1):
-    M = (modes-1)*2 + num_wires
+    M = (num_wires-1)*2 + num_wires
 
     int1_weights = np.random.normal(size=[layers, M], scale=passive_sd)
     s_weights = np.random.normal(size=[layers, num_wires], scale=active_sd)
