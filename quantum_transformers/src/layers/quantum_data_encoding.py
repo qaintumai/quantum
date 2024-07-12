@@ -2,7 +2,7 @@
 Quantum Data Encoding Layer for Quantum Feedforward using Quantum Neural Networks (QNN).
 """
 
-from ..src/models import QuantumNeuralNetwork
+from ..src/models import data_encoding
 
 class QuantumDataEncoding:
     def __init__(self, num_wires=8):
