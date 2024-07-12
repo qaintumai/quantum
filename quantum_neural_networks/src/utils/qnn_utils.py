@@ -3,74 +3,104 @@
 """
 qnn_utils.py
 
-Utility functions for Quantum Neural Networks (QNN) using Pennylane and PyTorch.
+Utility functions for the quantum neural network (QNN) project.
 """
 
 import numpy as np
 import torch
-import pennylane as qml
 
-def prepare_data(data, num_features):
+def preprocess_data(data, num_wires):
     """
-    Prepares and normalizes data for encoding in a quantum neural network.
-
+    Preprocess the input data to fit the quantum neural network requirements.
+    
     Parameters:
-    data (array-like): Input data to be prepared.
-    num_features (int): Number of features to be encoded.
-
+    data (array-like): The input data to be preprocessed.
+    num_wires (int): The number of quantum wires to use in the model.
+    
     Returns:
-    array-like: Normalized data suitable for quantum encoding.
+    array: Preprocessed data suitable for input into the QNN.
     """
+    # Example preprocessing: normalize the data
     data = np.array(data)
-    if data.ndim == 1:
-        data = data.reshape(1, -1)
-    
-    # Normalize data
-    max_val = np.max(np.abs(data), axis=1, keepdims=True)
+    max_val = np.max(np.abs(data), axis=0)
     data = data / max_val
-    
-    # Pad or truncate data to fit the required number of features
-    if data.shape[1] < num_features:
-        padding = np.zeros((data.shape[0], num_features - data.shape[1]))
-        data = np.hstack((data, padding))
-    else:
-        data = data[:, :num_features]
-
+    # Ensure data fits into the number of wires
+    if len(data) > num_wires:
+        data = data[:num_wires]
     return data
 
-def evaluate_model(model, test_loader, criterion, device):
+def train_model(model, data_loader, loss_fn, optimizer, epochs):
     """
-    Evaluates the performance of a quantum neural network on test data.
-
+    Train the PyTorch model.
+    
     Parameters:
-    model: The quantum neural network model to be evaluated.
-    test_loader: DataLoader for the test dataset.
-    criterion: Loss function.
-    device: Device to perform the evaluation on (e.g., 'cpu' or 'cuda').
-
+    model (torch.nn.Module): The PyTorch model to be trained.
+    data_loader (torch.utils.data.DataLoader): The data loader for the training data.
+    loss_fn (torch.nn.Module): The loss function.
+    optimizer (torch.optim.Optimizer): The optimizer.
+    epochs (int): The number of training epochs.
+    
     Returns:
-    float: Average loss over the test dataset.
-    float: Accuracy of the model on the test dataset.
+    list: Training loss over epochs.
+    """
+    model.train()
+    loss_history = []
+    
+    for epoch in range(epochs):
+        running_loss = 0.0
+        for batch in data_loader:
+            inputs, targets = batch
+            optimizer.zero_grad()
+            outputs = model(inputs)
+            loss = loss_fn(outputs, targets)
+            loss.backward()
+            optimizer.step()
+            running_loss += loss.item()
+        
+        avg_loss = running_loss / len(data_loader)
+        loss_history.append(avg_loss)
+        print(f"Epoch [{epoch+1}/{epochs}], Loss: {avg_loss:.4f}")
+    
+    return loss_history
+
+def evaluate_model(model, data_loader, loss_fn):
+    """
+    Evaluate the PyTorch model.
+    
+    Parameters:
+    model (torch.nn.Module): The PyTorch model to be evaluated.
+    data_loader (torch.utils.data.DataLoader): The data loader for the evaluation data.
+    loss_fn (torch.nn.Module): The loss function.
+    
+    Returns:
+    float: Evaluation loss.
     """
     model.eval()
-    test_loss = 0
-    correct = 0
-
+    total_loss = 0.0
+    
     with torch.no_grad():
-        for data, target in test_loader:
-            data, target = data.to(device), target.to(device)
-            output = model(data)
-            test_loss += criterion(output, target).item()  # Sum up batch loss
-            pred = output.argmax(dim=1, keepdim=True)  # Get the index of the max log-probability
-            correct += pred.eq(target.view_as(pred)).sum().item()
+        for batch in data_loader:
+            inputs, targets = batch
+            outputs = model(inputs)
+            loss = loss_fn(outputs, targets)
+            total_loss += loss.item()
+    
+    avg_loss = total_loss / len(data_loader)
+    return avg_loss
 
-    test_loss /= len(test_loader.dataset)
-    accuracy = correct / len(test_loader.dataset)
-
-    return test_loss, accuracy
-
-__all__ = [
-    'prepare_data',
-    'evaluate_model',
-]
-
+def visualize_training(loss_history):
+    """
+    Visualize the training loss over epochs.
+    
+    Parameters:
+    loss_history (list): The training loss history.
+    """
+    import matplotlib.pyplot as plt
+    
+    plt.figure(figsize=(10, 5))
+    plt.plot(loss_history, label="Training Loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training Loss Over Epochs")
+    plt.legend()
+    plt.show()
