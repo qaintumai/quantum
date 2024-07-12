@@ -6,12 +6,15 @@ main.py
 Script to train and evaluate the quantum neural network model.
 """
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+
 import torch
 import numpy as np
 import pennylane as qml
-from models.qnn_layer import data_encoding, qnn_layer, init_weights
-from models.qnn_model import get_model
-from models.qnn_utils import preprocess_data, train_model, evaluate_model, visualize_training
+from models import data_encoding, qnn_layer, init_weights, get_model
+from utils import preprocess_data, train_model, evaluate_model, visualize_training
 
 # Parameters
 num_wires = 8
