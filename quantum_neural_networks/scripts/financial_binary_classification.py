@@ -46,9 +46,9 @@ def load_and_preprocess_data(file_path):
 X_train, X_test, y_train, y_test = load_and_preprocess_data('../data/financial.csv')
 
 num_layers = 2
-num_modes = 8  # This should match num_wires in the imported module
+num_wires = 8  # This should match num_wires in the imported module
 
-model = get_model(num_modes, num_layers)
+model = get_model(num_wires, num_layers)
 
 def train_model(model, X_train, y_train, batch_size=5, epochs=6):
     loss_fn = torch.nn.MSELoss()
