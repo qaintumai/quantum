@@ -9,7 +9,6 @@ Quantum neural network model implementation using Pennylane and PyTorch.
 import torch
 import numpy as np
 import pennylane as qml
-from .qnn_circuit import QuantumNeuralNetwork
 
 # Think through the output
 num_modes = 8
