@@ -1,6 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Binary classification of financial distress in financial.csv
 """
+
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 
 import numpy as np
 import pandas as pd
@@ -9,7 +15,7 @@ import pennylane as qml
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 # Import the functions from the module
-from src.models.qnn_model import get_model
+from models import data_encoding, qnn_layer, init_weights, get_model
 
 def load_and_preprocess_data(file_path):
     df = pd.read_csv(file_path)
@@ -43,7 +49,9 @@ def load_and_preprocess_data(file_path):
 
     return X_train, X_test, y_train, y_test
 
-X_train, X_test, y_train, y_test = load_and_preprocess_data('../data/financial.csv')
+# Ensure the correct path to the data file
+data_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'financial.csv')
+X_train, X_test, y_train, y_test = load_and_preprocess_data(data_path)
 
 num_layers = 2
 num_wires = 8  # This should match num_wires in the imported module
@@ -74,7 +82,7 @@ def train_model(model, X_train, y_train, batch_size=5, epochs=6):
 def evaluate_model(model, X_test, y_test):
     y_pred = model(X_test).detach().numpy()
     y_test = y_test.numpy()
-    correct = [1 if p == p_true else 0 for p, p_true in zip(y_pred, y_test)]
+    correct = [1 if round(p) == p_true else 0 for p, p_true in zip(y_pred, y_test)]
     accuracy = sum(correct) / len(y_test)
     print(f"Accuracy: {accuracy * 100}%")
 
