@@ -1,12 +1,2 @@
-"""
-Models for Quantum Neural Networks (QNN).
-
-This package includes the model definitions for QNN.
-"""
-
-from .qnn_model import QuantumNeuralNetwork
-
-__all__ = [
-    'QuantumNeuralNetwork',
-]
-
+from .qnn_layer import data_encoding, qnn_layer, init_weights
+from .qnn_model import quantum_nn, get_model
