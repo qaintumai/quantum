@@ -9,11 +9,13 @@ from .multi_headed_attention import MultiHeadedAttention
 from .quantum_data_encoding import QuantumDataEncoding
 from .quantum_feed_forward import QuantumFeedForward
 from .scale_dot_product import ScaleDotProduct
+from .weight_initializer import WeightInitializer
 
 __all__ = [
     'InputEmbedding',
     'MultiHeadedAttention',
     'QuantumDataEncoding',
     'QuantumFeedForward',
-    'ScaleDotProduct'
+    'ScaleDotProduct',
+    'WeightInitializer'
 ]
