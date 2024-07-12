@@ -11,10 +11,11 @@ import numpy as np
 import pennylane as qml
 from .qnn_layer import data_encoding, qnn_layer, init_weights
 
-num_wires = 8
-num_basis = 2
+num_wires = 8   # This hand coding is needed for defining the device
+num_basis = 2   # This hand coding is needed for defining the device
 
 # select a device
+# "strawberryfields.fock" is needed for analog (continuous variable) computing
 dev = qml.device("strawberryfields.fock", wires=num_wires, cutoff_dim=num_basis)
 
 @qml.qnode(dev, interface="torch")
@@ -29,6 +30,11 @@ def quantum_nn(inputs, var):
     return qml.expval(qml.X(0))
 
 def get_model(num_wires, num_layers):
+    """
+    Building a quantum model to train
+    Input: number of wires and number of layers
+    Output: quantum model converted to a PyTorch model
+    """
     weights = init_weights(num_layers, num_wires)
     shape_tup = weights.shape
     weight_shapes = {'var': shape_tup}
