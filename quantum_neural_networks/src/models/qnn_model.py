@@ -1,37 +1,43 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-test_get_model.py
+qnn_model.py
 
-Unit tests for the get_model function in qnn_model.py.
+Quantum neural network model implementation using Pennylane and PyTorch.
 """
 
-import unittest
 import torch
-from src.models.qnn_model import get_model
+import numpy as np
+import pennylane as qml
+from .qnn_layer import data_encoding, qnn_layer, init_weights
 
-class TestGetModel(unittest.TestCase):
-    
-    def setUp(self):
-        self.num_wires = 8
-        self.num_layers = 2
+num_wires = 8   # This hand coding is needed for defining the device
+num_basis = 2   # This hand coding is needed for defining the device
 
-    def test_get_model_instance(self):
-        """Test if the get_model function returns a PyTorch Sequential model instance"""
-        try:
-            model = get_model(self.num_wires, self.num_layers)
-            self.assertIsInstance(model, torch.nn.Sequential)
-        except Exception as e:
-            self.fail(f"get_model raised an exception: {e}")
+# select a device
+# "strawberryfields.fock" is needed for analog (continuous variable) computing
+dev = qml.device("strawberryfields.fock", wires=num_wires, cutoff_dim=num_basis)
 
-    def test_get_model_structure(self):
-        """Test if the get_model function returns a model with the correct structure"""
-        try:
-            model = get_model(self.num_wires, self.num_layers)
-            # Ensure the model has the expected layer type
-            self.assertTrue(any(isinstance(layer, qml.qnn.TorchLayer) for layer in model))
-        except Exception as e:
-            self.fail(f"get_model raised an exception: {e}")
+@qml.qnode(dev, interface="torch")
+def quantum_nn(inputs, var):
+    # convert classical inputs into quantum states
+    data_encoding(inputs)
 
-if __name__ == '__main__':
-    unittest.main()
+    # iterative quantum layers
+    for v in var:
+        qnn_layer(v)
+
+    return qml.expval(qml.X(0))
+
+def get_model(num_wires, num_layers):
+    """
+    Building a quantum model to train
+    Input: number of wires and number of layers
+    Output: quantum model converted to a PyTorch model
+    """
+    weights = init_weights(num_layers, num_wires)
+    shape_tup = weights.shape
+    weight_shapes = {'var': shape_tup}
+    qlayer = qml.qnn.TorchLayer(quantum_nn, weight_shapes)
+    model = torch.nn.Sequential(qlayer)
+    return model
