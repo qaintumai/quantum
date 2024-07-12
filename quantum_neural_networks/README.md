@@ -21,7 +21,7 @@ It is heuristically observed that QNNs have the following advantages:
 - faster convergence.
 
 ### Words of Caution
-Due to the decorator in Pennylane for quantum circuits, the number of wires need to be defined for data_encoding and qnn_layer, but cannot be passed as arguments. So we are going through an annoying process of manually defining them.
+Due to the decorator in Pennylane for quantum circuits, the number of wires need to be defined for data_encoding and qnn_layer, but cannot be passed as arguments. So we are going through an annoying process of manually defining them inside those functions in src/models/qnn_layer. Also inside src/models/qnn_model.py, the device need to be defined according to the number of wires and the number of bases which are manually defined for now. Future topic of your contribution.
   
 ## Getting Started
 
