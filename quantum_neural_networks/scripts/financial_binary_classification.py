@@ -43,7 +43,7 @@ def load_and_preprocess_data(file_path):
 
     return X_train, X_test, y_train, y_test
 
-X_train, X_test, y_train, y_test = load_and_preprocess_data('data/financial.csv')
+X_train, X_test, y_train, y_test = load_and_preprocess_data('../data/financial.csv')
 
 num_layers = 2
 num_modes = 8  # This should match num_wires in the imported module
