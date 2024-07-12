@@ -19,6 +19,9 @@ The dataflow of this architecture is composed of:
 It is heuristically observed that QNNs have the following advantages:
 - substantial reduction of parameters to train
 - faster convergence.
+
+### Words of Caution
+Due to the decorator in Pennylane for quantum circuits, the number of wires need to be defined for data_encoding and qnn_layer, but cannot be passed as arguments. So we are going through an annoying process of manually defining them.
   
 ## Getting Started
 
