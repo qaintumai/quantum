@@ -1,8 +1,8 @@
 import pennylane as qml
-# Define the DataEncoding class
+# Define the QuantumDataEncoding class
 
 
-class DataEncoding:
+class QuantumDataEncoding:
     def __init__(self, num_wires):
         self.num_wires = num_wires
 
