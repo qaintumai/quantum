@@ -41,5 +41,3 @@ def get_model(num_wires, num_layers):
     qlayer = qml.qnn.TorchLayer(quantum_nn, weight_shapes)
     model = torch.nn.Sequential(qlayer)
     return model
-
-model = get_model(num_wires, num_layers)
