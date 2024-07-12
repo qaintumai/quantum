@@ -28,14 +28,12 @@ def quantum_nn(inputs, var):
 
     return qml.expval(qml.X(0))
 
-def get_model(num_modes, num_layers):
-    weights = init_weights(num_layers, num_modes)
+def get_model(num_wires, num_layers):
+    weights = init_weights(num_layers, num_wires)
     shape_tup = weights.shape
     weight_shapes = {'var': shape_tup}
     qlayer = qml.qnn.TorchLayer(quantum_nn, weight_shapes)
     model = torch.nn.Sequential(qlayer)
     return model
 
-num_layers = 2
-
-model = get_model(num_modes, num_layers)
+model = get_model(num_wires, num_layers)
