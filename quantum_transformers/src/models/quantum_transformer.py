@@ -1,6 +1,7 @@
 # Define the Transformer class
 import torch.nn as nn
-from models import InputEmbedding, EncoderBlock, DecoderBlock
+from layers import InputEmbedding
+from models import QuantumEncoder, QuantumDecoder
 
 
 class Transformer(nn.Module):
@@ -10,9 +11,9 @@ class Transformer(nn.Module):
         self.device = device
         self.embedding = InputEmbedding(
             vocab_size, embed_len, dropout, device).to(device)
-        self.encoder_layers = nn.ModuleList([EncoderBlock(
+        self.encoder_layers = nn.ModuleList([QuantumEncoder(
             embed_len, num_heads, batch_size, dropout).to(device) for _ in range(num_encoder_layers)])
-        self.decoder_layers = nn.ModuleList([DecoderBlock(
+        self.decoder_layers = nn.ModuleList([QuantumDecoder(
             embed_len, num_heads, batch_size, dropout).to(device) for _ in range(num_decoder_layers)])
         self.output_linear = nn.Linear(embed_len, vocab_size).to(device)
 
