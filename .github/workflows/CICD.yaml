@@ -1,3 +1,5 @@
+#NOTE: setup branch protection rules to only allow changes to main via pull requests. (edit)
+
 #Github workflow for automated testing and deployment
 name: qAIntum CICD
 
@@ -13,6 +15,63 @@ on:
   schedule:
   - cron: "0 2 * * 1-5"
 
-#check if PR or push makes changes to protected file, and if so deny
+#create new virtual env running on ubuntu on Github provided server,
+#installs dependencies in venv.
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-#create virtual environment, install dependencies and run tests with PR/push
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install -r requirements.txt
+    
+    #Installs and runs Lint (tests for syntax errors/enforces coding standards)   
+    - name: Lint and Test
+      run: |
+        source venv/bin/activate
+        pip install flake8
+        flake8 .
+        pytest
+
+#automated testing, only activated if event is A (a push a PR) and B (modifies a file in either folder)
+    - name: Run quantum_neural_networks tests
+      if: github.event_name == 'push' || github.event_name == 'pull_request' && contains(github.event.head_commit.modified, 'quantum_neural_networks/')
+      run: |
+        source venv/bin/activate
+        python quantum_neural_networks/tests/__init__.py
+
+    - name: Run quantum_transformers tests
+      if: github.event_name == 'push' || github.event_name == 'pull_request' && contains(github.event.head_commit.modified, 'quantum_transformers/')
+      run: |
+        source venv/bin/activate
+        python quantum_transformers/tests/__init__.py
+
+#if the previous code block does not through an error, code from PR will be merged
+auto-merge:
+  needs: build
+  runs-on: ubuntu-latest
+  if: github.event_name == 'pull_request'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Merge PR
+      id: merge
+      run: |
+        PR_NUMBER=$(jq --raw-output .number "$GITHUB_EVENT_PATH")
+        MERGE_STATUS=$(gh pr merge $PR_NUMBER --repo ${{ github.repository }} --merge)
+        echo "$MERGE_STATUS"
+
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
