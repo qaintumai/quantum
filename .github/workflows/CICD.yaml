@@ -1,4 +1,4 @@
-#NOTE: setup branch protection rules to only allow changes to main via pull requests. (edit)
+#NOTE: setup branch protection rules to only allow changes to main via pull requests.
 
 #Github workflow for automated testing and deployment
 name: qAIntum CICD
