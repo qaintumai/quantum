@@ -1,0 +1,18 @@
+#Github workflow for automated testing and deployment
+name: qAIntum CICD
+
+#specifies one which action(s) workflow will be triggered--
+#when user tries to push to main/create a pull request, and everday M-F at 2 UTC
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+  - cron: "0 2 * * 1-5"
+
+#check if PR or push makes changes to protected file, and if so deny
+
+#create virtual environment, install dependencies and run tests with PR/push
