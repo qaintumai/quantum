@@ -1,4 +1,9 @@
-
+"""
+Author: Sophie Choe, qAIntum.ai
+Date: July 17, 2024
+Essentially, this is a quantum neural network (QNN). 
+This file is a specific QNN as a quantum version of the feed forward block of a transformer.
+"""
 
 import torch.nn as nn
 import pennylane as qml
