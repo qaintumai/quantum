@@ -1,5 +1,5 @@
 class QuantumNeuralNetworkLayer:
-    def __init__(self, num_wires=8):
+    def __init__(self, num_wires):
         self.num_wires = num_wires
 
     def apply(self, v):
