@@ -35,6 +35,15 @@ This document provides a detailed reference for the APIs available in the Quantu
 
 The Layers module contains the core components for building various layers in quantum neural networks and transformers.
 
+For qauntum neural networks, the following components are needed:
+* quantum data encoding
+* quantum layer: this is a quantum version of a classical layer composed of weight matrix, bias addition, and nonlinear activation function.
+* weight initializer: this creates a randomly initialized vector to be used as parameters of the quantum gates of the quantum layers.
+* quantum circuit: this process builds a circuit composed of quantum data encoding and a quantum neural network. Depending of the desired output, there are three methods we can use:
+  * qnn_single_output: returns a single value as a result of the quantum computation using the expected value measurement method applied to the first wire.
+  * qnn_multi_output: returns a vector of multiple values equal to the number of wires used. 
+  * qnn_probabilities: the size of the output is equal to the number of basis raised to the power of the number of wires.
+
 #### **Models**
 
 The Models module provides the implementation of quantum neural networks and quantum transformers. Quantum encoders and quantum decoders are used to build quantum transformers.
