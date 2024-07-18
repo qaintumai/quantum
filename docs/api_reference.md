@@ -43,6 +43,9 @@ For qauntum neural networks, the following components are needed:
   * qnn_single_output: returns a single value as a result of the quantum computation using the expected value measurement method applied to the first wire.
   * qnn_multi_output: returns a vector of multiple values equal to the number of wires used. 
   * qnn_probabilities: the size of the output is equal to the number of basis raised to the power of the number of wires.
+ 
+For quantum transformers, most of the components are the same as classical transformers: input embedding, scaled dot product, and multi-headed attention. The only component that is different is the feed forward block, which is replaced with a quantum neural network.
+
 
 #### **Models**
 
