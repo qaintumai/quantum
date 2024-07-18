@@ -71,8 +71,7 @@ The Utilities module contains shared utilities used across the project.
 * Description: A class representing the multi-headed attention mechanism.
 * Methods:
   * __init__(self, config): Initializes the multi-headed attention with the given configuration.
-  * Parameters:
-config (dict): Configuration dictionary for the multi-headed attention.
+  * Parameters: num_heads, embed_len, batch_size, mask=None
 
 #### qnn_multi_output.py
 
