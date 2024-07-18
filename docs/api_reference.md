@@ -77,34 +77,26 @@ config (dict): Configuration dictionary for the multi-headed attention.
 
 #### qnn_multi_output.py
 
-#### **Class: QNNMultiOutput
+##### Function: qnn_multi_output
 
-#### **Description: A class representing the multi-output layer in QNN.
-#### **Methods:
-__init__(self, config): Initializes the multi-output layer with the given configuration.
-Parameters:
-config (dict): Configuration dictionary for the multi-output layer.
-qnn_probabilities.py
+* Description: A function building a quantum neural network circuit for multi-valued output vector.
 
-#### **Class: QNNProbabilities
 
-#### **Description: A class representing the probability layer in QNN.
-#### **Methods:
-__init__(self, config): Initializes the probability layer with the given configuration.
-Parameters:
-config (dict): Configuration dictionary for the probability layer.
-qnn_single_output.py
+#### qnn_probabiities.py
 
-#### **Class: QNNSingleOutput
+##### Function: qnn_probabilities
 
-#### **Description: A class representing the single-output layer in QNN.
-#### **Methods:
-__init__(self, config): Initializes the single-output layer with the given configuration.
-Parameters:
-config (dict): Configuration dictionary for the single-output layer.
-quantum_data_encoding.py
+* Description: A function building a quantum neural network circuit, returning a output vector of size - number of basis ^ number_of_wires.
 
-#### **Class: QuantumDataEncoding
+#### qnn_single_output.py
+
+##### Function: qnn_probabilities
+
+* Description: A function building a quantum neural network circuit for a single-valued output.
+  
+#### quantum_data_encoding.py
+
+#### **Class: QuantumDataEncoder
 
 #### **Description: A class for encoding data for quantum computations.
 #### **Methods:
