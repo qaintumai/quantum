@@ -37,7 +37,7 @@ The Layers module contains the core components for building various layers in qu
 
 #### **Models**
 
-The Models module provides the implementation of various models, including quantum decoders, encoders, neural networks, and transformers.
+The Models module provides the implementation of quantum neural networks and quantum transformers. Quantum encoders and quantum decoders are used to build quantum transformers.
 
 #### **Utilities**
 
