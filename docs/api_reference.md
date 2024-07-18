@@ -44,7 +44,7 @@ The Models module provides the implementation of various models, including quant
 The Utilities module contains shared utilities used across the project.
 
 ### **Layers API**
-#### **input_embedding.py**
+#### input_embedding.py
 
 #### **Class: InputEmbedding**
 
