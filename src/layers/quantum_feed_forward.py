@@ -5,6 +5,8 @@ Essentially, this is a quantum neural network (QNN).
 This file is a specific QNN as a quantum version of the feed forward block of a transformer.
 """
 
+from src.models import 
+
 class QuantumFeedForward(nn.Module):
     def __init__(self, embed_len, dropout=0.1):
         super(QuantumFeedForward, self).__init__()
