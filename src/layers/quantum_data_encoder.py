@@ -1,9 +1,34 @@
 import pennylane as qml
-# Define the QuantumDataEncoder class
 
+"""
+This module defines the QuantumDataEncoder class, which is used to encode classical data 
+into a quantum format suitable for use in a quantum neural network. The class applies a 
+series of quantum gates (squeezing, beamsplitter, rotation, displacement, and Kerr gates) 
+to the input data.
+
+Usage:
+To use the QuantumDataEncoder class, import it as follows:
+    from layers.quantum_data_encoding import QuantumDataEncoder
+
+Example:
+    encoder = QuantumDataEncoder(num_wires=8)
+    encoder.encode(input_data)
+"""
 
 class QuantumDataEncoder:
+    """
+    A class used to encode classical data into a quantum format using various quantum gates.
+    """
+
     def __init__(self, num_wires):
+        """
+        Initializes the QuantumDataEncoder class with the given number of wires.
+
+        Parameters:
+        - num_wires (int): Number of quantum wires. 
+
+        NOTE: currently, we only support num_wires =8 or 6, which is declared in the qnn classes.
+        """
         self.num_wires = num_wires
 
     def encode(self, x):

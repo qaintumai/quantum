@@ -1,3 +1,7 @@
+import pennylane as qml
+from .quantum_data_encoder import QuantumDataEncoder
+from .quantum_layer import QuantumNeuralNetworkLayer
+
 # Define the number of wires and basis states
 num_wires = 8
 num_basis = 2
@@ -17,3 +21,7 @@ def qnn_probabilities(inputs, var):
 
     # Return the probabilities
     return qml.probs(wires=[wire for wire in num_wires])
+
+
+
+#NOTE: This file is redundant? Only change 

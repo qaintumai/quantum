@@ -1,3 +1,7 @@
+import pennylane as qml
+from .quantum_data_encoder import QuantumDataEncoder
+from .quantum_layer import QuantumNeuralNetworkLayer
+
 # Define the number of wires and basis states
 num_wires = 6
 num_basis = 2
