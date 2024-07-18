@@ -10,7 +10,7 @@ class QuantumNeuralNetworkModel:
         shape_tup = weights.shape
         weight_shapes = {'var': shape_tup}
         qlayer = qml.qnn.TorchLayer(self.quantum_nn, weight_shapes)
-        model = Sequential(qlayer)
+        model = [qlayer]
         return model
 
 # Example usage
