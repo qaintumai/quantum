@@ -62,9 +62,8 @@ The Utilities module contains shared utilities used across the project.
 
 * Description: A class representing the input embedding layer.
 * Methods:
-    * __init__(self, config): Initializes the input embedding with the given con figuration.
-    * Parameters:
-       * config (dict): input_vocab_size, embed_len, dropout=0.1, device='cpu'.
+    * __init__(self, config): Initializes the input embedding with the given configuration.
+    * Parameters: input_vocab_size, embed_len, dropout=0.1, device='cpu'.
 #### multi_headed_attention.py
 
 ##### Class: MultiHeadedAttention
