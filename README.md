@@ -30,4 +30,29 @@ Quantum InterConnects are composed of
 
 Most of the research in these areas is based on quantum optics. Hence quantum computing using quantum optics will seemlessly integrate into the whole architecture of Quantum Internet. 
 
+## Getting Started
+
+### Virtual Environment
+```shell
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Dependency Installation
+
+#### Third-party Dependencies
+
+- PyTorch
+- Pennylane (**0.29.1**)
+- Scikit Learn
+- Pandas
+- Numpy
+
+```shell
+pip install -r requirements.txt
+```
+
+### Running
+
+
 
