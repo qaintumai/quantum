@@ -1,7 +1,8 @@
 ## **API Reference**
-Table of Contents
 
-Introduction
+### **Table of Contents**
+
+1. Introduction
 Modules
 Quantum Neural Networks
 Quantum Transformers
