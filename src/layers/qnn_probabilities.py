@@ -6,7 +6,7 @@ num_basis = 2
 dev = qml.device("strawberryfields.fock", wires=num_wires, cutoff_dim=num_basis)
 
 @qml.qnode(dev, interface="torch")
-def quantum_nn(inputs, var):
+def qnn_probabilities(inputs, var):
     num_wires = 8
     encoder = QuantumDataEncoder(num_wires)
     encoder.encode(inputs)
@@ -17,4 +17,4 @@ def quantum_nn(inputs, var):
         q_layer.apply(v)
 
     # Return the probabilities
-    return qml.expval(wires=[wire for wire in num_wires])
+    return qml.probs(wires=[wire for wire in num_wires])
