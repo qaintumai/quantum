@@ -3,145 +3,115 @@
 ### **Table of Contents**
 
 1. Introduction
-Modules
-Quantum Neural Networks
-Quantum Transformers
-Common Utilities
-Quantum Neural Networks API
-qnn_model.py
-qnn_utils.py
-Quantum Transformers API
-transformer.py
-data_encoding.py
-decoder_block.py
-encoder_block.py
-feed_forward_block.py
-input_embedding.py
-multi_headed_attention.py
-quantum_layer.py
-scaled_dot_product.py
-weight_initializer.py
-Common Utilities API
-data_loader.py
-config.py
-Introduction
+2. Modules
+   * Layers
+   * Models
+   * Utilities
+3. Layers API
+   * input_embedding.py
+   * multi_headed_attention.py
+   * qnn_multi_output.py
+   * qnn_probabilities.py
+   * qnn_single_output.py
+   * quantum_data_encoding.py
+   * quantum_feed_forward.py
+   * quantum_layer.py
+   * scaled_dot_product.py
+   * weight_initializer.py
+4. Models API
+   * quantum_decoder.py
+   * quantum_encoder.py
+   * quantum_neural_network.py
+   * quantum_transformer.py
+5. Utilities API
+
+
+## **Introduction**
 This document provides a detailed reference for the APIs available in the Quantum Project. Each module and its respective components are described in detail, including the available functions, their parameters, return types, and usage examples.
 
-Modules
-Quantum Neural Networks
+## **Modules**
 
-The Quantum Neural Networks module contains the core components for building and training quantum neural network models.
+### **Layers**
 
-Quantum Transformers
+The Layers module contains the core components for building various layers in quantum neural networks and transformers.
 
-The Quantum Transformers module provides the implementation of transformer models adapted for quantum computations.
+### **Models**
 
-Common Utilities
+The Models module provides the implementation of various models, including quantum decoders, encoders, neural networks, and transformers.
 
-The Common Utilities module contains shared utilities used across the project, including data loading and configuration management.
+### **Utilities**
 
-Quantum Neural Networks API
-qnn_model.py
+The Utilities module contains shared utilities used across the project.
 
-Class: QuantumNeuralNetwork
+## **Layers API**
+### **input_embedding.py**
 
-Description: A class representing a quantum neural network model.
-Methods:
-__init__(self, config): Initializes the QNN with the given configuration.
-Parameters:
-config (dict): Configuration dictionary for the QNN.
-train(self, data, labels): Trains the QNN on the provided data and labels.
-Parameters:
-data (array-like): Training data.
-labels (array-like): Training labels.
-predict(self, data): Predicts labels for the provided data.
-Parameters:
-data (array-like): Data to predict labels for.
-Returns:
-predictions (array-like): Predicted labels.
-qnn_utils.py
+### **Class: InputEmbedding
 
-Function: preprocess_data
-
-Description: Preprocesses the data for use in the QNN.
-Parameters:
-data (array-like): Data to be preprocessed.
-Returns:
-processed_data (array-like): Preprocessed data.
-Quantum Transformers API
-transformer.py
-
-Class: QuantumTransformer
-
-Description: A class representing a quantum transformer model.
-Methods:
-__init__(self, config): Initializes the transformer with the given configuration.
-Parameters:
-config (dict): Configuration dictionary for the transformer.
-encode(self, data): Encodes the input data.
-Parameters:
-data (array-like): Data to be encoded.
-Returns:
-encoded_data (array-like): Encoded data.
-data_encoding.py
-
-Function: encode_data
-
-Description: Encodes data for use in quantum transformers.
-Parameters:
-data (array-like): Data to be encoded.
-Returns:
-encoded_data (array-like): Encoded data.
-decoder_block.py
-
-Class: DecoderBlock
-
-Description: A class representing a decoder block in the transformer.
-Methods:
-__init__(self, config): Initializes the decoder block with the given configuration.
-Parameters:
-config (dict): Configuration dictionary for the decoder block.
-encoder_block.py
-
-Class: EncoderBlock
-
-Description: A class representing an encoder block in the transformer.
-Methods:
-__init__(self, config): Initializes the encoder block with the given configuration.
-Parameters:
-config (dict): Configuration dictionary for the encoder block.
-feed_forward_block.py
-
-Class: FeedForwardBlock
-
-Description: A class representing a feed-forward block in the transformer.
-Methods:
-__init__(self, config): Initializes the feed-forward block with the given configuration.
-Parameters:
-config (dict): Configuration dictionary for the feed-forward block.
-input_embedding.py
-
-Class: InputEmbedding
-
-Description: A class representing the input embedding layer in the transformer.
-Methods:
-__init__(self, config): Initializes the input embedding with the given configuration.
+### **Description: A class representing the input embedding layer.
+### **Methods:
+   __init__(self, config): Initializes the input embedding with the given configuration.
 Parameters:
 config (dict): Configuration dictionary for the input embedding.
 multi_headed_attention.py
 
 Class: MultiHeadedAttention
 
-Description: A class representing the multi-headed attention mechanism in the transformer.
+Description: A class representing the multi-headed attention mechanism.
 Methods:
 __init__(self, config): Initializes the multi-headed attention with the given configuration.
 Parameters:
 config (dict): Configuration dictionary for the multi-headed attention.
+qnn_multi_output.py
+
+Class: QNNMultiOutput
+
+Description: A class representing the multi-output layer in QNN.
+Methods:
+__init__(self, config): Initializes the multi-output layer with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for the multi-output layer.
+qnn_probabilities.py
+
+Class: QNNProbabilities
+
+Description: A class representing the probability layer in QNN.
+Methods:
+__init__(self, config): Initializes the probability layer with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for the probability layer.
+qnn_single_output.py
+
+Class: QNNSingleOutput
+
+Description: A class representing the single-output layer in QNN.
+Methods:
+__init__(self, config): Initializes the single-output layer with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for the single-output layer.
+quantum_data_encoding.py
+
+Class: QuantumDataEncoding
+
+Description: A class for encoding data for quantum computations.
+Methods:
+__init__(self, config): Initializes the data encoding with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for data encoding.
+quantum_feed_forward.py
+
+Class: QuantumFeedForward
+
+Description: A class representing a feed-forward layer in quantum neural networks.
+Methods:
+__init__(self, config): Initializes the feed-forward layer with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for the feed-forward layer.
 quantum_layer.py
 
 Class: QuantumLayer
 
-Description: A class representing a quantum layer in the transformer.
+Description: A class representing a generic quantum layer.
 Methods:
 __init__(self, config): Initializes the quantum layer with the given configuration.
 Parameters:
@@ -161,12 +131,63 @@ weight_initializer.py
 
 Function: initialize_weights
 
-Description: Initializes weights for the transformer.
+Description: Initializes weights for layers.
 Parameters:
 shape (tuple): Shape of the weights.
 Returns:
 weights (array-like): Initialized weights.
-Common Utilities API
+Models API
+quantum_decoder.py
+
+Class: QuantumDecoder
+
+Description: A class representing a quantum decoder model.
+Methods:
+__init__(self, config): Initializes the decoder with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for the decoder.
+quantum_encoder.py
+
+Class: QuantumEncoder
+
+Description: A class representing a quantum encoder model.
+Methods:
+__init__(self, config): Initializes the encoder with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for the encoder.
+quantum_neural_network.py
+
+Class: QuantumNeuralNetwork
+
+Description: A class representing a quantum neural network model.
+Methods:
+__init__(self, config): Initializes the QNN with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for the QNN.
+train(self, data, labels): Trains the QNN on the provided data and labels.
+Parameters:
+data (array-like): Training data.
+labels (array-like): Training labels.
+predict(self, data): Predicts labels for the provided data.
+Parameters:
+data (array-like): Data to predict labels for.
+Returns:
+predictions (array-like): Predicted labels.
+quantum_transformer.py
+
+Class: QuantumTransformer
+
+Description: A class representing a quantum transformer model.
+Methods:
+__init__(self, config): Initializes the transformer with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for the transformer.
+encode(self, data): Encodes the input data.
+Parameters:
+data (array-like): Data to be encoded.
+Returns:
+encoded_data (array-like): Encoded data.
+Utilities API
 data_loader.py
 
 Function: load_data
