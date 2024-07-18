@@ -64,7 +64,7 @@ The Utilities module contains shared utilities used across the project.
 * Methods:
     * __init__(self, config): Initializes the input embedding with the given con figuration.
     * Parameters:
-       * config (dict): Configuration dictionary for the input embedding.
+       * config (dict): input_vocab_size, embed_len, dropout=0.1, device='cpu'.
 #### multi_headed_attention.py
 
 ##### Class: MultiHeadedAttention
@@ -80,6 +80,7 @@ config (dict): Configuration dictionary for the multi-headed attention.
 ##### Function: qnn_multi_output
 
 * Description: A function building a quantum neural network circuit for multi-valued output vector.
+* Parameters: 
 
 
 #### qnn_probabiities.py
