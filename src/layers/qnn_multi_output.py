@@ -8,7 +8,7 @@ num_basis = 2
 dev = qml.device("strawberryfields.fock", wires=num_wires, cutoff_dim=num_basis)
 
 @qml.qnode(dev, interface="torch")
-def quantum_circuit_multi_output(inputs, var):
+def qnn_multi_output(inputs, var):
     encoder = QuantumDataEncoder(num_wires)
     encoder.encode(inputs)
 
