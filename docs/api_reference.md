@@ -65,16 +65,17 @@ The Utilities module contains shared utilities used across the project.
     * __init__(self, config): Initializes the input embedding with the given con figuration.
     * Parameters:
        * config (dict): Configuration dictionary for the input embedding.
-#### **multi_headed_attention.py
+#### multi_headed_attention.py
 
-#### **Class: MultiHeadedAttention
+##### Class: MultiHeadedAttention
 
-#### **Description: A class representing the multi-headed attention mechanism.
-#### **Methods:
-__init__(self, config): Initializes the multi-headed attention with the given configuration.
-#### **Parameters:
+* Description: A class representing the multi-headed attention mechanism.
+* Methods:
+  * __init__(self, config): Initializes the multi-headed attention with the given configuration.
+  * Parameters:
 config (dict): Configuration dictionary for the multi-headed attention.
-qnn_multi_output.py
+
+#### qnn_multi_output.py
 
 #### **Class: QNNMultiOutput
 
