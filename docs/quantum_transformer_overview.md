@@ -1,6 +1,6 @@
 ## Quantum Transformer
 
-Ever since the Transformer model was introduced in the seminal paper "Attention Is All You Need" by Vaswani et al., in 2017, we saw an explotion of advancement in Generative AI starting from ChatGPT in 2022.
+Ever since the Transformer model was introduced in the seminal paper ["Attention Is All You Need"](https://arxiv.org/abs/1706.03762) by Vaswani et al., in 2017, we saw an explotion of advancement in Generative AI starting from ChatGPT in 2022.
 
 Overview
 The Transformer model is designed to handle sequential data, entirely relying on a mechanism called self-attention to draw global dependencies between input and output. This mechanism allows for "parallelization" of data for efficient processing.
