@@ -1,4 +1,4 @@
-API Reference
+## **API Reference**
 Table of Contents
 
 Introduction
