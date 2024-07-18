@@ -1,9 +1,9 @@
 ## Quantum Transformer
 
-"Attention Is All You Need" is a seminal paper by Vaswani et al., published in 2017, that introduced the Transformer model. The Transformer has since become a cornerstone in the field of natural language processing (NLP) and machine learning. Here's an overview of the Transformer model based on the paper:
+Ever since the Transformer model was introduced in the seminal paper "Attention Is All You Need" by Vaswani et al., in 2017, we saw an explotion of advancement in Generative AI starting from ChatGPT in 2022.
 
 Overview
-The Transformer model is designed to handle sequential data, such as text, more efficiently than previous architectures like recurrent neural networks (RNNs) and long short-term memory networks (LSTMs). It relies entirely on a mechanism called self-attention to draw global dependencies between input and output.
+The Transformer model is designed to handle sequential data, entirely relying on a mechanism called self-attention to draw global dependencies between input and output. This mechanism allows for "parallelization" of data for efficient processing.
 
 Key Components
 Self-Attention Mechanism:
@@ -38,5 +38,3 @@ Long-Range Dependencies: Self-attention mechanism enables the model to learn lon
 Applications
 The Transformer model has revolutionized NLP and has been the foundation for many state-of-the-art models like BERT, GPT, and T5. Its applications range from machine translation, text summarization, and sentiment analysis to more complex tasks like question answering and language generation.
 
-Conclusion
-The "Attention Is All You Need" paper introduced a paradigm shift in how sequential data is processed, moving from sequential RNN-based models to parallelizable and efficient Transformer-based models. The self-attention mechanism is central to its architecture, allowing for more effective learning of dependencies within the data.
