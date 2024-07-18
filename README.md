@@ -54,5 +54,37 @@ pip install -r requirements.txt
 
 ### Running
 
+```sh
+pip install -e . 
+./scripts/financial_binary_classification.py
+```
+
+You should see the following output:
+
+```sh
+loss tensor(0.5000, grad_fn=<MseLossBackward0>)
+Average loss over epoch 1: 0.0250
+loss tensor(0.5781, grad_fn=<MseLossBackward0>)
+Average loss over epoch 2: 0.0289
+loss tensor(0.5312, grad_fn=<MseLossBackward0>)
+Average loss over epoch 3: 0.0266
+loss tensor(0.5312, grad_fn=<MseLossBackward0>)
+Average loss over epoch 4: 0.0266
+loss tensor(0.5000, grad_fn=<MseLossBackward0>)
+Average loss over epoch 5: 0.0250
+loss tensor(0.5625, grad_fn=<MseLossBackward0>)
+Average loss over epoch 6: 0.0281
+Accuracy: 85.0%
+```
+
+### Contributing and Best Practices
+
+Follow [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
+
+#### Coming Soon
+
+- Hybrid Quantum/Classical Neural Network
+- Type checking with mypy
+- Linting with flake8
 
 
