@@ -58,13 +58,13 @@ The Utilities module contains shared utilities used across the project.
 ### **Layers API**
 #### input_embedding.py
 
-#### **Class: InputEmbedding**
+##### Class: InputEmbedding
 
-#### ** * Description:** A class representing the input embedding layer.
-#### ** * Methods:**
+* Description: A class representing the input embedding layer.
+* Methods:
     * __init__(self, config): Initializes the input embedding with the given con figuration.
-         * Parameters:
-              * config (dict): Configuration dictionary for the input embedding.
+    * Parameters:
+       * config (dict): Configuration dictionary for the input embedding.
 #### **multi_headed_attention.py
 
 #### **Class: MultiHeadedAttention
