@@ -71,14 +71,14 @@ The Utilities module contains shared utilities used across the project.
 * Description: A class representing the multi-headed attention mechanism.
 * Methods:
   * __init__(self, config): Initializes the multi-headed attention with the given configuration.
-  * Parameters: num_heads, embed_len, batch_size, mask=None
+  * Parameters: num_heads, embed_len, batch_size, mask=None.
 
 #### qnn_multi_output.py
 
 ##### Function: qnn_multi_output
 
 * Description: A function building a quantum neural network circuit for multi-valued output vector.
-* Parameters: 
+* Parameters: input data, initialized weights.
 
 
 #### qnn_probabiities.py
@@ -86,21 +86,23 @@ The Utilities module contains shared utilities used across the project.
 ##### Function: qnn_probabilities
 
 * Description: A function building a quantum neural network circuit, returning a output vector of size - number of basis ^ number_of_wires.
+* Parameters: input data, initialized weights.
 
 #### qnn_single_output.py
 
 ##### Function: qnn_probabilities
 
 * Description: A function building a quantum neural network circuit for a single-valued output.
+* Parameters: input data, initialized weights.
   
 #### quantum_data_encoding.py
 
-#### **Class: QuantumDataEncoder
+##### Class: QuantumDataEncoder
 
-#### **Description: A class for encoding data for quantum computations.
-#### **Methods:
-__init__(self, config): Initializes the data encoding with the given configuration.
-Parameters:
+* Description: A class for encoding data for quantum computations.
+* Methods:
+  * __init__(self, config): Initializes the data encoding with the given configuration.
+  * Parameters:
 config (dict): Configuration dictionary for data encoding.
 quantum_feed_forward.py
 
