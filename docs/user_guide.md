@@ -61,4 +61,27 @@ To install the project, follow these steps:
 
 The project is organized as follows:
 
+quantum-project/
+├── docs/
+├── src/
+│ ├── layers/
+│ │ ├── input_embedding.py
+│ │ ├── multi_headed_attention.py
+│ │ ├── qnn_multi_output.py
+│ │ ├── qnn_probabilities.py
+│ │ ├── qnn_single_output.py
+│ │ ├── quantum_data_encoding.py
+│ │ ├── quantum_feed_forward.py
+│ │ ├── quantum_layer.py
+│ │ ├── scaled_dot_product.py
+│ │ ├── weight_initializer.py
+│ ├── models/
+│ │ ├── quantum_decoder.py
+│ │ ├── quantum_encoder.py
+│ │ ├── quantum_neural_network.py
+│ │ ├── quantum_transformer.py
+│ ├── utils/
+├── tests/
+├── scripts/
+
 
