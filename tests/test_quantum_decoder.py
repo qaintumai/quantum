@@ -13,7 +13,6 @@
 # limitations under the License.
 # ==============================================================================
 
-
 # Test the DecoderBlock class
 import torch
 from models import DecoderBlock
