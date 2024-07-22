@@ -1,2 +1,8 @@
 # .gitignore file
 .DS_Store
+
+# Ignore virtual environments
+**/venv/
+**/env/
+**/.env/
+**/myenv/

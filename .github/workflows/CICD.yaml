@@ -46,16 +46,10 @@ jobs:
 
 #automated testing, only activated if event is A (a push a PR) and B (modifies a file in either folder)
     - name: Run quantum_neural_networks tests
-      if: github.event_name == 'push' || github.event_name == 'pull_request' && contains(github.event.head_commit.modified, 'quantum_neural_networks/')
+      if: github.event_name == 'push' || github.event_name == 'pull_request'
       run: |
         source venv/bin/activate
-        python quantum_neural_networks/tests/__init__.py
-
-    - name: Run quantum_transformers tests
-      if: github.event_name == 'push' || github.event_name == 'pull_request' && contains(github.event.head_commit.modified, 'quantum_transformers/')
-      run: |
-        source venv/bin/activate
-        python quantum_transformers/tests/__init__.py
+        python tests/__init__.py
 
 #if the previous code block does not through an error, code from PR will be merged
 auto-merge:

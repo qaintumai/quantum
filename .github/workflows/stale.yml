@@ -25,3 +25,5 @@ jobs:
         stale-pr-message: 'Stale pull request message'
         stale-issue-label: 'no-issue-activity'
         stale-pr-label: 'no-pr-activity'
+        days-before-stale: 30           # Number of days of inactivity before marking an issue or PR as stale
+        days-before-close: 7            # Number of days to wait after marking as stale before closing the issue or PR
