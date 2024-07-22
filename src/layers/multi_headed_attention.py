@@ -13,23 +13,24 @@
 # limitations under the License.
 # ==============================================================================
 
-import torch.nn as nn
+from torch import nn
 from .scaled_dot_product import ScaledDotProduct
 
-"""
-Usage:
-To use the MultiHeadedAttention class, import it as follows:
-    from layers.multi_headed_attention import MultiHeadedAttention
-
-Example:
-    attention_layer = MultiHeadedAttention(num_heads=8, embed_len=128, batch_size=32)
-    output = attention_layer(queries, keys, values
-"""
 class MultiHeadedAttention(nn.Module):
     """
-    A class used to implement the multi-headed attention mechanism, splitting the input into multiple heads, applies scaled dot-product attention to each head, and then concatenates the results.
+    A class used to implement the multi-headed attention mechanism,
+    splitting the input into multiple heads, applies scaled dot-product
+    attention to each head, and then concatenates the results.
+
+    Usage:
+    To use the MultiHeadedAttention class, import it as follows:
+    from layers.multi_headed_attention import MultiHeadedAttention
+
+    Example:
+    attention_layer = MultiHeadedAttention(num_heads=8, embed_len=128, batch_size=32)
+    output = attention_layer(queries, keys, values
     """
-    
+
     def __init__(self, num_heads, embed_len, batch_size, mask=None):
         """
         Initializes the MultiHeadedAttention class with the given parameters.
@@ -60,7 +61,7 @@ class MultiHeadedAttention(nn.Module):
                 embed_len=self.head_length, mask=True)
         else:
             self.attention = ScaledDotProduct(embed_len=self.head_length)
-        
+
         # Define the output linear layer
         self.output_linear = nn.Linear(self.q_in, self.q_in)
 
