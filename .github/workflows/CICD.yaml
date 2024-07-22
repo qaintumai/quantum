@@ -28,7 +28,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.12'
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
@@ -51,21 +51,3 @@ jobs:
         source venv/bin/activate
         python tests/__init__.py
 
-#if the previous code block does not through an error, code from PR will be merged
-auto-merge:
-  needs: build
-  runs-on: ubuntu-latest
-  if: github.event_name == 'pull_request'
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Merge PR
-      id: merge
-      run: |
-        PR_NUMBER=$(jq --raw-output .number "$GITHUB_EVENT_PATH")
-        MERGE_STATUS=$(gh pr merge $PR_NUMBER --repo ${{ github.repository }} --merge)
-        echo "$MERGE_STATUS"
-
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
