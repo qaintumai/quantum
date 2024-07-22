@@ -41,7 +41,8 @@ jobs:
       run: |
         source venv/bin/activate
         pip install flake8
-        flake8 .
+        python -c 'import sys; sys.setrecursionlimit(2000)'
+        flake8 --verbose .
         pytest
 
 #automated testing, only activated if event is A (a push a PR) and B (modifies a file in either folder)
