@@ -41,8 +41,6 @@ embed_len = 64  # example value
 model = QuantumFeedForward(embed_len)
 
 # Calculate the number of parameters
-
-
 def count_parameters(module):
     return sum(p.numel() for p in module.parameters() if p.requires_grad)
 

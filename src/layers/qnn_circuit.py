@@ -42,7 +42,7 @@ def qnn_circuit(inputs, var):
 
     Parameters:
     - inputs (list or array-like): Input data to be encoded and processed by the QNN.
-    - var (list or array-like): List of variables for the quantum layers, structure determines 
+    - var (list or array-like): List of variables for the quantum layers, structure determines
     output type.
 
     Returns:
@@ -59,7 +59,7 @@ def qnn_circuit(inputs, var):
     if multi_output:
         # Return the probabilities for all wires
         return [qml.expval(qml.X(wire)) for wire in range(num_wires)]
-    
+
     if probabilities:
         # Return the probabilities NOTE: not functional, need to review pennylane function.
         wires = [0,1,2,3,4,5,6,7]

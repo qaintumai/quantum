@@ -17,9 +17,9 @@ import pennylane as qml
 
 class QuantumDataEncoder:
     """
-    This module defines the QuantumDataEncoder class, which is used to encode classical data 
-    into a quantum format suitable for use in a quantum neural network. The class applies a 
-    series of quantum gates (squeezing, beamsplitter, rotation, displacement, and Kerr gates) 
+    This module defines the QuantumDataEncoder class, which is used to encode classical data
+    into a quantum format suitable for use in a quantum neural network. The class applies a
+    series of quantum gates (squeezing, beamsplitter, rotation, displacement, and Kerr gates)
     to the input data.
 
     Usage:
@@ -43,6 +43,21 @@ class QuantumDataEncoder:
         self.num_wires = num_wires
 
     def encode(self, x):
+        """
+        Encodes the input data into a quantum state using a sequence of quantum gates.
+
+        Parameters:
+        x : input data (list or array-like)
+
+        The encoding process uses the following gates in sequence:
+        - Squeezing gates
+        - Beamsplitter gates
+        - Rotation gates
+        - Displacement gates
+        - Kerr gates
+        - Squeezing gates (second set)
+        - Rotation gates (second set)
+        """
         num_features = len(x)
 
         # Squeezing gates

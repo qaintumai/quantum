@@ -47,4 +47,3 @@ class QuantumDecoder(nn.Module):
 
         # Quantum Feed-forward
         return self.quantum_feed_forward(second_sublayer_output)
-
