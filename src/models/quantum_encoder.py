@@ -14,7 +14,7 @@
 # ==============================================================================
 
 # Define the EncoderBlock class
-import torch.nn as nn
+from torch import nn
 from layers import QuantumFeedForward, MultiHeadedAttention
 
 

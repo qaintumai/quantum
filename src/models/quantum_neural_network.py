@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+import pennylane as qml
+from layers import WeightInitializer, qnn
 
 class QuantumNeuralNetworkModel:
     def __init__(self, num_layers, num_wires, quantum_nn):
@@ -31,5 +33,5 @@ class QuantumNeuralNetworkModel:
 # Example usage
 num_layers = 2
 num_wires = 6
-qnn_model = QuantumNeuralNetworkModel(num_layers, num_wires)
+qnn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn)
 model = qnn_model.model
