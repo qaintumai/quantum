@@ -1,4 +1,4 @@
-# Copyright 2015 The qAIntum.ai Authors. All Rights Reserved.
+# Copyright 2024 The qAIntum.ai Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ from torch import nn
 class QuantumFeedForward(nn.Module):
     def __init__(self, embed_len, dropout=0.1):
         super(QuantumFeedForward, self).__init__()
+
+        #TODO: pointer to which layers?
         self.feed_forward = nn.Sequential(*layers)
         self.dropout_layer = nn.Dropout(p=dropout)
         self.layer_norm = nn.LayerNorm(embed_len)
