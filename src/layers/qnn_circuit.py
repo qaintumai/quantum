@@ -18,22 +18,22 @@ from .quantum_data_encoder import QuantumDataEncoder
 from .quantum_layer import QuantumNeuralNetworkLayer
 
 #model output type
-
-single = True
-multi = False
-probabilistic = False
+single_output = True
+multi_output = False
+probabilities = False
 
 
 # Define the number of wires and basis states
 num_basis = 2
 num_wires = 8
-if (single):
+if (single_output):
     num_wires = 6
 
 # Select a device
 dev = qml.device("strawberryfields.fock", wires=num_wires, cutoff_dim=num_basis)
 
-def QuantumNeuralNetwork(inputs, var):
+@qml.qnode(dev, interface="torch")
+def qnn_circuit(inputs, var):
     """
     This module defines a quantum neural network (QNN) that can return multiple outputs,
     a single output, or a probability distribution using PennyLane and PyTorch. The QNN
@@ -56,13 +56,14 @@ def QuantumNeuralNetwork(inputs, var):
     for v in var:
         q_layer.apply(v)
 
-    if multi:
+    if multi_output:
         # Return the probabilities for all wires
         return [qml.expval(qml.X(wire)) for wire in range(num_wires)]
     
-    if probabilistic:
+    if probabilities:
         # Return the probabilities NOTE: not functional, need to review pennylane function.
-        return [qml.probs(wires=[wire for wire in num_wires])]
+        wires = [0,1,2,3,4,5,6,7]
+        return [qml.probs(wires=wires)]
 
     #else model output type is single
     return qml.expval(qml.X(0))
