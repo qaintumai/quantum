@@ -36,12 +36,10 @@ from .weight_initializer import WeightInitializer
 __all__ = [
     "InputEmbedding",
     "MultiHeadedAttention",
-    "qnn_multi_output",
-    "qnn_probabilities",
-    "qnn_single_output",
+    "QuantumNeuralNetwork",
     "QuantumDataEncoder",
     "QuantumFeedForward",
-    "QuantumLayer",
+    "QuantumNeuralNetworkLayer",
     "ScaledDotProduct",
     "WeightInitializer",
 ]

@@ -33,7 +33,7 @@ if (single):
 # Select a device
 dev = qml.device("strawberryfields.fock", wires=num_wires, cutoff_dim=num_basis)
 
-def qnn(inputs, var):
+def QuantumNeuralNetwork(inputs, var):
     """
     This module defines a quantum neural network (QNN) that can return multiple outputs,
     a single output, or a probability distribution using PennyLane and PyTorch. The QNN
