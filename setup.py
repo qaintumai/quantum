@@ -45,7 +45,7 @@ setup(
         "autograd==1.6.2",
         "autoray==0.6.12",
         "cachetools==5.3.3",
-        "certifi==2024.6.2",
+        "certifi==2024.7.4",
         "charset-normalizer==3.3.2",
         "click==8.1.7",
         "cloudpickle==3.0.0",
