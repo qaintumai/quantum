@@ -1,5 +1,5 @@
 numpy==2.0.1
 PennyLane==0.37.0
-setuptools==65.5.0
+setuptools==70.0.0
 torch==2.2.2
 torchvision==0.17.2
