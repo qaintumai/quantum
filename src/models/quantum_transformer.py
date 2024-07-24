@@ -33,6 +33,7 @@ class Transformer(nn.Module):
         self.output_linear = nn.Linear(embed_len, vocab_size).to(device)
 
     def forward(self, src, tgt):
+        #TODO: embedding not callable?
         src_embedded = self.embedding(src)
         tgt_embedded = self.embedding(tgt)
 
@@ -46,5 +47,5 @@ class Transformer(nn.Module):
         decoder_output = tgt_embedded
         for layer in self.decoder_layers:
             decoder_output = layer(decoder_output, encoder_output)
-
+        #TODO: output_linear not callable
         return self.output_linear(decoder_output)
