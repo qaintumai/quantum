@@ -12,14 +12,9 @@
     - [Quantum Neural Networks (QNN)](#quantum-neural-networks-qnn)
     - [Quantum Transformers (QT)](#quantum-neural-networks-qnn)
 5. [Example Notebooks](#example-notebooks)
-    - [Layers](#layers)
-    - [Models](#models)
-    - [Utilities](#utilities)
-6. [Examples](#examples)
-7. [Troubleshooting](#troubleshooting)
+6. [Documentation](#examples)
 8. [Contributing](#contributing)
-9. [License](#license)
-10. [Contact](#contact)
+9. [Support](#license)
 
 ---
 
@@ -55,6 +50,8 @@ The project is organized into the following main directories:
 - **/tests**: Test files
 - **/scripts**: Scripts for training and evaluating models
 
+---
+
 ## Setup Instructions
 
 ### **Prerequisites**
@@ -81,6 +78,9 @@ Ensure you have the following installed:
     ```bash
     pip install -r requirements.txt
     ```
+
+---
+
 ## Usage
 
 ### **Quantum Neural Networks (QNN)**
@@ -121,12 +121,16 @@ To evaluate a trained QT model, use the evaluate_qt.py script:
 python scripts/evaluate_qt.py --model_path models/qt_model.pth --config configs/qt_config.json
 ```
 
+---
+
 ## Example Notebooks
 
 The /notebooks directory contains Jupyter notebooks for exploration and experimentation. These notebooks provide examples of how to use the models and layers in the project.
 
 - `exploration.ipynb`: Initial data exploration and preprocessing
 - `experimentation.ipynb`: Experimentation with different model architectures and training settings
+
+---
 
 ## Documentation
 
@@ -136,9 +140,13 @@ Detailed documentation for each component is available in the `/docs` directory.
 - `qt_overview.md`: Overview of Quantum Transformers
 - `api_reference.md`: API reference for the project's modules and functions
 
+---
+
 ## Contributing
 
 Contributions are welcome! Please refer to the `CONTRIBUTING.md` file in the `/docs` directory for guidelines on how to contribute to the project.
+
+---
 
 ## Support
 
