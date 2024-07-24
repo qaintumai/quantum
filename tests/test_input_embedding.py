@@ -14,8 +14,8 @@
 # ==============================================================================
 
 import torch
-from models import InputEmbedding
-from utils.device_configuration import get_device
+from layers.input_embedding import InputEmbedding
+from utils.config import get_device
 
 
 def test_input_embedding():

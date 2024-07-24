@@ -15,7 +15,7 @@
 
 # Test the FeedForwardBlock class
 import torch
-from models import FeedForwardBlock
+from layers.quantum_feed_forward import QuantumFeedForward
 
 
 def test_feed_forward_block():
@@ -26,7 +26,7 @@ def test_feed_forward_block():
     dropout = 0.1
 
     # Create an instance of FeedForwardBlock
-    model = FeedForwardBlock(embed_len, dropout)
+    model = QuantumFeedForward(embed_len, dropout)
 
     # Create a dummy input tensor
     dummy_input = torch.rand(batch_size, seq_len, embed_len)

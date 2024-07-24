@@ -15,7 +15,7 @@
 
 # Test the Transformer class
 import torch
-from models import Transformer
+from models.quantum_transformer import Transformer
 
 
 def test_transformer():

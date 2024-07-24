@@ -15,7 +15,7 @@
 
 # Test the DecoderBlock class
 import torch
-from models import DecoderBlock
+from src.models import QuantumDecoder
 
 
 def test_decoder_block():
@@ -28,7 +28,7 @@ def test_decoder_block():
     mask = None
 
     # Create an instance of DecoderBlock
-    model = DecoderBlock(embed_len, num_heads, batch_size, dropout, mask)
+    model = QuantumDecoder(embed_len, num_heads, batch_size, dropout, mask)
 
     # Create dummy input tensors
     target = torch.rand(batch_size, seq_len, embed_len)

@@ -15,7 +15,7 @@
 
 # Test the EncoderBlock class
 import torch
-from models import EncoderBlock
+from src.models import QuantumEncoder
 
 
 def test_encoder_block():
@@ -28,7 +28,7 @@ def test_encoder_block():
     mask = None
 
     # Create an instance of EncoderBlock
-    model = EncoderBlock(embed_len, num_heads, batch_size, dropout, mask)
+    model = QuantumEncoder(embed_len, num_heads, batch_size, dropout, mask)
 
     # Create dummy input tensors
     queries = torch.rand(batch_size, seq_len, embed_len)

@@ -15,7 +15,7 @@
 
 # Test the ScaledDotProduct class
 import torch
-from models import ScaledDotProduct
+from layers.scaled_dot_product import ScaledDotProduct
 
 
 # Test the ScaledDotProduct class
