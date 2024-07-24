@@ -113,7 +113,7 @@ setup(
         "triton==2.3.0",
         "typing_extensions==4.12.1",
         "tzdata==2024.1",
-        "urllib3==2.2.1",
+        "urllib3==2.2.2",
         "xanadu-cloud-client==0.3.2",
         "zipp==3.19.2"
     ],
