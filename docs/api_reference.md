@@ -35,14 +35,14 @@ This document provides a detailed reference for the APIs available in the Quantu
 
 The Layers module contains the core components for building various layers in quantum neural networks and transformers.
 
-For qauntum neural networks, the following components are needed:
+For qauntum neural networks (qnn), the following components are needed:
 * quantum data encoding
-* quantum layer: this is a quantum version of a classical layer composed of weight matrix, bias addition, and nonlinear activation function.
+* qnn layer: this is a quantum version of a classical layer composed of weight matrix, bias addition, and nonlinear activation function.
 * weight initializer: this creates a randomly initialized vector to be used as parameters of the quantum gates of the quantum layers.
-* quantum circuit: this process builds a circuit composed of quantum data encoding and a quantum neural network. Depending of the desired output, there are three methods we can use:
-  * qnn_single_output: returns a single value as a result of the quantum computation using the expected value measurement method applied to the first wire.
-  * qnn_multi_output: returns a vector of multiple values equal to the number of wires used. 
-  * qnn_probabilities: the size of the output is equal to the number of basis raised to the power of the number of wires.
+* qnn circuit: this process builds a circuit composed of quantum data encoding and a quantum neural network. Depending of the desired output, there are three methods we can use:
+  * single_output: returns a single value as a result of the quantum computation using the expected value measurement method applied to the first wire.
+  * multi_output: returns a vector of multiple values equal to the number of wires used. 
+  * probabilities: the size of the output is equal to the number of basis raised to the power of the number of wires.
  
 For quantum transformers, most of the components are the same as classical transformers: input embedding, scaled dot product, and multi-headed attention. The only component that is different is the feed forward block, which is replaced with a quantum neural network.
 
@@ -73,27 +73,16 @@ The Utilities module contains shared utilities used across the project.
   * __init__(self, config): Initializes the multi-headed attention with the given configuration.
   * Parameters: num_heads, embed_len, batch_size, mask=None.
 
-#### qnn_multi_output.py
+#### qnn_circuit.py
 
-##### Function: qnn_multi_output
+##### Function: qnn_circuit
 
-* Description: A function building a quantum neural network circuit for multi-valued output vector.
+* Description: A function building a quantum neural network circuit. The measuremet outputs are of the shape:
+              * single output: expectation value of the first wire.
+              * multi output: expectation values of all the wires.
+              * probabilities: output of size the number of basis states ^ the number of wires.
 * Parameters: input data, initialized weights.
 
-
-#### qnn_probabiities.py
-
-##### Function: qnn_probabilities
-
-* Description: A function building a quantum neural network circuit, returning a output vector of size - number of basis ^ number_of_wires.
-* Parameters: input data, initialized weights.
-
-#### qnn_single_output.py
-
-##### Function: qnn_probabilities
-
-* Description: A function building a quantum neural network circuit for a single-valued output.
-* Parameters: input data, initialized weights.
   
 #### quantum_data_encoding.py
 
@@ -104,48 +93,52 @@ The Utilities module contains shared utilities used across the project.
   * __init__(self, config): Initializes the data encoding with the given configuration.
   * Parameters:
 config (dict): Configuration dictionary for data encoding.
-quantum_feed_forward.py
 
-#### **Class: QuantumFeedForward**
+#### quantum_feed_forward.py
 
-#### **Description:** A class representing a feed-forward layer in quantum neural networks.
-#### **Methods:
+##### Class: QuantumFeedForward
+
+* Description: A class representing a feed-forward layer in quantum neural networks.
+* Methods:
 __init__(self, config): Initializes the feed-forward layer with the given configuration.
 Parameters:
 config (dict): Configuration dictionary for the feed-forward layer.
-quantum_layer.py
 
-#### **Class: QuantumLayer**
+#### qnn_layer.py
 
-#### **Description: ** A class representing a generic quantum layer.
-#### **Methods:
+##### Class: QNNLayer
+
+* Description: A class representing a generic quantum neural network layer.
+* Methods:
 __init__(self, config): Initializes the quantum layer with the given configuration.
 Parameters:
 config (dict): Configuration dictionary for the quantum layer.
-scaled_dot_product.py
 
-#### **Function: scaled_dot_product_attention**
+#### scaled_dot_product.py
 
-#### **Description: Computes scaled dot-product attention.**
-Parameters:
-queries (array-like): Query vectors.
-keys (array-like): Key vectors.
-values (array-like): Value vectors.
-Returns:
-attention_output (array-like): Output of the attention mechanism.
-weight_initializer.py
+##### Class: scaled_dot_product_attention**
 
-#### **Function: initialize_weights**
+* Description: Computes scaled dot-product attention.
+* Parameters:
+            * queries (array-like): Query vectors.
+            * keys (array-like): Key vectors.
+            * values (array-like): Value vectors.
+* Returns: Output (array-like) of the attention mechanism.
 
-#### **Description: ** Initializes weights for layers.
-Parameters:
+#### weight_initializer.py
+
+##### Class: initialize_weights
+
+* Description: Initializes weights for layers.
+* Parameters:
 shape (tuple): Shape of the weights.
-Returns:
+* Returns:
 weights (array-like): Initialized weights.
-Models API
-quantum_decoder.py
 
-#### **Class: QuantumDecoder**
+### Models API
+#### quantum_decoder.py
+
+##### Class: QuantumDecoder**
 
 #### **Description:** A class representing a quantum decoder model.
 #### **Methods:**
