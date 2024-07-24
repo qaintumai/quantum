@@ -1,0 +1,65 @@
+{
+  "general": {
+    "project_name": "Quantum AI Project",
+    "log_dir": "logs/",
+    "seed": 42
+  },
+  "data": {
+    "train_data_path": "data/processed/train.csv",
+    "val_data_path": "data/processed/val.csv",
+    "test_data_path": "data/processed/test.csv",
+    "batch_size": 32,
+    "num_workers": 4,
+    "shuffle": true
+  },
+  "model": {
+    "type": "qnn",  // or "qt"
+    "save_dir": "models/",
+    "load_model_path": "models/best_model.pth",
+    "save_best_only": true,
+    "early_stopping": true,
+    "early_stopping_patience": 10
+  },
+  "qnn": {
+    "input_dim": 128,
+    "hidden_dim": 256,
+    "output_dim": 10,
+    "num_layers": 3,
+    "activation": "relu",
+    "dropout": 0.5
+  },
+  "qt": {
+    "input_dim": 128,
+    "num_heads": 8,
+    "num_encoder_layers": 6,
+    "num_decoder_layers": 6,
+    "dim_feedforward": 512,
+    "dropout": 0.1
+  },
+  "training": {
+    "num_epochs": 100,
+    "learning_rate": 0.001,
+    "optimizer": "adam",
+    "loss_function": "cross_entropy",
+    "validation_split": 0.2,
+    "checkpoint_every_n_epochs": 5
+  },
+  "evaluation": {
+    "metrics": ["accuracy", "f1_score", "precision", "recall"]
+  },
+  "tuning": {
+    "hyperparameters": {
+      "learning_rate": [0.001, 0.0001, 0.00001],
+      "batch_size": [16, 32, 64],
+      "num_layers": [2, 3, 4],
+      "dropout": [0.3, 0.5, 0.7]
+    },
+    "search_algorithm": "grid_search",
+    "num_trials": 50
+  },
+  "logging": {
+    "log_to_file": true,
+    "log_to_console": true,
+    "log_level": "INFO"
+  }
+}
