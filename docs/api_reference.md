@@ -86,8 +86,8 @@ The Utilities module contains shared utilities used across the project.
 
 * Description: A class representing a generic quantum neural network layer.
 * Methods:
-__init__(self, config): Initializes the quantum layer with the given configuration.
-Parameters:
+  * __init__(self, config): Initializes the quantum layer with the given configuration.
+  * Parameters:
 config (dict): Configuration dictionary for the quantum layer.
   
 #### quantum_data_encoding.py
