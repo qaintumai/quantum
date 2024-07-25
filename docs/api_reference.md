@@ -11,7 +11,7 @@
    * [input_embedding.py](#input_embeddingpy)
    * [multi_headed_attention.py](#multi_headed_attentionpy)
    * [qnn_circuit.py](#qnn_circuitpy)
-   * [qnn_layer.py](#quantum_layerpy)
+   * [qnn_layer.py](#qnn_layerpy)
    * [quantum_data_encoding.py](#quantum_data_encodingpy)
    * [quantum_feed_forward.py](#quantum_feed_forwardpy)  
    * [scaled_dot_product.py](#scaled_dot_productpy)
