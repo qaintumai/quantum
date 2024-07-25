@@ -18,7 +18,7 @@
    * quantum_layer.py
    * scaled_dot_product.py
    * weight_initializer.py
-4. Models API
+4. [Models API](#models-api)
    * quantum_decoder.py
    * quantum_encoder.py
    * quantum_neural_network.py
