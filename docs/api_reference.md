@@ -23,7 +23,7 @@
    * quantum_encoder.py
    * quantum_neural_network.py
    * quantum_transformer.py
-5. Utilities API
+5. [Utilities API](#utilities-api)
 
 
 ### Introduction
