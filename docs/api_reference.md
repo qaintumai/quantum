@@ -10,6 +10,7 @@
 3. [Layers API](#layers-api)
    * [input_embedding.py](#input_embeddingpy)
    * [multi_headed_attention.py](#multi_headed_attentionpy)
+   * [qnn_circuit.py](#qnn_circuitpy)
    * [qnn_layer.py](#quantum_layerpy)
    * [quantum_data_encoding.py](#quantum_data_encodingpy)
    * [quantum_feed_forward.py](#quantum_feed_forwardpy)  
@@ -79,6 +80,15 @@ The Utilities module contains shared utilities used across the project.
               * probabilities: output of size the number of basis states ^ the number of wires.
 * Parameters: input data, initialized weights.
 
+#### qnn_layer.py
+
+##### Class: QNNLayer
+
+* Description: A class representing a generic quantum neural network layer.
+* Methods:
+__init__(self, config): Initializes the quantum layer with the given configuration.
+Parameters:
+config (dict): Configuration dictionary for the quantum layer.
   
 #### quantum_data_encoding.py
 
@@ -99,16 +109,6 @@ config (dict): Configuration dictionary for data encoding.
 __init__(self, config): Initializes the feed-forward layer with the given configuration.
 Parameters:
 config (dict): Configuration dictionary for the feed-forward layer.
-
-#### qnn_layer.py
-
-##### Class: QNNLayer
-
-* Description: A class representing a generic quantum neural network layer.
-* Methods:
-__init__(self, config): Initializes the quantum layer with the given configuration.
-Parameters:
-config (dict): Configuration dictionary for the quantum layer.
 
 #### scaled_dot_product.py
 
