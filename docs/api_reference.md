@@ -182,10 +182,9 @@ predictions (array-like): Predicted labels.
 * Description: A class representing a quantum transformer model.
 * Methods:
   * __init__(self, config): Initializes the transformer with the given configuration.
-  * Parameters:
-config (dict): Configuration dictionary for the transformer.
-encode(self, data): Encodes the input data.
-Parameters:
+    * Parameters: config (dict): Configuration dictionary for the transformer.
+  * encode(self, data): Encodes the input data.
+    * Parameters:
 data (array-like): Data to be encoded.
 * Returns:
 encoded_data (array-like): Encoded data.
@@ -198,7 +197,7 @@ encoded_data (array-like): Encoded data.
 * Description: Loads data from the specified source.
 * Parameters:
 source (str): Path or URL to the data source.
-Returns:
+* Returns:
 data (array-like): Loaded data.
 
 #### config.py
@@ -208,5 +207,5 @@ data (array-like): Loaded data.
 * Description: Retrieves the configuration settings.
 * Parameters:
 config_file (str): Path to the configuration file.
-Returns:
+* Returns:
 config (dict): Configuration dictionary.
