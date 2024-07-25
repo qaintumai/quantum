@@ -166,10 +166,8 @@ config (dict): Configuration dictionary for the QNN.
       * data (array-like): Training data.
       * labels (array-like): Training labels.
   * predict(self, data): Predicts labels for the provided data.
-    * Parameters:
-    * data (array-like): Data to predict labels for.
-    * Returns:
-predictions (array-like): Predicted labels.
+    * Parameters: data (array-like): Data to predict labels for.
+    * Returns: predictions (array-like): Predicted labels.
 
 #### quantum_transformer.py
 
@@ -180,10 +178,8 @@ predictions (array-like): Predicted labels.
   * __init__(self, config): Initializes the transformer with the given configuration.
     * Parameters: config (dict): Configuration dictionary for the transformer.
   * encode(self, data): Encodes the input data.
-    * Parameters:
-data (array-like): Data to be encoded.
-    * Returns:
-encoded_data (array-like): Encoded data.
+    * Parameters: data (array-like): Data to be encoded.
+    * Returns: encoded_data (array-like): Encoded data.
 
 ### Utilities API
 #### data_loader.py
