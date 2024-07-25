@@ -163,16 +163,16 @@ config (dict): Configuration dictionary for the encoder.
 ##### Description: A class representing a quantum neural network model.
 * Methods:
   * __init__(self, config): Initializes the QNN with the given configuration.
-  * Parameters:
+    * Parameters:
 config (dict): Configuration dictionary for the QNN.
-train(self, data, labels): Trains the QNN on the provided data and labels.
-Parameters:
-data (array-like): Training data.
-labels (array-like): Training labels.
-predict(self, data): Predicts labels for the provided data.
-Parameters:
-data (array-like): Data to predict labels for.
-Returns:
+  * train(self, data, labels): Trains the QNN on the provided data and labels.
+    * Parameters:
+      * data (array-like): Training data.
+      * labels (array-like): Training labels.
+  * predict(self, data): Predicts labels for the provided data.
+    * Parameters:
+    * data (array-like): Data to predict labels for.
+    * Returns:
 predictions (array-like): Predicted labels.
 
 #### quantum_transformer.py
@@ -186,7 +186,7 @@ predictions (array-like): Predicted labels.
   * encode(self, data): Encodes the input data.
     * Parameters:
 data (array-like): Data to be encoded.
-* Returns:
+    * Returns:
 encoded_data (array-like): Encoded data.
 
 ### Utilities API
