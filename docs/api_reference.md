@@ -8,7 +8,7 @@
    * [Models](#models)
    * [Utilities](#utilities)
 3. [Layers API](#layers-api)
-   * [input_embedding.py](#input-embedding-py)
+   * [input_embedding.py](#input_embedding.py)
    * multi_headed_attention.py
    * qnn_multi_output.py
    * qnn_probabilities.py
