@@ -75,9 +75,9 @@ The Utilities module contains shared utilities used across the project.
 ##### Function: qnn_circuit
 
 * Description: A function building a quantum neural network circuit. The measuremet outputs are of the shape:     
-              * single output: expectation value of the first wire.     
-              * multi output: expectation values of all the wires.     
-              * probabilities: output of size the number of basis states ^ the number of wires.     
+  * single output: expectation value of the first wire.     
+  * multi output: expectation values of all the wires.     
+  * probabilities: output of size the number of basis states ^ the number of wires.     
 * Parameters: input data, initialized weights.
 
 #### qnn_layer.py
