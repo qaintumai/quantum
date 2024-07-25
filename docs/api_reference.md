@@ -26,12 +26,12 @@
 5. Utilities API
 
 
-### **Introduction**
+### Introduction
 This document provides a detailed reference for the APIs available in the Quantum Project. Each module and its respective components are described in detail, including the available functions, their parameters, return types, and usage examples.
 
-### **Modules**
+### Modules
 
-#### **Layers**
+#### Layers
 
 The Layers module contains the core components for building various layers in quantum neural networks and transformers.
 
@@ -47,15 +47,15 @@ For qauntum neural networks (qnn), the following components are needed:
 For quantum transformers, most of the components are the same as classical transformers: input embedding, scaled dot product, and multi-headed attention. The only component that is different is the feed forward block, which is replaced with a quantum neural network.
 
 
-#### **Models**
+#### Models
 
 The Models module provides the implementation of quantum neural networks and quantum transformers. Quantum encoders and quantum decoders are used to build quantum transformers.
 
-#### **Utilities**
+#### Utilities
 
 The Utilities module contains shared utilities used across the project.
 
-### **Layers API**
+### Layers API
 #### input_embedding.py
 
 ##### Class: InputEmbedding
@@ -116,7 +116,7 @@ config (dict): Configuration dictionary for the quantum layer.
 
 #### scaled_dot_product.py
 
-##### Class: scaled_dot_product_attention**
+##### Class: scaled_dot_product_attention
 
 * Description: Computes scaled dot-product attention.
 * Parameters:
@@ -138,30 +138,32 @@ weights (array-like): Initialized weights.
 ### Models API
 #### quantum_decoder.py
 
-##### Class: QuantumDecoder**
+##### Class: QuantumDecoder
 
-#### **Description:** A class representing a quantum decoder model.
-#### **Methods:**
-__init__(self, config): Initializes the decoder with the given configuration.
-Parameters:
+* Description: A class representing a quantum decoder model.
+* Methods:
+  * __init__(self, config): Initializes the decoder with the given configuration.
+  * Parameters:
 config (dict): Configuration dictionary for the decoder.
-quantum_encoder.py
 
-#### **Class: QuantumEncoder**
+#### quantum_encoder.py
 
-#### **Description:** A class representing a quantum encoder model.
-#### **Methods:**
-__init__(self, config): Initializes the encoder with the given configuration.
-Parameters:
+##### Class: QuantumEncoder
+
+* Description: A class representing a quantum encoder model.
+* Methods:
+  * __init__(self, config): Initializes the encoder with the given configuration.
+  * Parameters:
 config (dict): Configuration dictionary for the encoder.
-quantum_neural_network.py
 
-#### **Class: QuantumNeuralNetwork**
+#### quantum_neural_network.py
 
-#### **Description:** A class representing a quantum neural network model.
-#### **Methods:
-__init__(self, config): Initializes the QNN with the given configuration.
-Parameters:
+##### Class: QuantumNeuralNetwork
+
+##### Description: A class representing a quantum neural network model.
+* Methods:
+  * __init__(self, config): Initializes the QNN with the given configuration.
+  * Parameters:
 config (dict): Configuration dictionary for the QNN.
 train(self, data, labels): Trains the QNN on the provided data and labels.
 Parameters:
@@ -172,36 +174,39 @@ Parameters:
 data (array-like): Data to predict labels for.
 Returns:
 predictions (array-like): Predicted labels.
-quantum_transformer.py
 
-#### **Class: QuantumTransformer**
+#### quantum_transformer.py
 
-#### **Description:** A class representing a quantum transformer model.
-#### **Methods:**
-__init__(self, config): Initializes the transformer with the given configuration.
-Parameters:
+##### Class: QuantumTransformer
+
+* Description: A class representing a quantum transformer model.
+* Methods:
+  * __init__(self, config): Initializes the transformer with the given configuration.
+  * Parameters:
 config (dict): Configuration dictionary for the transformer.
 encode(self, data): Encodes the input data.
 Parameters:
 data (array-like): Data to be encoded.
-Returns:
+* Returns:
 encoded_data (array-like): Encoded data.
-Utilities API
-data_loader.py
 
-#### **Function: load_data**
+### Utilities API
+#### data_loader.py
 
-#### **Description:** Loads data from the specified source.
-#### **Parameters:**
+##### Function: load_data
+
+* Description: Loads data from the specified source.
+* Parameters:
 source (str): Path or URL to the data source.
 Returns:
 data (array-like): Loaded data.
-config.py
 
-#### **Function: get_config**
+#### config.py
 
-#### **Description:** Retrieves the configuration settings.
-#### **Parameters:**
+##### Function: get_config
+
+* Description: Retrieves the configuration settings.
+* Parameters:
 config_file (str): Path to the configuration file.
 Returns:
 config (dict): Configuration dictionary.
