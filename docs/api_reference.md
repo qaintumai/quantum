@@ -106,8 +106,8 @@ config (dict): Configuration dictionary for data encoding.
 
 * Description: A class representing a feed-forward layer in quantum neural networks.
 * Methods:
-__init__(self, config): Initializes the feed-forward layer with the given configuration.
-Parameters:
+  * __init__(self, config): Initializes the feed-forward layer with the given configuration.
+  * Parameters:
 config (dict): Configuration dictionary for the feed-forward layer.
 
 #### scaled_dot_product.py
@@ -115,10 +115,10 @@ config (dict): Configuration dictionary for the feed-forward layer.
 ##### Class: scaled_dot_product_attention
 
 * Description: Computes scaled dot-product attention.
-* Parameters:
-            * queries (array-like): Query vectors.
-            * keys (array-like): Key vectors.
-            * values (array-like): Value vectors.
+* Parameters:    
+  * queries (array-like): Query vectors.    
+  * keys (array-like): Key vectors.    
+  * values (array-like): Value vectors.    
 * Returns: Output (array-like) of the attention mechanism.
 
 #### weight_initializer.py
