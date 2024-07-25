@@ -4,10 +4,10 @@
 
 1. [Introduction](#introduction)
 2. [Modules](#modules)
-   * Layers
-   * Models
-   * Utilities
-3. Layers API
+   * [Layers](#layers)
+   * [Models](#models)
+   * [Utilities](#utilities)
+3. [Layers API](#layers-api)
    * input_embedding.py
    * multi_headed_attention.py
    * qnn_multi_output.py
