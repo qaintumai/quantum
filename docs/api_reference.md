@@ -160,7 +160,7 @@ config (dict): Configuration dictionary for the encoder.
 
 ##### Class: QuantumNeuralNetwork
 
-##### Description: A class representing a quantum neural network model.
+* Description: A class representing a quantum neural network model.
 * Methods:
   * __init__(self, config): Initializes the QNN with the given configuration.
     * Parameters:
