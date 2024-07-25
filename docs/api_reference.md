@@ -8,23 +8,22 @@
    * [Models](#models)
    * [Utilities](#utilities)
 3. [Layers API](#layers-api)
-   * [input_embedding.py](#input_embedding.py)
-   * multi_headed_attention.py
-   * qnn_multi_output.py
-   * qnn_probabilities.py
-   * qnn_single_output.py
-   * quantum_data_encoding.py
-   * quantum_feed_forward.py
-   * quantum_layer.py
-   * scaled_dot_product.py
-   * weight_initializer.py
+   * [input_embedding.py](#input_embedding)
+   * [multi_headed_attention.py](#multi_headed_attention)
+   * [qnn_multi_output.py](#qnn_multi_output)
+   * [qnn_probabilities.py](#qnn_probabilities)
+   * [qnn_single_output.py](#qnn_single_output)
+   * [quantum_data_encoding.py](#quantum_data_encoding)
+   * [quantum_feed_forward.py](#quantum_feed_forward)
+   * [quantum_layer.py](#quantum_layer)
+   * [scaled_dot_product.py](#scaled_dot_product)
+   * [weight_initializer.py](#weight_initializer)
 4. [Models API](#models-api)
-   * quantum_decoder.py
-   * quantum_encoder.py
-   * quantum_neural_network.py
-   * quantum_transformer.py
-5. [Utilities API](#utilities-api)
-
+   * [quantum_decoder.py](#quantum_decoder)
+   * [quantum_encoder.py](#quantum_encoder)
+   * [quantum_neural_network.py](#quantum_neural_network)
+   * [quantum_transformer.py](#quantum_transformer)
+  
 
 ### Introduction
 This document provides a detailed reference for the APIs available in the Quantum Project. Each module and its respective components are described in detail, including the available functions, their parameters, return types, and usage examples.
