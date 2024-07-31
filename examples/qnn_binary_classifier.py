@@ -4,8 +4,13 @@ import pandas as pd
 import torch
 import pennylane as qml
 
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import StandardScaler
+from layers import *
+from models import *
+
+# from sklearn.preprocessing import MinMaxScaler
+# from sklearn.preprocessing import StandardScaler
+
+
 
 """QNN_binary_classifier.ipynb
 
@@ -93,7 +98,6 @@ def load_and_preprocess_data(file_path):
 
     return X_train, X_test, y_train, y_test
 
-X_train, X_test, y_train, y_test = load_and_preprocess_data('financial.csv')
 
 """## **2. Data Encoding**
 
@@ -101,6 +105,20 @@ This step converts classical data into a quantum state by using the data entries
 
 The data encoding gates used are Squeezing, Rotation, Beamsplitter, Displacement Gate, and Kerr Gate. Other gates under "CV operators" in the Pennylane package can be explored.
 """
+
+X_train, X_test, y_train, y_test = load_and_preprocess_data('financial.csv')
+num_wires = 8
+num_basis = 2
+layers = 2
+weights = WeightInitializer().init_weights(layers, num_wires)
+shape_tup = weights.shape
+weight_shapes = {'var': shape_tup}
+encoder = QuantumDataEncoder(num_wires)
+encoder.encode(X_train)
+qlayer = qml.qnn.TorchLayer(QuantumNeuralNetworkLayer(num_wires).apply, weight_shapes)
+
+model = torch.nn.Sequential(qlayer)
+
 
 def data_encoding(x):
     """
@@ -163,6 +181,8 @@ This in a faithful implementation of classical neural networks:
 * Bias addition: Displacement gate
 * Nonlinear activation function: Kerr gate
 """
+
+
 
 def qnn_layer(v):
     """
