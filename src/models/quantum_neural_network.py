@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 import pennylane as qml
-from layers import WeightInitializer
+from layers.weight_initializer import WeightInitializer
 from layers.qnn_circuit import qnn_circuit
 
 class QuantumNeuralNetworkModel:
