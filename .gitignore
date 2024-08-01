@@ -6,3 +6,11 @@
 **/env/
 **/.env/
 **/myenv/
+
+.vscode
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+.ipynb_checkpoints
