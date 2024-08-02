@@ -1,7 +1,7 @@
 # Photonic Analog Quantum Computing
-This folder contains the code for Quantum Neural Networks (QNN) and Quantum Transformers (QT) based on Photonic Analog Quantum Computing. 
+This folder contains the code for Quantum Neural Networks (QNN) and Quantum Transformers (QT) based on Photonic Analog Quantum Computing.
 
-Quantum computing is a method of computation that utilizes physical mediums operating on the principles of quantum mechanics. There are two types of quantum computing: 
+Quantum computing is a method of computation that utilizes physical mediums operating on the principles of quantum mechanics. There are two types of quantum computing:
 * Digital Quantum Computing: quantizing digital computing based on the binary logic
 * Analog Quantum Computing: using the continuous (analog) properties of nature.
 
@@ -21,16 +21,27 @@ National Science Foundation (NSF) and Department of Energy (DOE) have been desig
 * [Development of Quantum InterConnects (QuICs) for Next-Generation Information Technologies, 2019](https://arxiv.org/pdf/1912.06642)
 * [A Roadmap for Quantum Interconnects, 2022](https://publications.anl.gov/anlpubs/2022/12/179439.pdf)
 
-Quantum InterConnects are composed of 
+Quantum InterConnects are composed of
 * Quantum Communications
 * Quantum Computing
 * Quantum Memory
 * Transducers
 * Quantum Sensing.
 
-Most of the research in these areas is based on quantum optics. Hence quantum computing using quantum optics will seemlessly integrate into the whole architecture of Quantum Internet. 
+Most of the research in these areas is based on quantum optics. Hence quantum computing using quantum optics will seemlessly integrate into the whole architecture of Quantum Internet.
 
 ## Getting Started
+
+### Clone the Repository
+```sh
+git clone https://github.com/qaintumai/quantum.git
+cd quantum
+```
+
+### Create a Branch
+```sh
+git checkout -b <new_branch_name>
+```
 
 ### Virtual Environment
 ```shell
@@ -48,15 +59,15 @@ source venv/bin/activate
 - Pandas
 - Numpy
 
-```shell
+```sh
 pip install -r requirements.txt
 ```
 
 ### Running
 
 ```sh
-pip install -e . 
-./scripts/financial_binary_classification.py
+pip install -e .
+./exampless/qnn_binary_classification.py
 ```
 
 You should see the following output:
@@ -75,6 +86,33 @@ Average loss over epoch 5: 0.0250
 loss tensor(0.5625, grad_fn=<MseLossBackward0>)
 Average loss over epoch 6: 0.0281
 Accuracy: 85.0%
+```
+
+### Make Changes
+Edit, add, or remove files as needed in your project. For example, you might edit a file called qnn_binary_classification.py.
+
+### Stage the Changes
+Add the files you changed to the staging area.
+```sh
+git add qnn_binary_classification.py
+```
+
+If you made changes to multiple files, to stage all changes you can use:
+```sh
+git add .
+```
+
+### Commit the Changes
+Commit the staged changes with a descriptive commit message.
+```sh
+git commit -m "Add changes to qnn_binary_classification.py"
+```
+
+### Push the New Branch to 'quantum'
+Push your new branch with the changes to the 'quantum' repository.
+```sh
+git push origin <new_branch_name>
+
 ```
 
 ### Contributing and Best Practices
