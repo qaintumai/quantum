@@ -57,3 +57,23 @@ def train_model(model, criterion, optimizer, train_loader, num_epochs=100, devic
             print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {epoch_loss:.4f}')
 
     print("Training complete")
+
+def evaluate_model(model, X_test, y_test):
+    """
+    Evaluates the given model.
+
+    Parameters:
+    - model: torch.nn.Module, the model to evaluate
+    - X_test: torch.Tensor, the test data
+    - y_test: torch.Tensor, the test labels
+
+    Returns:
+    - None
+    """
+    model.eval()  # Set the model to evaluation mode
+    with torch.no_grad():
+        y_pred = model(X_test).detach().numpy()
+        y_test = y_test.numpy()
+        correct = [1 if p == p_true else 0 for p, p_true in zip(y_pred, y_test)]
+        accuracy = sum(correct) / len(y_test)
+        print(f"Accuracy: {accuracy * 100:.2f}%")
