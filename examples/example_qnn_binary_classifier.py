@@ -1,6 +1,30 @@
+# Copyright 2024 The qAIntum.ai Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
+"""
+Quantum Neural Network Binary Classifier Example
+
+This script demonstrates the training and evaluation of a Quantum Neural Network (QNN) for binary classification on financial distress data.
+"""
+
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset
 import pennylane as qml
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
@@ -13,12 +37,11 @@ src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if src_dir not in sys.path:
     sys.path.append(src_dir)
 
-
-from models.quantum_neural_network import QuantumNeuralNetworkModel
-from layers.quantum_data_encoder import QuantumDataEncoder
+# from models.quantum_neural_network import QuantumNeuralNetworkModel  /Self-referential
+# from layers.quantum_data_encoder import QuantumDataEncoder  /This is inside qnn_circuit
 from layers.weight_initializer import WeightInitializer
 from layers.qnn_circuit import qnn_circuit
-
+from utils.utils import train_model, evaluate_model
 
 def load_and_preprocess_data(file_path):
     """
@@ -57,54 +80,34 @@ def load_and_preprocess_data(file_path):
 
     return X_train, X_test, y_train, y_test
 
+# Find the right path for 'financial.csv'
+financial_csv_path = os.path.abspath(os.path.join(script_dir, '..', 'data', 'financial.csv'))
+X_train, X_test, y_train, y_test = load_and_preprocess_data(financial_csv_path)
 
-X_train, X_test, y_train, y_test = load_and_preprocess_data('financial.csv')
+# Creating DataLoader
+train_dataset = TensorDataset(X_train, y_train)
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
+# Configuration
+# For the quantum neural network circuit
 num_wires = 8
 num_basis = 2
 num_layers = 2
 
-encoder = QuantumDataEncoder(num_wires)
-encoder.encode(X_train)
-weights = WeightInitializer().init_weights(num_layers, num_wires)
+# For training
+learning_rate = 0.01  # Learning rate for the optimizer
+batch_size = 2  # Batch size for DataLoader
+device = 'cpu'  # Device to use for training ('cpu' or 'cuda')
 
-shape_tup = weights.shape
-weight_shapes = {'var': shape_tup}
+# Instantiate the QNN model
+quantum_nn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit)
 
-model = QuantumNeuralNetworkModel(num_layers,num_wires, qnn_circuit)
+# Define loss function and optimizer
+criterion = nn.MSELoss()
+optimizer = optim.Adam(quantum_nn_model.parameters(), lr=learning_rate)
 
-# check train_model and evaluate_model in utils.
+# Train the model
+train_model(quantum_nn_model, criterion, optimizer, train_loader, num_epochs=num_epochs, device=device)
 
-def train_model(model, X_train, y_train, batch_size=5, epochs=6):
-    loss_fn = torch.nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-
-    data_loader = torch.utils.data.DataLoader(
-        list(zip(X_train, y_train)), batch_size=batch_size, shuffle=True, drop_last=True
-    )
-
-    for epoch in range(epochs):
-        running_loss = 0
-        for xs, ys in data_loader:
-            optimizer.zero_grad()
-            x = model(xs).float()
-            y = ys.float()
-            loss = loss_fn(x, y)
-            loss.backward()
-            optimizer.step()
-            running_loss += loss.item()
-        avg_loss = running_loss / len(data_loader)
-        print(f"Average loss over epoch {epoch + 1}: {avg_loss:.4f}")
-
-train_model(model, X_train, y_train, batch_size=5, epochs=3)
-
-"""## **5. Evaluation**"""
-
-def evaluate_model(model, X_test, y_test):
-    y_pred = model(X_test).detach().numpy()
-    y_test = y_test.numpy()
-    correct = [1 if p == p_true else 0 for p, p_true in zip(y_pred, y_test)]
-    accuracy = sum(correct) / len(y_test)
-    print(f"Accuracy: {accuracy * 100}%")
-
-evaluate_model(model, X_test, y_test)
+# Evaluate the model
+evaluate_model(quantum_nn_model, X_test, y_test)
