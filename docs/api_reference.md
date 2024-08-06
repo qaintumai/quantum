@@ -13,7 +13,7 @@
    * [qnn_circuit.py](#qnn_circuitpy)
    * [qnn_layer.py](#qnn_layerpy)
    * [quantum_data_encoding.py](#quantum_data_encodingpy)
-   * [quantum_feed_forward.py](#quantum_feed_forwardpy)  
+   * [quantum_feed_forward.py](#quantum_feed_forwardpy)
    * [scaled_dot_product.py](#scaled_dot_productpy)
    * [weight_initializer.py](#weight_initializerpy)
 4. [Models API](#models-api)
