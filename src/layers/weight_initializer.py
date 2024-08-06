@@ -14,7 +14,7 @@
 # ==============================================================================
 
 import numpy as np
-# Define the WeightInitializer class
+#TODO: Define the WeightInitializer class
 
 
 class WeightInitializer:

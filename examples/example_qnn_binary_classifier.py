@@ -37,9 +37,8 @@ src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if src_dir not in sys.path:
     sys.path.append(src_dir)
 
-# from models.quantum_neural_network import QuantumNeuralNetworkModel  /Self-referential
+from models.quantum_neural_network import QuantumNeuralNetworkModel  #Self-referential?
 # from layers.quantum_data_encoder import QuantumDataEncoder  /This is inside qnn_circuit
-from layers.weight_initializer import WeightInitializer
 from layers.qnn_circuit import qnn_circuit
 from utils.utils import train_model, evaluate_model
 
@@ -84,6 +83,12 @@ def load_and_preprocess_data(file_path):
 financial_csv_path = os.path.abspath(os.path.join(script_dir, '..', 'data', 'financial.csv'))
 X_train, X_test, y_train, y_test = load_and_preprocess_data(financial_csv_path)
 
+# For training
+learning_rate = 0.01  # Learning rate for the optimizer
+batch_size = 2  # Batch size for DataLoader
+device = 'cpu'  # Device to use for training ('cpu' or 'cuda')
+num_epochs = 3 
+
 # Creating DataLoader
 train_dataset = TensorDataset(X_train, y_train)
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
@@ -93,11 +98,6 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 num_wires = 8
 num_basis = 2
 num_layers = 2
-
-# For training
-learning_rate = 0.01  # Learning rate for the optimizer
-batch_size = 2  # Batch size for DataLoader
-device = 'cpu'  # Device to use for training ('cpu' or 'cuda')
 
 # Instantiate the QNN model
 quantum_nn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit)

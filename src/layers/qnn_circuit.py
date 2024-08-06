@@ -61,7 +61,7 @@ def qnn_circuit(inputs, var):
         return [qml.expval(qml.X(wire)) for wire in range(num_wires)]
 
     if probabilities:
-        # Return the probabilities NOTE: not functional, need to review pennylane function.
+        #TODO: Return the probabilities NOTE: not functional, need to review pennylane function.
         wires = [0,1,2,3,4,5,6,7]
         return [qml.probs(wires=wires)]
 

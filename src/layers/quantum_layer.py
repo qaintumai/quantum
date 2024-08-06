@@ -15,6 +15,8 @@
 
 import pennylane as qml
 
+#TODO: Define Quantum Neural Network Layer
+
 class QuantumNeuralNetworkLayer:
     def __init__(self, num_wires):
         self.num_wires = num_wires
