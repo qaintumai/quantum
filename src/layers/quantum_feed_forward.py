@@ -22,7 +22,7 @@ class QuantumFeedForward(nn.Module):
         super(QuantumFeedForward, self).__init__()
 
         #TODO: pointer to which layers?
-        self.feed_forward = nn.Sequential(*layers)
+        # self.feed_forward = nn.Sequential(*layers)
         self.dropout_layer = nn.Dropout(p=dropout)
         self.layer_norm = nn.LayerNorm(embed_len)
 

@@ -39,7 +39,7 @@ def train_model(model, criterion, optimizer, train_loader, num_epochs=100, devic
         running_loss = 0.0
 
         for inputs, labels in train_loader:
-            inputs, labels = inputs.to(device), labels.to(device)
+            inputs, labels = inputs.to(device).float(), labels.to(device).float()
 
             # Forward pass
             outputs = model(inputs)
