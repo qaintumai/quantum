@@ -14,8 +14,9 @@
 # ==============================================================================
 
 from torch import nn
-# from src.models import
+# from src.models import ## Was left over from file conversion, what is the purpose?
 
+# TODO: define class
 class QuantumFeedForward(nn.Module):
     def __init__(self, embed_len, dropout=0.1):
         super(QuantumFeedForward, self).__init__()
