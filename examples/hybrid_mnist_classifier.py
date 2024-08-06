@@ -22,15 +22,11 @@ This script demonstrates the training and evaluation of a Quantum Neural Network
 import torch
 import torchvision
 import torch.nn as nn
-import torch.nn.functional as F
-import torchvision.transforms as transforms
 import torch.optim as optim
-from torchsummary import summary
-import pennylane as qml
 import numpy as np
-import matplotlib.pyplot as plt
 import sys
 import os
+import pennylane as qml
 
 
 # Add the src directory to the Python path
@@ -39,9 +35,10 @@ src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if src_dir not in sys.path:
     sys.path.append(src_dir)
 
-from models.quantum_neural_network import QuantumNeuralNetworkModel
+from layers.quantum_data_encoder import QuantumDataEncoder
 from layers.qnn_circuit import qnn_circuit
 from utils.utils import train_model, evaluate_model
+from layers.quantum_layer import QuantumNeuralNetworkLayer
 
 ### PREPROCESSING ###
 
@@ -99,7 +96,6 @@ test_samples = 100
 X_train, X_test, y_train, y_test = X_train[:n_samples], X_test[:test_samples], y_train[:n_samples], y_test[:test_samples]
 
 num_wires = 4
-num_modes = 4
 cutoff_dim = 2
 # For training
 learning_rate = 0.01  # Learning rate for the optimizer
@@ -108,19 +104,48 @@ device = 'cpu'  # Device to use for training ('cpu' or 'cuda')
 num_epochs = 3 
 num_layers = 4
 
+# Instantiate classical Model
+model = nn.Sequential(
+    nn.Flatten(),  # Flatten the input
+    nn.Linear(28 * 28, 392),  # Dense layer with 392 units
+    nn.ELU(),  # ELU activation function
+    nn.Linear(392, 196),  # Dense layer with 196 units
+    nn.ELU(),  # ELU activation function
+    nn.Linear(196, 98),  # Dense layer with 98 units
+    nn.Linear(98, 49),  # Dense layer with 49 units
+    nn.ELU(),  # ELU activation function
+    nn.Linear(49, 30)  # Dense layer with 30 units
+)
+
+#encode data into quantum encoder
+encoder = QuantumDataEncoder(num_wires)
+encoder.encode(x)
+
+#create quantum layer
+
+# shape weights: 4 layers and 32 parameters per layer
+weight_shape = {'var': (4,32)}        
+
+# Define the quantum layer using TorchLayer
+
+quantum_layer = qml.qnn.TorchLayer(qnn_circuit, weight_shape)
+# add to the classical sequential model
+model.add_module('quantum_layer', quantum_layer)
+
+print(model)
 
 # Instantiate the QNN model
-quantum_nn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit)
+
 
 # Define loss function and optimizer
 criterion = nn.MSELoss()
 
 #TODO: resolve parameters . . .
 ### I think we should pass in all optimizer parameters as optionals for the QNN model above with some defaults set. This way we can instantiate 
-optimizer = optim.Adam(quantum_nn_model.parameters(), lr=learning_rate)
+optimizer = optim.Adam(lr=learning_rate)
 
 # Train the model
-train_model(quantum_nn_model, criterion, optimizer, train_loader, num_epochs=num_epochs, device=device)
+train_model(model, criterion, optimizer, train_loader, num_epochs=num_epochs, device=device)
 
 # Evaluate the model
 evaluate_model(quantum_nn_model, X_test, y_test)
