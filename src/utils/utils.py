@@ -17,7 +17,7 @@
 
 import torch
 
-def train_model(model, criterion, optimizer, train_loader, num_epochs=100, device='cpu'):
+def train_model(model, criterion, optimizer, train_loader, num_epochs=100, device='cpu', debug=True):
     """
     Trains the given model.
 
@@ -28,6 +28,7 @@ def train_model(model, criterion, optimizer, train_loader, num_epochs=100, devic
     - train_loader: DataLoader, provides an iterable over the dataset
     - num_epochs: int, number of epochs to train the model (default: 100)
     - device: str, device to use for training ('cpu' or 'cuda')
+    - debug: bool, if True, print debug information
 
     Returns:
     - None
@@ -37,24 +38,37 @@ def train_model(model, criterion, optimizer, train_loader, num_epochs=100, devic
     for epoch in range(num_epochs):
         model.train()  # Set the model to training mode
         running_loss = 0.0
+        operation_count = 0
 
         for inputs, labels in train_loader:
             inputs, labels = inputs.to(device).float(), labels.to(device).float()
+            if debug:
+                print(f"Epoch {epoch + 1}, Batch {operation_count + 1}")
+                print(f"Inputs: {inputs.shape}, Labels: {labels.shape}")
 
             # Forward pass
             outputs = model(inputs)
+            if debug:
+                print(f"Outputs: {outputs.shape}")
             loss = criterion(outputs, labels)
+            if debug:
+                print(f"Loss: {loss.item()}")
 
             # Backward pass and optimization
             optimizer.zero_grad()  # Zero the gradients
             loss.backward()  # Backpropagation
             optimizer.step()  # Update model parameters
+            if debug:
+                print("Performed backpropagation and optimization step")
 
             running_loss += loss.item() * inputs.size(0)
+            operation_count += 1
 
         epoch_loss = running_loss / len(train_loader.dataset)
-        if (epoch + 1) % 10 == 0:
+        if (epoch + 1) % 10 == 0 or debug:
             print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {epoch_loss:.4f}')
+        if debug:
+            print(f"Total operations in epoch {epoch + 1}: {operation_count}")
 
     print("Training complete")
 

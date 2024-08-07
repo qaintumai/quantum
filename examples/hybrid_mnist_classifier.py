@@ -8,7 +8,7 @@ import torch.optim as optim
 import torchvision
 import numpy as np
 import pennylane as qml
-
+import time
 # Add the src directory to the Python path
 script_dir = os.path.dirname(__file__)
 src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
@@ -76,6 +76,8 @@ X_train, X_test, y_train, y_test = X_train[:n_samples], X_test[:test_samples], y
 config.num_wires = 4
 config.num_basis = 2
 config.probabilities = True
+config.multi_output = False
+config.single_output = False
 
 # For training
 learning_rate = 0.01  # Learning rate for the optimizer
@@ -110,7 +112,11 @@ criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 # Train the model
+start_time = time.time()
 train_model(model, criterion, optimizer, train_loader, num_epochs=num_epochs, device=device)
+end_time = time.time()
+duration = end_time - start_time
+print("Total time: {duration:.6f} seconds")
 
 # Evaluate the model
 evaluate_model(model, X_test, y_test)
