@@ -13,4 +13,9 @@
 # limitations under the License.
 # ==============================================================================
 
-
+#Variables to access across project . . .
+num_wires = 8
+num_basis = 2
+single_output = False
+multi_output = False
+probabilities = False

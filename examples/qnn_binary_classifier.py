@@ -38,7 +38,6 @@ if src_dir not in sys.path:
     sys.path.append(src_dir)
 
 from models.quantum_neural_network import QuantumNeuralNetworkModel  #Self-referential?
-# from layers.quantum_data_encoder import QuantumDataEncoder  /This is inside qnn_circuit
 from layers.qnn_circuit import qnn_circuit
 from utils.utils import train_model, evaluate_model
 

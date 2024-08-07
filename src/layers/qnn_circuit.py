@@ -16,16 +16,18 @@
 import pennylane as qml
 from .quantum_data_encoder import QuantumDataEncoder
 from .quantum_layer import QuantumNeuralNetworkLayer
+import sys
+import os
 
-#model output type
-single_output = True
-multi_output = False
-probabilities = False
+# Add the src directory to the Python path
+script_dir = os.path.dirname(__file__)
+src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
+if src_dir not in sys.path:
+    sys.path.append(src_dir)
+
+from utils.config import num_wires, num_basis, single_output, multi_output, probabilities
 
 
-# Define the number of wires and basis states
-num_basis = 2
-num_wires = 8
 if (single_output):
     num_wires = 6
 
@@ -62,7 +64,7 @@ def qnn_circuit(inputs, var):
 
     if probabilities:
         #TODO: Return the probabilities NOTE: not functional, need to review pennylane function.
-        wires = [0,1,2,3,4,5,6,7]
+        wires = list(range(num_wires))
         return [qml.probs(wires=wires)]
 
     #else model output type is single

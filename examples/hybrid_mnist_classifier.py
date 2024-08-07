@@ -1,37 +1,13 @@
-# Copyright 2024 The qAIntum.ai Authors. All Rights Reserved.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# ==============================================================================
+# examples/hybrid_mnist_classifier.py
 
-"""
-Quantum Neural Network MNIST Classifier Example
-
-This script demonstrates the training and evaluation of a Quantum Neural Network (QNN) for probabilistic classification on the MNIST dataset.
-"""
-
-import torch
-import torchvision
-import torch.nn as nn
-import torch.nn.functional as F
-import torchvision.transforms as transforms
-import torch.optim as optim
-from torchsummary import summary
-import pennylane as qml
-import numpy as np
-import matplotlib.pyplot as plt
-import sys
 import os
-
+import sys
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import torchvision
+import numpy as np
+import pennylane as qml
 
 # Add the src directory to the Python path
 script_dir = os.path.dirname(__file__)
@@ -39,9 +15,11 @@ src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if src_dir not in sys.path:
     sys.path.append(src_dir)
 
-from models.quantum_neural_network import QuantumNeuralNetworkModel
+from layers.quantum_data_encoder import QuantumDataEncoder
 from layers.qnn_circuit import qnn_circuit
 from utils.utils import train_model, evaluate_model
+from layers.quantum_layer import QuantumNeuralNetworkLayer
+from utils import config
 
 ### PREPROCESSING ###
 
@@ -62,13 +40,13 @@ test_loader = torch.utils.data.DataLoader(testset, batch_size=2, shuffle=True)
 X_train, Y_train = next(iter(train_loader))
 X_test, Y_test = next(iter(test_loader))
 
-# Convert images to numpy arrays
-X_train = X_train.numpy()
-X_test = X_test.numpy()
+# Convert images to numpy arrays and ensure they are of type float
+X_train = X_train.numpy().astype(np.float32)
+X_test = X_test.numpy().astype(np.float32)
 
-# Convert labels to numpy arrays
-Y_train = Y_train.numpy()
-Y_test = Y_test.numpy()
+# Convert labels to numpy arrays and ensure they are of type float
+Y_train = Y_train.numpy().astype(np.float32)
+Y_test = Y_test.numpy().astype(np.float32)
 
 # Print shapes to verify
 print("X_train shape:", X_train.shape)
@@ -80,14 +58,11 @@ print("Y_test shape:", Y_test.shape)
 print("X_train min and max values:", X_train.min(), X_train.max())
 print("X_test min and max values:", X_test.min(), X_test.max())
 
-
-#One hot encoding, necessary for file
+# One hot encoding, necessary for file
 def one_hot(labels):  
-       
-    depth =  2**4                       # 10 classes + 6 zeros for padding
-    indices = labels.astype(np.int32)    
-    one_hot_labels = np.eye(depth)[indices].astype(np.float32) 
-    
+    depth = 2**4  # 10 classes + 6 zeros for padding
+    indices = labels.astype(np.int32)
+    one_hot_labels = np.eye(depth)[indices].astype(np.float32)
     return one_hot_labels
 
 # one-hot encoded labels, each label of length cutoff dimension**2
@@ -98,9 +73,10 @@ n_samples = 600
 test_samples = 100
 X_train, X_test, y_train, y_test = X_train[:n_samples], X_test[:test_samples], y_train[:n_samples], y_test[:test_samples]
 
-num_wires = 4
-num_modes = 4
-cutoff_dim = 2
+config.num_wires = 4
+config.num_basis = 2
+config.probabilities = True
+
 # For training
 learning_rate = 0.01  # Learning rate for the optimizer
 batch_size = 2  # Batch size for DataLoader
@@ -108,19 +84,33 @@ device = 'cpu'  # Device to use for training ('cpu' or 'cuda')
 num_epochs = 3 
 num_layers = 4
 
+# Instantiate classical Model
+model = nn.Sequential(
+    nn.Flatten(),  # Flatten the input
+    nn.Linear(28 * 28, 392),  # Dense layer with 392 units
+    nn.ELU(),  # ELU activation function
+    nn.Linear(392, 196),  # Dense layer with 196 units
+    nn.ELU(),  # ELU activation function
+    nn.Linear(196, 98),  # Dense layer with 98 units
+    nn.Linear(98, 49),  # Dense layer with 49 units
+    nn.ELU(),  # ELU activation function
+    nn.Linear(49, 30)  # Dense layer with 30 units
+)
 
-# Instantiate the QNN model
-quantum_nn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit)
+# shape weights: 4 layers and 32 parameters per layer
+weight_shape = {'var': (4, 32)}
+
+# Define the quantum layer using TorchLayer
+quantum_layer = qml.qnn.TorchLayer(qnn_circuit, weight_shape)
+# add to the classical sequential model
+model.add_module('quantum_layer', quantum_layer)
 
 # Define loss function and optimizer
 criterion = nn.MSELoss()
-
-#TODO: resolve parameters . . .
-### I think we should pass in all optimizer parameters as optionals for the QNN model above with some defaults set. This way we can instantiate 
-optimizer = optim.Adam(quantum_nn_model.parameters(), lr=learning_rate)
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
 # Train the model
-train_model(quantum_nn_model, criterion, optimizer, train_loader, num_epochs=num_epochs, device=device)
+train_model(model, criterion, optimizer, train_loader, num_epochs=num_epochs, device=device)
 
 # Evaluate the model
-evaluate_model(quantum_nn_model, X_test, y_test)
+evaluate_model(model, X_test, y_test)
