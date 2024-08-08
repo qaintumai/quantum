@@ -20,18 +20,18 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="quantum-project",
+    name="quantum",
     version="0.1.0",
-    author="Sophie Choe, Alexander Olivas, Arjun Subedi",
-    author_email="sophie.choe@qaintum.ai",
+    author="Sophie Choe, Alexander Olivas, Arjun Subedi, Max Ivry, Nikilesh B R",
+    author_email="contact@qaintum.ai",
     description="A project containing Quantum Neural Networks and Quantum Transformers.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/qaintum.ai/quantum",  # Update with your project's URL
-    packages=find_packages(include=["quantum_neural_networks", "quantum_neural_networks.*", "quantum_transformers", "quantum_transformers.*"]),
+    url="https://github.com/qaintumai/quantum",  # Updated with your project's URL
+    packages=find_packages(include=["src", "src.*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
@@ -127,10 +127,9 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "train_qnn=qnn.scripts.train_qnn:main",
-            "train_qt=qt.scripts.train_qt:main",
-            "evaluate_qnn=qnn.scripts.evaluate_qnn:main",
-            "evaluate_qt=qt.scripts.evaluate_qt:main",
+            "train_qnn=scripts.train_qnn:main",
+            "train_qtransformer=scripts.train_qtransformer:main",
+            "evaluate_model=scripts.evaluate_model:main",
         ],
     },
     include_package_data=True,
