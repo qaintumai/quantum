@@ -66,13 +66,11 @@ class InputEmbedding(nn.Module):
         """
         
         # Compute the token embeddings
-        #TODO: self.firstEmbedding is not callable
         first_embedding = self.firstEmbedding(input).to(self.device)
         batch_size, seq_len = input.shape
 
         positions_vector = torch.arange(0, seq_len).expand(
             batch_size, seq_len).to(self.device)
-        #TODO: self.secondEmbedding is not callable
         positional_encoding = self.secondEmbedding(
             positions_vector).to(self.device)
 

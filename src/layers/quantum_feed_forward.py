@@ -16,9 +16,27 @@
 from torch import nn
 # from src.models import ## Was left over from file conversion, what is the purpose?
 
-# TODO: define class
 class QuantumFeedForward(nn.Module):
+    """
+    A class used to define a feedforward block for a quantum neural network.
+
+    Usage:
+    To use the QuantumFeedForward class, import it as follows:
+    from layers.quantum_feed_forward import QuantumFeedForward
+
+    Example:
+    model = QuantumFeedForward(embed_len=64)
+    output = model(input_tensor)
+    """
+
     def __init__(self, embed_len, dropout=0.1):
+        """
+        Initializes the QuantumFeedForward class with the given parameters.
+
+        Parameters:
+        - embed_len (int): Length of the embedding vector.
+        - dropout (float, optional): Dropout rate for regularization. Default is 0.1.
+        """
         super(QuantumFeedForward, self).__init__()
 
         #TODO: pointer to which layers?
@@ -27,6 +45,15 @@ class QuantumFeedForward(nn.Module):
         self.layer_norm = nn.LayerNorm(embed_len)
 
     def forward(self, x):
+        """
+        Applies the feedforward block to the input tensor.
+
+        Parameters:
+        - x (torch.Tensor): Input tensor.
+
+        Returns:
+        - torch.Tensor: Output tensor after applying feedforward, dropout, and layer normalization.
+        """
         ff_output = self.feed_forward(x)
         ff_output = self.dropout_layer(ff_output)
         return self.layer_norm(ff_output + x)
@@ -38,6 +65,15 @@ model = QuantumFeedForward(embed_len)
 
 # Calculate the number of parameters
 def count_parameters(module):
+    """
+    Counts the number of trainable parameters in a module.
+
+    Parameters:
+    - module (torch.nn.Module): The module to count parameters for.
+
+    Returns:
+    - int: Total number of trainable parameters.
+    """
     return sum(p.numel() for p in module.parameters() if p.requires_grad)
 
 
