@@ -14,12 +14,33 @@
 # ==============================================================================
 
 import numpy as np
-#TODO: Define the WeightInitializer class
-
 
 class WeightInitializer:
+    """
+    A class used to initialize the weights for a quantum neural network layer.
+
+    Usage:
+    To use the WeightInitializer class, import it as follows:
+    from utils.weight_initializer import WeightInitializer
+
+    Example:
+    weights = WeightInitializer.init_weights(layers=4, num_wires=4, active_sd=0.0001, passive_sd=0.1)
+    """
+
     @staticmethod
     def init_weights(layers, num_wires, active_sd=0.0001, passive_sd=0.1):
+        """
+        Initializes the weights for the quantum neural network layer.
+
+        Parameters:
+        - layers (int): Number of layers in the quantum neural network.
+        - num_wires (int): Number of wires (qumodes) in the quantum circuit.
+        - active_sd (float, optional): Standard deviation for active gate parameters. Default is 0.0001.
+        - passive_sd (float, optional): Standard deviation for passive gate parameters. Default is 0.1.
+
+        Returns:
+        - np.ndarray: A numpy array containing the initialized weights for the quantum neural network.
+        """
         M = (num_wires - 1) * 2 + num_wires  # Number of interferometer parameters
 
         int1_weights = np.random.normal(size=[layers, M], scale=passive_sd)
