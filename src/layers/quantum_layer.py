@@ -15,13 +15,38 @@
 
 import pennylane as qml
 
-#TODO: Define Quantum Neural Network Layer
-
 class QuantumNeuralNetworkLayer:
+    """
+    A class used to define a Quantum Neural Network Layer for photonic quantum computing.
+
+    Usage:
+    To use the QuantumNeuralNetworkLayer class, import it as follows:
+    from layers.quantum_layer import QuantumNeuralNetworkLayer
+
+    Example:
+    qnn_layer = QuantumNeuralNetworkLayer(num_wires=4)
+    qnn_layer.apply(params)
+    """
+
     def __init__(self, num_wires):
+        """
+        Initializes the QuantumNeuralNetworkLayer class with the given number of wires.
+
+        Parameters:
+        - num_wires (int): Number of wires (qumodes) in the quantum circuit.
+        """
         self.num_wires = num_wires
 
     def apply(self, v):
+        """
+        Applies the quantum neural network layer with the given parameters.
+
+        Parameters:
+        - v (list or array): List or array of parameters for the quantum gates.
+
+        Returns:
+        - None
+        """
         num_params = len(v)
 
         # Interferometer 1

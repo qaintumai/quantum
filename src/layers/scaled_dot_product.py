@@ -17,19 +17,45 @@ import math
 import torch
 from torch import nn
 
-#TODO: Define the ScaledDotProduct class
-
-
 class ScaledDotProduct(nn.Module):
+    """
+    A class used to compute the scaled dot-product attention.
+
+    Usage:
+    To use the ScaledDotProduct class, import it as follows:
+    from layers.scaled_dot_product import ScaledDotProduct
+
+    Example:
+    scaled_dot_product = ScaledDotProduct(embed_len=128, mask=None)
+    output = scaled_dot_product(queries, keys, values)
+    """
+
     def __init__(self, embed_len, mask=None):
+        """
+        Initializes the ScaledDotProduct class with the given parameters.
+
+        Parameters:
+        - embed_len (int): Length of the embedding vector (dimension of keys and queries).
+        - mask (torch.Tensor, optional): Masking tensor for the attention mechanism. Default is None.
+        """
         super(ScaledDotProduct, self).__init__()
         self.embed_len = embed_len
         self.mask = mask
-        self.dk = embed_len  # dimension of keys and queries
-        # Apply softmax on the last dimension
-        self.softmax = nn.Softmax(dim=-1)
+        self.dk = embed_len  # Dimension of keys and queries
+        self.softmax = nn.Softmax(dim=-1)  # Apply softmax on the last dimension
 
     def forward(self, queries, keys, values):
+        """
+        Computes the scaled dot-product attention.
+
+        Parameters:
+        - queries (torch.Tensor): Tensor containing the query vectors.
+        - keys (torch.Tensor): Tensor containing the key vectors.
+        - values (torch.Tensor): Tensor containing the value vectors.
+
+        Returns:
+        - torch.Tensor: Tensor containing the output of the scaled dot-product attention.
+        """
         compatibility = torch.matmul(queries, keys.transpose(-2, -1))
         compatibility = compatibility / math.sqrt(self.dk)
         compatibility = self.softmax(compatibility)
