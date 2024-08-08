@@ -67,7 +67,7 @@ pip install -r requirements.txt
 
 ```sh
 pip install -e .
-./exampless/qnn_binary_classification.py
+./examples/qnn_binary_classification.py
 ```
 
 You should see the following output:
@@ -94,7 +94,7 @@ Edit, add, or remove files as needed in your project. For example, you might edi
 ### Stage the Changes
 Add the files you changed to the staging area.
 ```sh
-git add qnn_binary_classification.py
+git add <file_name_with_changes>
 ```
 
 If you made changes to multiple files, to stage all changes you can use:
@@ -105,7 +105,7 @@ git add .
 ### Commit the Changes
 Commit the staged changes with a descriptive commit message.
 ```sh
-git commit -m "Add changes to qnn_binary_classification.py"
+git commit -m "Add changes to <file_name_with_changes>"
 ```
 
 ### Push the New Branch to 'quantum'
@@ -121,7 +121,7 @@ Follow [Google Python Style Guide](https://google.github.io/styleguide/pyguide.h
 
 #### Coming Soon
 
-- Hybrid Quantum/Classical Neural Network
+- PyPi
 - Type checking with mypy
 - Linting with flake8
 
