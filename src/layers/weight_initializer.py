@@ -43,11 +43,11 @@ class WeightInitializer:
         """
         M = (num_wires - 1) * 2 + num_wires  # Number of interferometer parameters
 
-        int1_weights = np.random.normal(size=[layers, M], scale=passive_sd)
-        s_weights = np.random.normal(size=[layers, num_wires], scale=active_sd)
-        int2_weights = np.random.normal(size=[layers, M], scale=passive_sd)
-        dr_weights = np.random.normal(size=[layers, num_wires], scale=active_sd)
-        k_weights = np.random.normal(size=[layers, num_wires], scale=active_sd)
+        int1_weights = np.random.normal(size=[layers, M], scale=passive_sd) #beamsplitters and rotations
+        s_weights = np.random.normal(size=[layers, num_wires], scale=active_sd) #squeezers
+        int2_weights = np.random.normal(size=[layers, M], scale=passive_sd) #beamsplitters and rotations
+        dr_weights = np.random.normal(size=[layers, num_wires], scale=active_sd) #displacement
+        k_weights = np.random.normal(size=[layers, num_wires], scale=active_sd) #Kerr
 
         weights = np.concatenate(
             [int1_weights, s_weights, int2_weights, dr_weights, k_weights], axis=1)
