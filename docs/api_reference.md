@@ -21,7 +21,7 @@
    * [quantum_encoder.py](#quantum_encoderpy)
    * [quantum_neural_network.py](#quantum_neural_networkpy)
    * [quantum_transformer.py](#quantum_transformerpy)
-  
+
 
 ### Introduction
 This document provides a detailed reference for the APIs available in the Quantum Project. Each module and its respective components are described in detail, including the available functions, their parameters, return types, and usage examples.
@@ -33,14 +33,14 @@ This document provides a detailed reference for the APIs available in the Quantu
 The Layers module contains the core components for building various layers in quantum neural networks and transformers.
 
 For qauntum neural networks (qnn), the following components are needed:
-* quantum data encoding
+* quantum data encoder
 * qnn layer: this is a quantum version of a classical layer composed of weight matrix, bias addition, and nonlinear activation function.
 * weight initializer: this creates a randomly initialized vector to be used as parameters of the quantum gates of the quantum layers.
-* qnn circuit: this process builds a circuit composed of quantum data encoding and a quantum neural network. Depending of the desired output, there are three methods we can use:
+* qnn circuit: this process builds a circuit composed of quantum data encodder and a quantum neural network. Depending of the desired output, there are three methods we can use:
   * single_output: returns a single value as a result of the quantum computation using the expected value measurement method applied to the first wire.
-  * multi_output: returns a vector of multiple values equal to the number of wires used. 
+  * multi_output: returns a vector of multiple values equal to the number of wires used.
   * probabilities: the size of the output is equal to the number of basis raised to the power of the number of wires.
- 
+
 For quantum transformers, most of the components are the same as classical transformers: input embedding, scaled dot product, and multi-headed attention. The only component that is different is the feed forward block, which is replaced with a quantum neural network.
 
 
@@ -74,10 +74,10 @@ The Utilities module contains shared utilities used across the project.
 
 ##### Function: qnn_circuit
 
-* Description: A function building a quantum neural network circuit. The measuremet outputs are of the shape:     
-  * single output: expectation value of the first wire.     
-  * multi output: expectation values of all the wires.     
-  * probabilities: output of size the number of basis states ^ the number of wires.     
+* Description: A function building a quantum neural network circuit. The measuremet outputs are of the shape:
+  * single output: expectation value of the first wire.
+  * multi output: expectation values of all the wires.
+  * probabilities: output of size the number of basis states ^ the number of wires.
 * Parameters: input data, initialized weights.
 
 #### qnn_layer.py
@@ -89,14 +89,14 @@ The Utilities module contains shared utilities used across the project.
   * __init__(self, config): Initializes the quantum layer with the given configuration.
   * Parameters:
 config (dict): Configuration dictionary for the quantum layer.
-  
-#### quantum_data_encoding.py
+
+#### quantum_data_encoder.py
 
 ##### Class: QuantumDataEncoder
 
 * Description: A class for encoding data for quantum computations.
 * Methods:
-  * __init__(self, config): Initializes the data encoding with the given configuration.
+  * __init__(self, config): Initializes the data encoder with the given configuration.
   * Parameters:
 config (dict): Configuration dictionary for data encoding.
 
@@ -115,10 +115,10 @@ config (dict): Configuration dictionary for the feed-forward layer.
 ##### Class: scaled_dot_product_attention
 
 * Description: Computes scaled dot-product attention.
-* Parameters:    
-  * queries (array-like): Query vectors.    
-  * keys (array-like): Key vectors.    
-  * values (array-like): Value vectors.    
+* Parameters:
+  * queries (array-like): Query vectors.
+  * keys (array-like): Key vectors.
+  * values (array-like): Value vectors.
 * Returns: Output (array-like) of the attention mechanism.
 
 #### weight_initializer.py
