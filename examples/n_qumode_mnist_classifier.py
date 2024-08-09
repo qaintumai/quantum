@@ -94,6 +94,7 @@ num_epochs = 3
 num_layers = 4
 
 # Instantiate classical Model
+#This is an example of a classical model, the user can define internal layering and activation functions (classical parameters: num layers, activation function, input size)
 model = nn.Sequential(
     nn.Flatten(),  # Flatten the input
     nn.Linear(28 * 28, 392),  # Dense layer with 392 units
@@ -102,7 +103,7 @@ model = nn.Sequential(
     nn.ELU(),  # ELU activation function
     nn.Linear(196, 98),  # Dense layer with 98 units
     nn.ELU(),  # ELU activation function
-    nn.Linear(98, classical_output),  # Dense layer with 49 units
+    nn.Linear(98, classical_output),  # Dense layer
 )
 
 # shape weights: adjust based on number of layers and qumodes
