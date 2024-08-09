@@ -94,7 +94,7 @@ Edit, add, or remove files as needed in your project. For example, you might edi
 ### Stage the Changes
 Add the files you changed to the staging area.
 ```sh
-git add <file_name_with_changes>
+git add <directory_where_the_changed_file_is_located>/<file_name_with_changes>
 ```
 
 If you made changes to multiple files, to stage all changes you can use:
