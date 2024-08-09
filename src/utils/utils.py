@@ -86,8 +86,17 @@ def evaluate_model(model, X_test, y_test):
     """
     model.eval()  # Set the model to evaluation mode
     with torch.no_grad():
-        y_pred = model(X_test).detach().numpy()
-        y_test = y_test.numpy()
-        correct = [1 if p == p_true else 0 for p, p_true in zip(y_pred, y_test)]
-        accuracy = sum(correct) / len(y_test)
+        # Forward pass
+        y_pred = model(X_test)
+        
+        # Convert logits or probabilities to class predictions (e.g., using argmax)
+        y_pred = torch.argmax(y_pred, dim=1)
+        
+        # Ensure both y_pred and y_test are on the same device and in the same format
+        y_pred = y_pred.cpu().numpy()
+        y_test = y_test.cpu().numpy()
+
+        # Calculate accuracy
+        correct = (y_pred == y_test).sum()
+        accuracy = correct / len(y_test)
         print(f"Accuracy: {accuracy * 100:.2f}%")
