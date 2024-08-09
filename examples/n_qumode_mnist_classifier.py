@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torchvision
 import numpy as np
+import math
 import pennylane as qml
 import time
 
@@ -22,8 +23,12 @@ from utils import config
 
 ### CONFIGURATION ###
 n_qumodes = 4  # Set the number of qumodes here
+num_classes = 10
+n_basis = math.ceil(num_classes ** (1 / n_qumodes))
+classical_output = 3(n_qumodes*2) + 2(n_qumodes-1)
+parameter_count = 5(n_qumodes) + 4(n_qumodes-1)
 config.num_wires = n_qumodes
-config.num_basis = 2
+config.num_basis = n_basis
 config.probabilities = True
 config.multi_output = False
 config.single_output = False
@@ -67,7 +72,7 @@ print("X_test min and max values:", X_test.min(), X_test.max())
 
 # One hot encoding, necessary for file
 def one_hot(labels):  
-    depth = 2**n_qumodes  # Adjust depth based on the number of qumodes
+    depth = n_basis**n_qumodes  # Adjust depth based on the number of qumodes
     indices = labels.astype(np.int32)
     one_hot_labels = np.eye(depth)[indices].astype(np.float32)
     return one_hot_labels
@@ -95,13 +100,12 @@ model = nn.Sequential(
     nn.Linear(392, 196),  # Dense layer with 196 units
     nn.ELU(),  # ELU activation function
     nn.Linear(196, 98),  # Dense layer with 98 units
-    nn.Linear(98, 49),  # Dense layer with 49 units
     nn.ELU(),  # ELU activation function
-    nn.Linear(49, 2**n_qumodes)  # Adjust final layer to match the number of qumodes
+    nn.Linear(98, classical_output),  # Dense layer with 49 units
 )
 
 # shape weights: adjust based on number of layers and qumodes
-weight_shape = {'var': (num_layers, n_qumodes * 8)}
+weight_shape = {'var': (num_layers, parameter_count)}
 
 # Define the quantum layer using TorchLayer
 quantum_layer = qml.qnn.TorchLayer(qnn_circuit, weight_shape)
