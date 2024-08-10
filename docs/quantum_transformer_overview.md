@@ -20,7 +20,7 @@ Since the Transformer does not use recurrent structures, it incorporates positio
 
 * Decoder: Also consists of a stack of identical layers with three sub-layers: an additional multi-head self-attention mechanism over the encoder's output, in addition to the two sub-layers found in each encoder layer.
 
-Feed-Forward Neural Networks:
+#### Feed-Forward Neural Networks:
 
 Each encoder and decoder layer has a fully connected feed-forward network, applied to each position separately and identically.
 Residual Connections and Layer Normalization:
