@@ -22,23 +22,26 @@ It is heuristically observed that QNNs have the following advantages:
 
 Analog Quantum Neural Networks (A-QNNs) leverage the principles of CV quantum computation, which is a distinct paradigm from the more commonly discussed qubit-based (discrete variable AKA digital using the binary system) quantum computing. AQC uses quantum states that are described by continuous or analog variables, such as the position and momentum of quantum harmonic oscillators.
 
-Key Concepts of A-QNNs
-Quantum Harmonic Oscillators:
+## Key Concepts of A-QNNs
+
+### Quantum Harmonic Oscillators:
 
 Analog quantum systems typically use modes of the electromagnetic field, which can be described by quantum harmonic oscillators. The states of these oscillators are characterized by continuous variables (analog).
-Quantum States and Operations:
 
-Quantum States: In analog quantum systems, the quantum states are represented in an infinite-dimensional Hilbert space. The states used for our algorithm are squeezed Gaussian states while other states include coherent states, squeezed states, and thermal states.
+### Quantum States and Operations:
+
+* Quantum States: In analog quantum systems, the quantum states are represented in an infinite-dimensional Hilbert space. The states used for our algorithm are squeezed Gaussian states while other states include coherent states, squeezed states, and thermal states.
 Quantum Operations: Operations on analog quantum states include Gaussian operations (such as beam splitters and squeezers) and non-Gaussian operations (such as cubic phase gates).
 Quantum Neural Network Architecture:
 
-Quantum Layers: A A-QNN consists of layers of quantum operations. Each layer can be composed of a sequence of Gaussian and non-Gaussian operations.
+* Quantum Layers: A A-QNN consists of layers of quantum operations. Each layer can be composed of a sequence of Gaussian and non-Gaussian operations.
 Parameterization: Similar to classical neural networks, A-QNNs have parameters that can be optimized during training. These parameters can be the displacement, squeezing parameters, rotation angles, and interaction strengths in the quantum gates.
-Measurement: The output of a A-QNN is obtained by measuring the quantum state at the end of the network. In our algorithm using Xanadu's X8, measurements are performed by counting the number of photons per quantum mode (waveguides of quantum light).
-Training and Optimization:
+* Measurement: The output of a A-QNN is obtained by measuring the quantum state at the end of the network. In our algorithm using Xanadu's X8, measurements are performed by counting the number of photons per quantum mode (waveguides of quantum light).
+
+### Training and Optimization:
 The parameters controlling the quantum circuit are updated during the training process using the classical optimization techniques on classical computers.
-Cost Function: The training of a A-QNN involves defining a cost function that measures the difference between the desired output and the actual output of the network.
-Optimization Algorithms: Gradient-based optimization methods are often used to update the parameters of the quantum gates. This process can involve techniques like backpropagation adapted for quantum circuits.
+* Cost Function: The training of a A-QNN involves defining a cost function that measures the difference between the desired output and the actual output of the network.
+* Optimization Algorithms: Gradient-based optimization methods are often used to update the parameters of the quantum gates. This process can involve techniques like backpropagation adapted for quantum circuits.
 
 
 ### Words of Caution
