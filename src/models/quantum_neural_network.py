@@ -13,6 +13,16 @@
 # limitations under the License.
 # ==============================================================================
 import pennylane as qml
+import torch
+import sys
+import os
+
+# Add the src directory to the Python path
+script_dir = os.path.dirname(__file__)
+src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
+if src_dir not in sys.path:
+    sys.path.append(src_dir)
+
 from layers.weight_initializer import WeightInitializer
 from layers.qnn_circuit import qnn_circuit
 
@@ -28,7 +38,7 @@ class QuantumNeuralNetworkModel:
         shape_tup = weights.shape
         weight_shapes = {'var': shape_tup}
         qlayer = qml.qnn.TorchLayer(self.quantum_nn, weight_shapes)
-        model = [qlayer]
+        model = torch.nn.Sequential(qlayer)
         return model
 
 # Example usage

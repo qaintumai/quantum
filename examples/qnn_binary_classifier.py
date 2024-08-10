@@ -49,6 +49,7 @@ def load_and_preprocess_data(file_path):
     """
     df = pd.read_csv(file_path)
     df = df.drop(['Company', 'Time'], axis=1)
+#The outcomes are being binarised based on thresholds to make it a classifier
     df.iloc[:, 0][df.iloc[:, 0] > 0.55] = 1.0
     df.iloc[:, 0][df.iloc[:, 0] <= 0.55] = 0.0
 
@@ -78,8 +79,8 @@ def load_and_preprocess_data(file_path):
 
     return X_train, X_test, y_train, y_test
 
-# Find the right path for 'financial.csv'
-financial_csv_path = os.path.abspath(os.path.join(script_dir, '..', 'data', 'financial.csv'))
+# Make a 'data' folder and keep all datasets in that and then refer it from all files that require data
+financial_csv_path = os.path.abspath(os.path.join(script_dir, '..', 'tutorials', 'financial.csv'))
 X_train, X_test, y_train, y_test = load_and_preprocess_data(financial_csv_path)
 
 # For training
@@ -99,7 +100,7 @@ num_basis = 2
 num_layers = 2
 
 # Instantiate the QNN model
-quantum_nn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit)
+quantum_nn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit).model
 
 # Define loss function and optimizer
 criterion = nn.MSELoss()
