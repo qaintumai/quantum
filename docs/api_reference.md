@@ -12,7 +12,7 @@
    * [multi_headed_attention.py](#multi_headed_attentionpy)
    * [qnn_circuit.py](#qnn_circuitpy)
    * [qnn_layer.py](#qnn_layerpy)
-   * [quantum_data_encoding.py](#quantum_data_encodingpy)
+   * [quantum_data_encoding.py](#quantum_data_encoderpy)
    * [quantum_feed_forward.py](#quantum_feed_forwardpy)
    * [scaled_dot_product.py](#scaled_dot_productpy)
    * [weight_initializer.py](#weight_initializerpy)
@@ -33,7 +33,7 @@ This document provides a detailed reference for the APIs available in the Quantu
 The Layers module contains the core components for building various layers in quantum neural networks and transformers.
 
 For qauntum neural networks (qnn), the following components are needed:
-* quantum data encoder
+* quantum data encoder: convert classical data into a quantum state.
 * qnn layer: this is a quantum version of a classical layer composed of weight matrix, bias addition, and nonlinear activation function.
 * weight initializer: this creates a randomly initialized vector to be used as parameters of the quantum gates of the quantum layers.
 * qnn circuit: this process builds a circuit composed of quantum data encodder and a quantum neural network. Depending of the desired output, there are three methods we can use:
