@@ -56,7 +56,7 @@ test_loader = torch.utils.data.DataLoader(testset, batch_size=2, shuffle=True)
 # For training
 learning_rate = 0.01
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-num_epochs = 2
+num_epochs = 1
 num_layers = 4
 
 # Instantiate the model
