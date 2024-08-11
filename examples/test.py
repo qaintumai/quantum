@@ -42,7 +42,7 @@ transform = torchvision.transforms.Compose([
 
 # Load and subset the training dataset
 trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-n_samples = 10
+n_samples = 2
 train_subset = Subset(trainset, range(n_samples))
 train_loader = torch.utils.data.DataLoader(train_subset, batch_size=2, shuffle=True)
 

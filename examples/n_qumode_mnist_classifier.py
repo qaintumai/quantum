@@ -45,7 +45,7 @@ transform = torchvision.transforms.Compose([
 trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
 
 # Use only the first 600 samples for training
-n_samples = 600
+n_samples = 2
 train_subset = Subset(trainset, range(n_samples))
 train_loader = torch.utils.data.DataLoader(train_subset, batch_size=2, shuffle=True)
 
@@ -90,7 +90,7 @@ y_train, y_test = one_hot(Y_train), one_hot(Y_test)
 learning_rate = 0.01  # Learning rate for the optimizer
 batch_size = 2  # Batch size for DataLoader
 device = 'cpu'  # Device to use for training ('cpu' or 'cuda')
-num_epochs = 3 
+num_epochs = 1 
 num_layers = 4
 
 # Instantiate classical Model
