@@ -17,7 +17,7 @@ from layers.qnn_circuit import qnn_circuit
 from utils.utils import train_model, evaluate_model
 from utils import config
 
-class ClassicalQuantumClassifier:
+class HybridNeuralNetwork:
     def __init__(self, qumodes=4, classes=10, activation_function=nn.ELU, dataset='./data', q_layers=4, 
                  learning_rate=0.01, epochs=3, batch_size=2, samples = 10):
         self.qumodes = qumodes
@@ -109,7 +109,7 @@ class ClassicalQuantumClassifier:
 
 
 #example with default values
-quantum_model = ClassicalQuantumClassifier()
+quantum_model = HybridNeuralNetwork()
 
 # Train the model
 quantum_model.train()
