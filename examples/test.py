@@ -4,9 +4,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 import torchvision
-import numpy as np
+import math
 import pennylane as qml
 import time
+from torch.utils.data import Subset
+
 # Add the src directory to the Python path
 script_dir = os.path.dirname(__file__)
 src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
@@ -19,77 +21,45 @@ from utils.utils import train_model, evaluate_model
 from layers.quantum_layer import QuantumNeuralNetworkLayer
 from utils import config
 
-### PREPROCESSING ###
-
-# Define a transform to convert PIL images to tensors and normalize the pixel values
-transform = torchvision.transforms.Compose([
-    torchvision.transforms.ToTensor(),  # Convert images to tensors with pixel values in range [0, 1]
-])
-
-# Download and load the training dataset
-trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-
-# Limit the dataset to the first 600 samples for training
-trainset.data = trainset.data[:600]
-trainset.targets = trainset.targets[:600]
-
-train_loader = torch.utils.data.DataLoader(trainset, batch_size=2, shuffle=True)  
-
-# Download and load the test dataset
-testset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
-test_loader = torch.utils.data.DataLoader(testset, batch_size=2, shuffle=True)
-
-# Extract the full dataset from the DataLoader (this loads the entire dataset into memory)
-X_train, Y_train = next(iter(train_loader))
-X_test, Y_test = next(iter(test_loader))
-
-# Convert images to numpy arrays and ensure they are of type float
-X_train = X_train.numpy().astype(np.float32)
-X_test = X_test.numpy().astype(np.float32)
-
-# Convert labels to numpy arrays and ensure they are of type float
-Y_train = Y_train.numpy().astype(np.float32)
-Y_test = Y_test.numpy().astype(np.float32)
-
-# Print shapes to verify
-print("X_train shape:", X_train.shape)
-print("Y_train shape:", Y_train.shape)
-print("X_test shape:", X_test.shape)
-print("Y_test shape:", Y_test.shape)
-
-# Verify that pixel values are in the range [0, 1]
-print("X_train min and max values:", X_train.min(), X_train.max())
-print("X_test min and max values:", X_test.min(), X_test.max())
-
-# One hot encoding, necessary for file
-def one_hot(labels):  
-    depth = 2**4  # 10 classes + 6 zeros for padding
-    indices = labels.astype(np.int32)
-    one_hot_labels = np.eye(depth)[indices].astype(np.float32)
-    return one_hot_labels
-
-# one-hot encoded labels, each label of length cutoff dimension**2
-y_train, y_test = one_hot(Y_train), one_hot(Y_test)
-
-# Using only 600 samples for training in this experiment
-n_samples = 600
-test_samples = 100
-X_train, X_test, y_train, y_test = X_train[:n_samples], X_test[:test_samples], y_train[:n_samples], y_test[:test_samples]
-
-config.num_wires = 4
-config.num_basis = 2
+### CONFIGURATION ###
+n_qumodes = 4
+num_classes = 10
+n_basis = math.ceil(num_classes ** (1 / n_qumodes))
+classical_output = 3 * (n_qumodes * 2) + 2 * (n_qumodes - 1)
+parameter_count = 5 * n_qumodes + 4 * (n_qumodes - 1)
+config.num_wires = n_qumodes
+config.num_basis = n_basis
 config.probabilities = True
 config.multi_output = False
 config.single_output = False
 
+### PREPROCESSING ###
+
+# Transform for MNIST dataset
+transform = torchvision.transforms.Compose([
+    torchvision.transforms.ToTensor(),
+])
+
+# Load and subset the training dataset
+trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
+n_samples = 2
+train_subset = Subset(trainset, range(n_samples))
+train_loader = torch.utils.data.DataLoader(train_subset, batch_size=2, shuffle=True)
+
+# Print the data type of train_loader
+print(f"Data type of train_loader: {type(train_loader)}")
+
+# Load the test dataset
+testset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
+test_loader = torch.utils.data.DataLoader(testset, batch_size=2, shuffle=True)
+
 # For training
-learning_rate = 0.01  # Learning rate for the optimizer
-batch_size = 2  # Batch size for DataLoader
-device = 'cpu'  # Device to use for training ('cpu' or 'cuda')
-num_epochs = 3 
+learning_rate = 0.01
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+num_epochs = 1
 num_layers = 4
 
-# Instantiate classical Model
+# Instantiate the model
 model = nn.Sequential(
     nn.Flatten(),  # Flatten the input
     nn.Linear(28 * 28, 392),  # Dense layer with 392 units
@@ -97,18 +67,26 @@ model = nn.Sequential(
     nn.Linear(392, 196),  # Dense layer with 196 units
     nn.ELU(),  # ELU activation function
     nn.Linear(196, 98),  # Dense layer with 98 units
-    nn.Linear(98, 49),  # Dense layer with 49 units
     nn.ELU(),  # ELU activation function
-    nn.Linear(49, 30)  # Dense layer with 30 units
+    nn.Linear(98, classical_output),  # Dense layer with classical_output units
 )
 
-# shape weights: 4 layers and 32 parameters per layer
-weight_shape = {'var': (4, 32)}
+# Adjust weights based on number of layers and qumodes
+weight_shape = {'var': (num_layers, parameter_count)}
 
 # Define the quantum layer using TorchLayer
 quantum_layer = qml.qnn.TorchLayer(qnn_circuit, weight_shape)
-# add to the classical sequential model
 model.add_module('quantum_layer', quantum_layer)
+
+# Move model to the appropriate device
+model.to(device)
+
+# Get the full test set from the test_loader
+X_test, Y_test = next(iter(test_loader))
+X_test, Y_test = X_test.to(device), Y_test.to(device)
+
+# Print the data types of X_test and Y_test
+print(f"Data type of X_test: {type(X_test)}, Data type of Y_test: {type(Y_test)}")
 
 # Define loss function and optimizer
 criterion = nn.MSELoss()
@@ -118,9 +96,8 @@ optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 start_time = time.time()
 train_model(model, criterion, optimizer, train_loader, num_epochs=num_epochs, device=device)
 end_time = time.time()
-duration = end_time - start_time
+duration = start_time - end_time
 print(f"Total time: {duration:.6f} seconds")
 
 # Evaluate the model
-evaluate_model(model, X_test, y_test)
-
+evaluate_model(model, X_test, Y_test)

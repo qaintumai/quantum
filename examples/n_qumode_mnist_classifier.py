@@ -8,6 +8,7 @@ import numpy as np
 import math
 import pennylane as qml
 import time
+from torch.utils.data import Subset
 
 # Add the src directory to the Python path
 script_dir = os.path.dirname(__file__)
@@ -25,8 +26,8 @@ from utils import config
 n_qumodes = 4  # Set the number of qumodes here
 num_classes = 10
 n_basis = math.ceil(num_classes ** (1 / n_qumodes))
-classical_output = 3(n_qumodes*2) + 2(n_qumodes-1)
-parameter_count = 5(n_qumodes) + 4(n_qumodes-1)
+classical_output = 3 * (n_qumodes * 2) + 2 * (n_qumodes - 1)
+parameter_count = 5 * n_qumodes + 4 * (n_qumodes - 1)
 config.num_wires = n_qumodes
 config.num_basis = n_basis
 config.probabilities = True
@@ -42,7 +43,11 @@ transform = torchvision.transforms.Compose([
 
 # Download and load the training dataset
 trainset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
-train_loader = torch.utils.data.DataLoader(trainset, batch_size=2, shuffle=True)  
+
+# Use only the first 600 samples for training
+n_samples = 2
+train_subset = Subset(trainset, range(n_samples))
+train_loader = torch.utils.data.DataLoader(train_subset, batch_size=2, shuffle=True)
 
 # Download and load the test dataset
 testset = torchvision.datasets.MNIST(root='./data', train=False, download=True, transform=transform)
@@ -80,19 +85,16 @@ def one_hot(labels):
 # one-hot encoded labels, each label of length cutoff dimension**2
 y_train, y_test = one_hot(Y_train), one_hot(Y_test)
 
-# using only 600 samples for training in this experiment
-n_samples = 600
-test_samples = 100
-X_train, X_test, y_train, y_test = X_train[:n_samples], X_test[:test_samples], y_train[:n_samples], y_test[:test_samples]
 
 # For training
 learning_rate = 0.01  # Learning rate for the optimizer
 batch_size = 2  # Batch size for DataLoader
 device = 'cpu'  # Device to use for training ('cpu' or 'cuda')
-num_epochs = 3 
+num_epochs = 1 
 num_layers = 4
 
 # Instantiate classical Model
+#This is an example of a classical model, the user can define internal layering and activation functions (classical parameters: num layers, activation function, input size)
 model = nn.Sequential(
     nn.Flatten(),  # Flatten the input
     nn.Linear(28 * 28, 392),  # Dense layer with 392 units
@@ -101,7 +103,7 @@ model = nn.Sequential(
     nn.ELU(),  # ELU activation function
     nn.Linear(196, 98),  # Dense layer with 98 units
     nn.ELU(),  # ELU activation function
-    nn.Linear(98, classical_output),  # Dense layer with 49 units
+    nn.Linear(98, classical_output),  # Dense layer
 )
 
 # shape weights: adjust based on number of layers and qumodes
