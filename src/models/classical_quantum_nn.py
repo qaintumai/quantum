@@ -8,13 +8,18 @@ import math
 import pennylane as qml
 import time
 from torch.utils.data import Subset
-from layers import qnn_circuit
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+src_dir = os.path.abspath(os.path.join(script_dir, '..'))
+if src_dir not in sys.path:
+    sys.path.append(src_dir)
+from layers.qnn_circuit import qnn_circuit
 from utils.utils import train_model, evaluate_model
 from utils import config
 
 class ClassicalQuantumClassifier:
     def __init__(self, n_qumodes=4, n_classes=10, activation_function=nn.ELU, dataset='./data', num_layers=4, 
-                 learning_rate=0.01, num_epochs=1, batch_size=2):
+                 learning_rate=0.01, num_epochs=3, batch_size=2, num_samples = 10):
         self.n_qumodes = n_qumodes
         self.n_classes = n_classes
         self.activation_function = activation_function
@@ -23,6 +28,7 @@ class ClassicalQuantumClassifier:
         self.learning_rate = learning_rate
         self.num_epochs = num_epochs
         self.batch_size = batch_size
+        self.num_samples = num_samples
         
         # Configuration settings
         self.n_basis = math.ceil(n_classes ** (1 / n_qumodes))
@@ -70,8 +76,7 @@ class ClassicalQuantumClassifier:
 
         # Load and subset the training dataset
         trainset = torchvision.datasets.MNIST(root=self.dataset, train=True, download=True, transform=transform)
-        n_samples = 2
-        train_subset = Subset(trainset, range(n_samples))
+        train_subset = Subset(trainset, range(self.num_samples))
         train_loader = torch.utils.data.DataLoader(train_subset, batch_size=self.batch_size, shuffle=True)
 
         # Load the test dataset
