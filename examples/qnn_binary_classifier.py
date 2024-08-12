@@ -79,8 +79,8 @@ def load_and_preprocess_data(file_path):
 
     return X_train, X_test, y_train, y_test
 
-# Make a 'data' folder and keep all datasets in that and then refer it from all files that require data
-financial_csv_path = os.path.abspath(os.path.join(script_dir, '..', 'tutorials', 'financial.csv'))
+# Accessing dataset from the 'data' directory
+financial_csv_path = os.path.abspath(os.path.join(script_dir, '..', 'src','data', 'financial.csv'))
 X_train, X_test, y_train, y_test = load_and_preprocess_data(financial_csv_path)
 
 # For training
