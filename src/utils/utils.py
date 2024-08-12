@@ -16,6 +16,8 @@
 # Train qnn_model parameters
 
 import torch
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+import numpy as np
 
 def train_model(model, criterion, optimizer, train_loader, num_epochs=100, device='cpu', debug=True):
     """
@@ -91,3 +93,34 @@ def evaluate_model(model, X_test, y_test):
         correct = [1 if p == p_true else 0 for p, p_true in zip(y_pred, y_test)]
         accuracy = sum(correct) / len(y_test)
         print(f"Accuracy: {accuracy * 100:.2f}%")
+
+def evaluate_regression_model(model, X_test, y_test):
+    """
+    Evaluate a regression Quantum Neural Network model on the test dataset.
+    Computes Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
+
+    Parameters:
+    - model: Trained PyTorch model to be evaluated.
+    - X_test: Test feature dataset (PyTorch tensor).
+    - y_test: True test target values (PyTorch tensor).
+    - device: Device to use for evaluation ('cpu' or 'cuda').
+
+    Returns:
+    - metrics: Dictionary containing MAE and RMSE.
+    """
+    model.eval()  # Set the model to evaluation mode
+    with torch.no_grad():
+        y_pred = model(X_test)
+    y_pred = y_pred.cpu().numpy()
+    y_test = y_test.cpu().numpy()
+    # Calculate MAE and RMSE
+    mae = mean_absolute_error(y_test, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    metrics = {
+        'MAE': mae,
+        'RMSE': rmse
+    }
+    print(f"Mean Absolute Error (MAE): {mae:.4f}")
+    print(f"Root Mean Squared Error (RMSE): {rmse:.4f}")
+
+    return metrics
