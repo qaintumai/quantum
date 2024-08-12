@@ -18,24 +18,24 @@ from utils.utils import train_model, evaluate_model
 from utils import config
 
 class ClassicalQuantumClassifier:
-    def __init__(self, n_qumodes=4, n_classes=10, activation_function=nn.ELU, dataset='./data', num_layers=4, 
-                 learning_rate=0.01, num_epochs=3, batch_size=2, num_samples = 10):
-        self.n_qumodes = n_qumodes
-        self.n_classes = n_classes
+    def __init__(self, qumodes=4, classes=10, activation_function=nn.ELU, dataset='./data', q_layers=4, 
+                 learning_rate=0.01, epochs=3, batch_size=2, samples = 10):
+        self.qumodes = qumodes
+        self.classes = classes
         self.activation_function = activation_function
         self.dataset = dataset
-        self.num_layers = num_layers
+        self.q_layers = q_layers
         self.learning_rate = learning_rate
-        self.num_epochs = num_epochs
+        self.epochs = epochs
         self.batch_size = batch_size
-        self.num_samples = num_samples
+        self.samples = samples
         
         # Configuration settings
-        self.n_basis = math.ceil(n_classes ** (1 / n_qumodes))
-        self.classical_output = 3 * (n_qumodes * 2) + 2 * (n_qumodes - 1)
-        self.parameter_count = 5 * n_qumodes + 4 * (n_qumodes - 1)
-        config.num_wires = n_qumodes
-        config.num_basis = self.n_basis
+        self.basis = math.ceil(classes ** (1 / qumodes))
+        self.classical_output = 3 * (qumodes * 2) + 2 * (qumodes - 1)
+        self.parameter_count = 5 * qumodes + 4 * (qumodes - 1)
+        config.num_wires = qumodes
+        config.num_basis = self.basis
         config.probabilities = True
         config.multi_output = False
         config.single_output = False
@@ -58,7 +58,7 @@ class ClassicalQuantumClassifier:
         )
         
         # Adjust weights based on number of layers and qumodes
-        weight_shape = {'var': (self.num_layers, self.parameter_count)}
+        weight_shape = {'var': (self.q_layers, self.parameter_count)}
         
         # Define the quantum layer using TorchLayer
         quantum_layer = qml.qnn.TorchLayer(qnn_circuit, weight_shape)
@@ -76,7 +76,7 @@ class ClassicalQuantumClassifier:
 
         # Load and subset the training dataset
         trainset = torchvision.datasets.MNIST(root=self.dataset, train=True, download=True, transform=transform)
-        train_subset = Subset(trainset, range(self.num_samples))
+        train_subset = Subset(trainset, range(self.samples))
         train_loader = torch.utils.data.DataLoader(train_subset, batch_size=self.batch_size, shuffle=True)
 
         # Load the test dataset
@@ -94,7 +94,7 @@ class ClassicalQuantumClassifier:
         
         # Train the model
         start_time = time.time()
-        train_model(self.model, criterion, optimizer, train_loader, num_epochs=self.num_epochs, device=self.device)
+        train_model(self.model, criterion, optimizer, train_loader, num_epochs=self.epochs, device=self.device)
         end_time = time.time()
         duration = end_time - start_time
         print(f"Total training time: {duration:.6f} seconds")
