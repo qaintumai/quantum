@@ -33,12 +33,10 @@ The project is organized into the following main directories:
   - **/layers**: Contains various layer implementations
     - `input_embedding.py`
     - `multi_headed_attention.py`
-    - `qnn_multi_output.py`
-    - `qnn_probabilities.py`
-    - `qnn_single_output.py`
+    - `qnn_circuit.py`
+    - `qnn_layer.py`
     - `quantum_data_encoding.py`
     - `quantum_feed_forward.py`
-    - `quantum_layer.py`
     - `scaled_dot_product.py`
     - `weight_initializer.py`
   - **/models**: Contains model definitions
@@ -66,8 +64,8 @@ Ensure you have the following installed:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/quantum-project.git
-    cd quantum-project
+    git clone https://github.com/qaintumai/quantum.git
+    cd quantum
     ```
 2. Create and avtivate a virtual environment:
     ```bash
@@ -136,8 +134,8 @@ The /notebooks directory contains Jupyter notebooks for exploration and experime
 
 Detailed documentation for each component is available in the `/docs` directory. Key files include:
 
-- `qnn_overview.md`: Overview of Quantum Neural Networks
-- `qt_overview.md`: Overview of Quantum Transformers
+- `quantum_neural_network_overview.md`: Overview of Quantum Neural Networks
+- `quantum_transformer_overview.md`: Overview of Quantum Transformers
 - `api_reference.md`: API reference for the project's modules and functions
 
 ---
