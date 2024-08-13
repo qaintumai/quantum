@@ -113,14 +113,17 @@ def evaluate_regression_model(model, X_test, y_test):
         y_pred = model(X_test)
     y_pred = y_pred.cpu().numpy()
     y_test = y_test.cpu().numpy()
-    # Calculate MAE and RMSE
+    # Calculate MAE, MSE, and RMSE
     mae = mean_absolute_error(y_test, y_pred)
+    mse = mean_squared_error(y_test,y_pred)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     metrics = {
         'MAE': mae,
+        'MSE': mse,
         'RMSE': rmse
     }
     print(f"Mean Absolute Error (MAE): {mae:.4f}")
+    print(f"Mean Squared Error (MSE): {mse:.4f}")
     print(f"Root Mean Squared Error (RMSE): {rmse:.4f}")
 
     return metrics
