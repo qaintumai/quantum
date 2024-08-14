@@ -19,7 +19,7 @@ if src_dir not in sys.path:
 from layers.quantum_data_encoder import QuantumDataEncoder
 from layers.qnn_circuit import qnn_circuit
 from utils.utils import train_model, evaluate_model
-from layers.quantum_layer import QuantumNeuralNetworkLayer
+from layers.qnn_layer import QuantumNeuralNetworkLayer
 from utils import config
 
 ### CONFIGURATION ###

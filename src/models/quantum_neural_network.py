@@ -13,6 +13,12 @@
 # limitations under the License.
 # ==============================================================================
 import pennylane as qml
+import os
+import sys
+script_dir = os.path.dirname(os.path.abspath(__file__))
+src_dir = os.path.abspath(os.path.join(script_dir, '..'))
+if src_dir not in sys.path:
+    sys.path.append(src_dir)
 from layers.weight_initializer import WeightInitializer
 from layers.qnn_circuit import qnn_circuit
 

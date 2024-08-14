@@ -17,7 +17,7 @@ from .quantum_decoder import QuantumDecoder
 from .quantum_encoder import QuantumEncoder
 from .quantum_neural_network import QuantumNeuralNetworkModel
 from .quantum_transformer import Transformer
-from .classical_quantum_nn import ClassicalQuantumClassifier
+from .hybrid_neural_network import ClassicalQuantumClassifier
 
 __all__ = [
     "QuantumDecoder",
