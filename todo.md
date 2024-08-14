@@ -1,8 +1,9 @@
 # Checklist
+This is just what I thought of course add as needed/wanted
 
 ## 
 - [R] add documentation to all files in models folder
-- [M] One-hot encoding in examples, is it necessary? 
+- [M] One-hot encoding in examples, is it necessary? (conclusion, I dont think so)
 - [M] Generalize hybrid_neural_network model to any dataset (with input validation)
 - [M] Generalize QNN to any dataset (w input val)
 - [N,M] Develop QT 
