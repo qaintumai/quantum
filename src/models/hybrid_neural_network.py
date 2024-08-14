@@ -189,6 +189,17 @@ class HybridNeuralNetwork:
         """
         _, test_loader = self.load_data()
         X_test, Y_test = next(iter(test_loader))
+        
+        # Debug: Print the types and shapes of X_test and Y_test
+        print("X_test type:", type(X_test))
+        print("X_test shape:", X_test.shape)
+        print("Y_test type:", type(Y_test))
+        print("Y_test shape:", Y_test.shape)
+        
+        # Debug: Print the first few samples of X_test and Y_test
+        print("First few test images (flattened):", X_test[:2].view(X_test.size(0), -1))
+        print("First few test labels:", Y_test[:10].numpy())
+        
         X_test, Y_test = X_test.to(self.device), Y_test.to(self.device)
         
         evaluate_model(self.model, X_test, Y_test)
@@ -196,5 +207,5 @@ class HybridNeuralNetwork:
 
 # Example usage with default values
 quantum_model = HybridNeuralNetwork()
-quantum_model.train(epochs=2, batch_size=16, samples=200)
+quantum_model.train(epochs=1, batch_size=2, samples=4)
 quantum_model.evaluate()
