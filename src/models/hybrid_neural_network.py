@@ -23,6 +23,8 @@ import math
 import pennylane as qml
 import time
 from torch.utils.data import Subset
+from matplotlib import pyplot as plt
+import torchvision.transforms as transforms
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 src_dir = os.path.abspath(os.path.join(script_dir, '..'))
@@ -168,7 +170,13 @@ class HybridNeuralNetwork:
         self.samples = samples
         
         train_loader, _ = self.load_data()
-        
+
+        # Debug: Inspect the first few images and labels
+        first_batch = next(iter(train_loader))
+        images, labels = first_batch
+        print(f"First few images (raw): {images}")
+        print(f"First few labels: {labels.numpy()}")
+
         # Define loss function and optimizer
         criterion = nn.MSELoss()
         optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
@@ -179,7 +187,7 @@ class HybridNeuralNetwork:
         end_time = time.time()
         duration = end_time - start_time
         print(f"Total training time: {duration:.6f} seconds")
-    
+
     def evaluate(self):
         """
         Evaluates the trained hybrid neural network model on the test dataset.
@@ -188,24 +196,33 @@ class HybridNeuralNetwork:
         number of samples).
         """
         _, test_loader = self.load_data()
-        X_test, Y_test = next(iter(test_loader))
-        
-        # Debug: Print the types and shapes of X_test and Y_test
-        print("X_test type:", type(X_test))
-        print("X_test shape:", X_test.shape)
-        print("Y_test type:", type(Y_test))
-        print("Y_test shape:", Y_test.shape)
-        
-        # Debug: Print the first few samples of X_test and Y_test
-        print("First few test images (flattened):", X_test[:2].view(X_test.size(0), -1))
-        print("First few test labels:", Y_test[:10].numpy())
-        
-        X_test, Y_test = X_test.to(self.device), Y_test.to(self.device)
+
+        # Debug: Inspect the first few images and labels after loading
+        first_batch = next(iter(test_loader))
+        images, labels = first_batch
+        print(f"First few test images (flattened): {images.view(-1, 28*28)}")
+        print(f"First few test labels: {labels.numpy()}")
+
+        X_test, Y_test = images.to(self.device), labels.to(self.device)
         
         evaluate_model(self.model, X_test, Y_test)
 
 
+# Try loading the images directly without transformations
+def check_raw_images(dataset_path='./data'):
+    mnist_dataset = torchvision.datasets.MNIST(root=dataset_path, train=True, download=True, transform=None)
+    
+    # Display the first two images and their labels
+    for i in range(2):
+        image, label = mnist_dataset[i]
+        print(f"Label: {label}")
+        plt.imshow(image, cmap="gray")
+        plt.show()
+
+# Check the raw images from the dataset
+check_raw_images()
+
 # Example usage with default values
 quantum_model = HybridNeuralNetwork()
-quantum_model.train(epochs=1, batch_size=2, samples=4)
+quantum_model.train(epochs=1, batch_size=2, samples=10)
 quantum_model.evaluate()
