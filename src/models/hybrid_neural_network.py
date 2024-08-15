@@ -25,6 +25,7 @@ import time
 from torch.utils.data import Subset
 from matplotlib import pyplot as plt
 import torchvision.transforms as transforms
+from torchvision.transforms import ToTensor
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 src_dir = os.path.abspath(os.path.join(script_dir, '..'))
@@ -147,7 +148,7 @@ class HybridNeuralNetwork:
 
         # Load the test dataset
         testset = torchvision.datasets.MNIST(root=dataset, train=False, download=True, transform=transform)
-        test_loader = torch.utils.data.DataLoader(testset, batch_size=batch_size, shuffle=True)
+        test_loader = torch.utils.data.DataLoader(testset, shuffle=True)
         
         return train_loader, test_loader
 
@@ -174,11 +175,13 @@ class HybridNeuralNetwork:
         # Debug: Inspect the first few images and labels
         first_batch = next(iter(train_loader))
         images, labels = first_batch
+        torch.set_printoptions(profile="full")
         print(f"First few images (raw): {images}")
         print(f"First few labels: {labels.numpy()}")
+        torch.set_printoptions(profile="default")
 
         # Define loss function and optimizer
-        criterion = nn.MSELoss()
+        criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
         
         # Train the model
@@ -193,19 +196,42 @@ class HybridNeuralNetwork:
         Evaluates the trained hybrid neural network model on the test dataset.
 
         The evaluation process uses the parameters set during the training phase (dataset path, batch size, and
-        number of samples).
+        number of samples). This method calculates and prints the accuracy of the model.
         """
         _, test_loader = self.load_data()
 
-        # Debug: Inspect the first few images and labels after loading
-        first_batch = next(iter(test_loader))
-        images, labels = first_batch
-        print(f"First few test images (flattened): {images.view(-1, 28*28)}")
-        print(f"First few test labels: {labels.numpy()}")
+        # Track the total number of correct predictions and total samples
+        total_correct = 0
+        total_samples = 0
 
-        X_test, Y_test = images.to(self.device), labels.to(self.device)
-        
-        evaluate_model(self.model, X_test, Y_test)
+        # Set the model to evaluation mode
+        self.model.eval()
+
+        with torch.no_grad():
+            for images, labels in test_loader:
+                # Move data to the appropriate device
+                images, labels = images.to(self.device), labels.to(self.device)
+
+                # Forward pass: get model predictions
+                outputs = self.model(images)
+
+                print(outputs)
+
+                # Convert model outputs to predicted classes (indices)
+                _, predicted_classes = torch.max(outputs, 1)
+
+                # Update the total number of correct predictions
+                total_correct += (predicted_classes == labels).sum().item()
+                total_samples += labels.size(0)
+
+                # Debug: Print the entire tensors for a quick check
+                print(f"Batch images (raw): {images}")
+                print(f"Batch labels: {labels.numpy()}")
+                print(f"Batch predictions: {predicted_classes.cpu().numpy()}")
+
+        # Calculate accuracy
+        accuracy = total_correct / total_samples * 100
+        print(f"Accuracy on the test dataset: {accuracy:.2f}%")
 
 
 # Try loading the images directly without transformations
@@ -221,6 +247,33 @@ def check_raw_images(dataset_path='./data'):
 
 # Check the raw images from the dataset
 check_raw_images()
+
+# Function to apply the transformation manually and inspect the result
+def inspect_transformation(dataset_path='./data'):
+    mnist_dataset = torchvision.datasets.MNIST(root=dataset_path, train=True, download=True, transform=None)
+    image, label = mnist_dataset[0]
+
+    # Display the raw image
+    plt.imshow(image, cmap="gray")
+    plt.title(f"Raw Image - Label: {label}")
+    plt.show()
+
+    # Apply ToTensor transformation manually
+    tensor_image = ToTensor()(image)
+
+    # Set print options to display the entire tensor
+    torch.set_printoptions(profile="full")
+    
+    print(f"Transformed Tensor: {tensor_image}")
+    print(f"Tensor Shape: {tensor_image.shape}")
+    print(f"Min Value: {tensor_image.min()}, Max Value: {tensor_image.max()}")
+
+    # Reset print options to default
+    torch.set_printoptions(profile="default")
+
+# Inspect the transformation
+inspect_transformation()
+
 
 # Example usage with default values
 quantum_model = HybridNeuralNetwork()
