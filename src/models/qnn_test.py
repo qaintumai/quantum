@@ -37,9 +37,10 @@ from utils.utils import train_model, evaluate_model
 from layers.weight_initializer import WeightInitializer
 
 class QuantumNeuralNetworkModel:
-    def __init__(self, num_layers=2, num_wires=8, quantum_nn=qnn_circuit, 
+    def __init__(self, df, num_layers=2, num_wires=8, quantum_nn=qnn_circuit, 
                  learning_rate=0.01, epochs=3, batch_size=2, samples=120, 
-                 threshold=0.55, binary=True, data_file=None):
+                 threshold=0.55, binary=True):
+        self.df = df
         self.num_layers = num_layers
         self.num_wires = num_wires
         self.quantum_nn = quantum_nn
@@ -49,7 +50,6 @@ class QuantumNeuralNetworkModel:
         self.samples = samples
         self.threshold = threshold
         self.binary = binary
-        self.data_file = data_file
         
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = self._build_model()
@@ -63,16 +63,16 @@ class QuantumNeuralNetworkModel:
         model.to(self.device)
         return model
 
-    def preprocess_data(self, df):
+    def preprocess_data(self):
         """
         Preprocess the dataframe, including optional binarization.
         """
         if self.binary:
-            df.iloc[:, 0][df.iloc[:, 0] > self.threshold] = 1.0
-            df.iloc[:, 0][df.iloc[:, 0] <= self.threshold] = 0.0
+            self.df.iloc[:, 0][self.df.iloc[:, 0] > self.threshold] = 1.0
+            self.df.iloc[:, 0][self.df.iloc[:, 0] <= self.threshold] = 0.0
         
-        y = df.iloc[:, 0].to_numpy()
-        X = df.iloc[:, 1:].to_numpy()
+        y = self.df.iloc[:, 0].to_numpy()
+        X = self.df.iloc[:, 1:].to_numpy()
 
         scaler = MinMaxScaler(feature_range=(0, 1))
         y_scaled = scaler.fit_transform(y.reshape(-1, 1))
@@ -95,16 +95,8 @@ class QuantumNeuralNetworkModel:
 
         return X_train, X_test, y_train, y_test
 
-    def load_data(self):
-        """
-        TODO: this function should be removed
-        """
-        df = pd.read_csv(self.data_file)
-        df = df.drop(['Company', 'Time'], axis=1)  # Specific to the financial dataset
-        return self.preprocess_data(df)
-
     def train(self):
-        X_train, X_test, y_train, y_test = self.load_data()
+        X_train, X_test, y_train, y_test = self.preprocess_data()
 
         train_dataset = TensorDataset(X_train, y_train)
         train_loader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
@@ -121,11 +113,14 @@ class QuantumNeuralNetworkModel:
         print(f"Total training time: {duration:.6f} seconds")
 
     def evaluate(self):
-        _, X_test, _, y_test = self.load_data()
+        _, X_test, _, y_test = self.preprocess_data()
         evaluate_model(self.model, X_test, y_test)
 
 # Example usage with the financial dataset
 financial_csv_path = os.path.abspath(os.path.join(script_dir, '..', 'data', 'financial.csv'))
-qnn_model = QuantumNeuralNetworkModel(data_file=financial_csv_path)
+df = pd.read_csv(financial_csv_path)
+df = df.drop(['Company', 'Time'], axis=1)  # Specific to the financial dataset
+
+qnn_model = QuantumNeuralNetworkModel(df=df)
 qnn_model.train()
 qnn_model.evaluate()
