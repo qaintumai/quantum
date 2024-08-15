@@ -212,6 +212,7 @@ class HybridNeuralNetwork:
                 # Move data to the appropriate device
                 images, labels = images.to(self.device), labels.to(self.device)
 
+                print(images)
                 # Forward pass: get model predictions
                 outputs = self.model(images)
 
@@ -277,5 +278,5 @@ inspect_transformation()
 
 # Example usage with default values
 quantum_model = HybridNeuralNetwork()
-quantum_model.train(epochs=1, batch_size=2, samples=10)
+quantum_model.train(epochs=1, batch_size=2, samples=4)
 quantum_model.evaluate()
