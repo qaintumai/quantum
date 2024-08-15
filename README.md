@@ -67,7 +67,7 @@ pip install -r requirements.txt
 
 ```sh
 pip install -e .
-./examples/qnn_binary_classification.py
+./examples/qnn_binary_classifier.py
 ```
 
 You should see the following output:
