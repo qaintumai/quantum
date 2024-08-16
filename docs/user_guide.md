@@ -47,6 +47,8 @@ The project is organized into the following main directories:
   - **/utils**: Utility functions and scripts
 - **/tests**: Test files
 - **/scripts**: Scripts for training and evaluating models
+- **/examples**: Contains Quantum Neural Network Examples
+- **/tutorials**: Contains Quantum Neural Network tutorial notebooks
 
 ---
 
@@ -67,7 +69,7 @@ Ensure you have the following installed:
     git clone https://github.com/qaintumai/quantum.git
     cd quantum
     ```
-2. Create and avtivate a virtual environment:
+2. Create and activate a virtual environment:
     ```bash
     python3 -m venv venv
     source venv/bin/activate
@@ -121,13 +123,12 @@ python scripts/evaluate_qt.py --model_path models/qt_model.pth --config configs/
 
 ---
 
-## Example Notebooks
+## Tutorials
 
-The /notebooks directory contains Jupyter notebooks for exploration and experimentation. These notebooks provide examples of how to use the models and layers in the project.
+The /tutorials directory contains Jupyter notebooks for exploration and experimentation. These notebooks provide examples of how to use the models and layers in the project.
 
-- `exploration.ipynb`: Initial data exploration and preprocessing
-- `experimentation.ipynb`: Experimentation with different model architectures and training settings
-
+- `qnn_binary_classifier.ipynb`: Photonic Analog (PA) QNN for binary classification. This is an application of the original work ["Continuous Variable Quantum Neural Networks"](https://arxiv.org/abs/1806.06871).
+- `n_qumode_classifier.ipynb`: Photonic Analog (PA) QNN for multi output classification. This is an application of the original work ["Continuous Variable Quantum MNIST Classifiers"](https://arxiv.org/abs/2204.01194).
 ---
 
 ## Documentation
