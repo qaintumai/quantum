@@ -14,7 +14,7 @@
 # ==============================================================================
 
 from torch import nn
-# from src.models import ## Was left over from file conversion, what is the purpose?
+from models.quantum_neural_network import QuantumNeuralNetwork
 
 class QuantumFeedForward(nn.Module):
     """
@@ -39,8 +39,8 @@ class QuantumFeedForward(nn.Module):
         """
         super(QuantumFeedForward, self).__init__()
 
-        #TODO: pointer to which layers?
-        # self.feed_forward = nn.Sequential(*layers)
+        layers = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit).model
+        self.feed_forward = nn.Sequential(*layers)
         self.dropout_layer = nn.Dropout(p=dropout)
         self.layer_norm = nn.LayerNorm(embed_len)
 
