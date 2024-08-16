@@ -2,7 +2,7 @@
 This folder contains the code for Quantum Neural Networks (QNN) and Quantum Transformers (QT) based on Photonic Analog Quantum Computing.
 
 Quantum computing is a method of computation that utilizes physical mediums operating on the principles of quantum mechanics. There are two types of quantum computing:
-* Digital Quantum Computing: quantizing digital computing based on the binary logic
+* Digital Quantum Computing: quantizing digital computing based on the binary logic.
 * Analog Quantum Computing: using the continuous (analog) properties of nature.
 
 The difference between digital (discrete) quantum computing and analog (continuous) quantum computing is stated in this paper: [Quantum computing overview](https://arxiv.org/pdf/2206.07246).
@@ -67,7 +67,7 @@ pip install -r requirements.txt
 
 ```sh
 pip install -e .
-./examples/qnn_binary_classification.py
+./examples/qnn_binary_classifier.py
 ```
 
 You should see the following output:

@@ -14,9 +14,9 @@
 # ==============================================================================
 
 """
-Quantum Neural Network Binary Classifier Example
+Quantum Neural Network Regression Example
 
-This script demonstrates the training and evaluation of a Quantum Neural Network (QNN) for binary classification on financial distress data.
+This script demonstrates the training and evaluation of a Quantum Neural Network (QNN) for regression on financial distress data.
 """
 
 import numpy as np
@@ -37,9 +37,9 @@ src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if src_dir not in sys.path:
     sys.path.append(src_dir)
 
-from models.quantum_neural_network import QuantumNeuralNetworkModel  #Self-referential?
+from models.quantum_neural_network import QuantumNeuralNetworkModel  
 from layers.qnn_circuit import qnn_circuit
-from utils.utils import train_model, evaluate_model
+from utils.utils import train_model, evaluate_regression_model
 
 def load_and_preprocess_data(file_path):
     """
@@ -49,9 +49,6 @@ def load_and_preprocess_data(file_path):
     """
     df = pd.read_csv(file_path)
     df = df.drop(['Company', 'Time'], axis=1)
-#The outcomes are being binarised based on thresholds to make it a classifier
-    df.iloc[:, 0][df.iloc[:, 0] > 0.55] = 1.0
-    df.iloc[:, 0][df.iloc[:, 0] <= 0.55] = 0.0
 
     y = df.iloc[:, 0]
     X = df.iloc[:, 1:]
@@ -79,7 +76,7 @@ def load_and_preprocess_data(file_path):
 
     return X_train, X_test, y_train, y_test
 
-# Accessing dataset from the 'data' directory
+# Make a 'data' folder and keep all datasets in that and then refer it from all files that require data
 financial_csv_path = os.path.abspath(os.path.join(script_dir, '..', 'src','data', 'financial.csv'))
 X_train, X_test, y_train, y_test = load_and_preprocess_data(financial_csv_path)
 
@@ -110,4 +107,4 @@ optimizer = optim.Adam(quantum_nn_model.parameters(), lr=learning_rate)
 train_model(quantum_nn_model, criterion, optimizer, train_loader, num_epochs=num_epochs, device=device)
 
 # Evaluate the model
-evaluate_model(quantum_nn_model, X_test, y_test)
+metrics = evaluate_regression_model(quantum_nn_model, X_test, y_test)
