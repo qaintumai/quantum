@@ -26,11 +26,14 @@ if src_dir not in sys.path:
 from layers.weight_initializer import WeightInitializer
 from layers.qnn_circuit import qnn_circuit
 
+from utils.config import num_wires, num_basis, single_output, multi_output, probabilities
+
 class QuantumNeuralNetworkModel:
-    def __init__(self, num_layers, num_wires, quantum_nn):
+    def __init__(self, num_layers, num_wires, inputs, var):
+        probabilities = True
         self.num_layers = num_layers
         self.num_wires = num_wires
-        self.quantum_nn = quantum_nn
+        self.quantum_nn = qnn_circuit(inputs, var)
         self.model = self._build_model()
 
     def _build_model(self):
@@ -38,11 +41,12 @@ class QuantumNeuralNetworkModel:
         shape_tup = weights.shape
         weight_shapes = {'var': shape_tup}
         qlayer = qml.qnn.TorchLayer(self.quantum_nn, weight_shapes)
-        model = torch.nn.Sequential(qlayer)
+        model = [qlayer]
+        # model = torch.nn.Sequential(qlayer)
         return model
 
 # Example usage
 num_layers = 2
 num_wires = 6
 qnn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit)
-model = qnn_model.model
+model = qnn_model.model   # This is a quantum model converted into a PyTorch model.
