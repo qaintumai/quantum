@@ -16,6 +16,6 @@
 #Variables to access across project . . .
 num_wires = 8
 num_basis = 2
-single_output = False
+single_output = True
 multi_output = False
 probabilities = False
