@@ -27,10 +27,6 @@ if src_dir not in sys.path:
 
 from utils.config import num_wires, num_basis, single_output, multi_output, probabilities
 
-
-if (single_output):
-    num_wires = 6
-
 # Select a device
 dev = qml.device("strawberryfields.fock", wires=num_wires, cutoff_dim=num_basis)
 
