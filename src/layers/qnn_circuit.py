@@ -15,7 +15,7 @@
 
 import pennylane as qml
 from .quantum_data_encoder import QuantumDataEncoder
-from .quantum_layer import QuantumNeuralNetworkLayer
+from .qnn_layer import QuantumNeuralNetworkLayer
 import sys
 import os
 

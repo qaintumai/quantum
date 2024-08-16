@@ -24,7 +24,7 @@ class QuantumDataEncoder:
 
     Usage:
     To use the QuantumDataEncoder class, import it as follows:
-    from layers.quantum_data_encoding import QuantumDataEncoder
+    from layers.quantum_data_encoder import QuantumDataEncoder
 
     Example:
     encoder = QuantumDataEncoder(num_wires=8)
@@ -38,64 +38,69 @@ class QuantumDataEncoder:
         Parameters:
         - num_wires (int): Number of quantum wires.
 
-        NOTE: currently, we only support num_wires =8 or 6, which is declared in the qnn classes.
+        NOTE: Currently, Xanadu's QPU X8 supports only up to 8 parameters.
+              We checked and Pennylane supports more than 8 parameters.
         """
         self.num_wires = num_wires
 
     def encode(self, x):
         """
-        Encodes the input data into a quantum state using a sequence of quantum gates.
+        Encodes the input data into a quantum state to be operated on using a sequence of quantum gates.
 
         Parameters:
         x : input data (list or array-like)
 
         The encoding process uses the following gates in sequence:
-        - Squeezing gates
-        - Beamsplitter gates
-        - Rotation gates
-        - Displacement gates
-        - Kerr gates
-        - Squeezing gates (second set)
-        - Rotation gates (second set)
+        - Squeezing gates: 2*self.num_wires parameters
+        - Beamsplitter gates: 2(self.num_wires-1) parameters
+        - Rotation gates: self.num_wires parameters
+        - Displacement gates: 2*self.num_wires parameters
+        - Kerr gates: self.num_wires parameters
+          Total: 8*self.num_wires - 2 parameters
+
+        rounds: the number of iterations of the sequence needed to take in all the entries of the input data
+                num_features // (8 * self.num_wires - 2)
+                We are adding (8 * self.num_wires - 3) as a pad to run one extra round for the remainding data entries.
         """
         num_features = len(x)
 
-        # Squeezing gates
-        for i in range(0, min(num_features, self.num_wires * 2), 2):
-            qml.Squeezing(x[i], x[i + 1], wires=i // 2)
+        # Calculate the number of rounds needed to process all features
+        rounds = (num_features + (8 * self.num_wires - 3)) // (8 * self.num_wires - 2)
 
-        # Beamsplitter gates
-        for i in range(self.num_wires - 1):
-            idx = self.num_wires * 2 + i * 2
-            if idx + 1 < num_features:
-                qml.Beamsplitter(x[idx], x[idx + 1], wires=[i % self.num_wires, (i + 1) % self.num_wires])
+        for j in range(rounds):
+            start_idx = j * (8 * self.num_wires - 2)
 
-        # Rotation gates
-        for i in range(self.num_wires):
-            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + i
-            if idx < num_features:
-                qml.Rotation(x[idx], wires=i)
+            # Squeezing gates
+            for i in range(self.num_wires):
+                # for each wire, the number of parameters are i*2
+                idx = start_idx + i * 2
+                if idx + 1 < num_features:
+                    qml.Squeezing(x[idx], x[idx + 1], wires=i)
 
-        # Displacement gates
-        for i in range(self.num_wires):
-            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + i * 2
-            if idx + 1 < num_features:
-                qml.Displacement(x[idx], x[idx + 1], wires=i)
+            # Beamsplitter gates
+            for i in range(self.num_wires - 1):
+                # start_index + Squeezing gates, and then i*2 parameters for each gate
+                idx = start_idx + self.num_wires * 2 + i * 2
+                if idx + 1 < num_features:
+                    qml.Beamsplitter(x[idx], x[idx + 1], wires=[i % self.num_wires, (i + 1) % self.num_wires])
 
-        # Kerr gates
-        for i in range(self.num_wires):
-            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires * 2 + i
-            if idx < num_features:
-                qml.Kerr(x[idx], wires=i)
+            # Rotation gates
+            for i in range(self.num_wires):
+                # start_index + Squeezing gates + Beamsplitters, and then i parameters for each gate
+                idx = start_idx + self.num_wires * 2 + (self.num_wires - 1) * 2 + i
+                if idx < num_features:
+                    qml.Rotation(x[idx], wires=i)
 
-        # Squeezing gates (second set)
-        for i in range(0, min(num_features - (self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires * 2 + self.num_wires), self.num_wires * 2), 2):
-            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires * 2 + self.num_wires + i
-            if idx + 1 < num_features:
-                qml.Squeezing(x[idx], x[idx + 1], wires=i // 2)
+            # Displacement gates
+            for i in range(self.num_wires):
+                # start_index + Squeezing gates + Beamsplitters + Rotation gates, and then i*2 parameters for each gate
+                idx = start_idx + self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + i * 2
+                if idx + 1 < num_features:
+                    qml.Displacement(x[idx], x[idx + 1], wires=i)
 
-        # Rotation gates (second set)
-        for i in range(self.num_wires):
-            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires * 2 + self.num_wires + self.num_wires * 2 + i
-            if idx < num_features:
-                qml.Rotation(x[idx], wires=i)
+            # Kerr gates
+            for i in range(self.num_wires):
+                # start_index + Squeezing gates + Beamsplitters + Rotation gates + Displacement gates, and then i parameters for each gate
+                idx = start_idx + self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires * 2 + i
+                if idx < num_features:
+                    qml.Kerr(x[idx], wires=i)
