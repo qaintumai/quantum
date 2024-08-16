@@ -28,5 +28,5 @@ def main(config_path):
     }
 
     report_file = config.general.log_dir + "report.json"
-    with open(report_file, 'w') as f:
-        json.dump(report
+    # with open(report_file, 'w') as f:
+    #     json.dump(report

@@ -15,11 +15,67 @@ src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if src_dir not in sys.path:
     sys.path.append(src_dir)
 
-from layers.quantum_data_encoder import QuantumDataEncoder
 from layers.qnn_circuit import qnn_circuit
-from utils.utils import train_model, evaluate_model
-from layers.qnn_layer import QuantumNeuralNetworkLayer
+# from utils.utils import train_model, evaluate_model
 from utils import config
+
+
+def train_model(model, criterion, optimizer, train_loader, num_epochs=100, device='cpu', debug=True):
+
+    model.to(device)  # Move model to the specified device
+    for epoch in range(num_epochs):
+        model.train()  # Set the model to training mode
+        running_loss = 0.0
+        operation_count = 0
+
+        for inputs, labels in train_loader:
+            inputs, labels = inputs.to(device).float(), labels.to(device).float()
+            print("____LABELS______")
+            print(labels)
+
+            print("_____INPUTS_____")
+            print(inputs)
+
+            # Forward pass
+            outputs = model(inputs)
+
+            print("____OUTPUTS______")
+            print(outputs)
+
+            loss = criterion(outputs, labels)
+
+
+            # Backward pass and optimization
+            optimizer.zero_grad()  # Zero the gradients
+            loss.backward()  # Backpropagation
+            optimizer.step()  # Update model parameters
+            if debug:
+                print("Performed backpropagation and optimization step")
+
+            running_loss += loss.item() * inputs.size(0)
+            operation_count += 1
+
+        epoch_loss = running_loss / len(train_loader.dataset)
+        if (epoch + 1) % 10 == 0 or debug:
+            print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {epoch_loss:.4f}')
+        if debug:
+            print(f"Total operations in epoch {epoch + 1}: {operation_count}")
+
+    print("Training complete")
+
+
+def evaluate_model(model, X_test, y_test):
+
+    model.eval()  # Set the model to evaluation mode
+    with torch.no_grad():
+        y_pred = model(X_test).detach().numpy()
+        print(y_pred)
+        y_test = y_test.numpy()
+        correct = [1 if p == p_true else 0 for p, p_true in zip(y_pred, y_test)]
+        accuracy = sum(correct) / len(y_test)
+        print(f"Accuracy: {accuracy * 100:.2f}%")
+
+
 
 ### PREPROCESSING ###
 
@@ -86,6 +142,7 @@ device = 'cpu'  # Device to use for training ('cpu' or 'cuda')
 num_epochs = 3 
 num_layers = 4
 
+
 # Instantiate classical Model
 model = nn.Sequential(
     nn.Flatten(),  # Flatten the input
@@ -94,6 +151,7 @@ model = nn.Sequential(
     nn.Linear(392, 196),  # Dense layer with 196 units
     nn.ELU(),  # ELU activation function
     nn.Linear(196, 98),  # Dense layer with 98 units
+    nn.ELU(),  # ELU activation function
     nn.Linear(98, 49),  # Dense layer with 49 units
     nn.ELU(),  # ELU activation function
     nn.Linear(49, 30)  # Dense layer with 30 units
@@ -105,8 +163,9 @@ weight_shape = {'var': (4, 32)}
 # Define the quantum layer using TorchLayer
 quantum_layer = qml.qnn.TorchLayer(qnn_circuit, weight_shape)
 # add to the classical sequential model
-model.add_module('quantum_layer', quantum_layer)
+model.add_module('8', quantum_layer)
 
+print(model)
 # Define loss function and optimizer
 criterion = nn.MSELoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
