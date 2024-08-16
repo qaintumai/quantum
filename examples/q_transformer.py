@@ -16,159 +16,562 @@
 """
 Quantum Transformer Example
 
-This script demonstrates the training and evaluation of a Quantum Transformer for sentiment analysis on IMDB reviews dataset.
+This script demonstrates a Quantum Transformer.
 """
 
 import torch
 import torch.nn as nn
-import torch.optim as optim
 import math
-import time
-from torchtext.datasets import IMDB
-from torchtext.data.utils import get_tokenizer
-from torchtext.vocab import build_vocab_from_iterator
-from torch.nn.utils.rnn import pad_sequence
-from torch.utils.data import DataLoader
+
 import numpy as np
 import pennylane as qml
-import sys
-import os
 
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 print(device)
 
-# Add the src directory to the Python path
-script_dir = os.path.dirname(__file__)
-src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
-if src_dir not in sys.path:
-    sys.path.append(src_dir)
+# Define the InputEmbedding class
+class InputEmbedding(nn.Module):
+    def __init__(self, input_vocab_size, embed_len, dropout=0.1, device='cpu'):
+        super(InputEmbedding, self).__init__()
+        self.input_vocab_size = input_vocab_size
+        self.embed_len = embed_len
+        self.dropout = dropout
+        self.device = device
 
-from layers.input_embedding import InputEmbedding
-from layers.scaled_dot_product import ScaledDotProduct
-from layers.multi_headed_attention import MultiHeadedAttention
-from layers.quantum_data_encoder import QuantumDataEncoder
-from layers.quantum_layer import QuantumNeuralNetworkLayer
-from layers.weight_initializer import WeightInitializer
-from layers.qnn_circuit import qnn_circuit
-from models.quantum_neural_network import QuantumNeuralNetworkModel
-#from layers.quantum_feed_forward import QuantumFeedForward
-from models.quantum_encoder import QuantumEncoder
-from models.quantum_decoder import QuantumDecoder
-from models.quantum_transformer import Transformer
+        self.firstEmbedding = nn.Embedding(self.input_vocab_size, self.embed_len).to(self.device)
+        self.secondEmbedding = nn.Embedding(self.input_vocab_size, self.embed_len).to(self.device)
+        self.dropoutLayer = nn.Dropout(p=self.dropout)
 
-# Set the device
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    def forward(self, input):
+        first_embedding = self.firstEmbedding(input).to(self.device)
+        batch_size, seq_len = input.shape
 
-# Load the IMDb dataset
-train_iter, test_iter = IMDB()
+        positions_vector = torch.arange(0, seq_len).expand(batch_size, seq_len).to(self.device)
+        positional_encoding = self.secondEmbedding(positions_vector).to(self.device)
 
-# Tokenizer
-tokenizer = get_tokenizer('basic_english')
+        return self.dropoutLayer(first_embedding + positional_encoding)
 
-# Vocabulary
-def yield_tokens(data_iter):
-    for _, text in data_iter:
-        yield tokenizer(text)
+def test_input_embedding():
+    # Define parameters
+    input_vocab_size = 100
+    embed_len = 64
+    seq_len = 10
+    batch_size = 32
+    dropout = 0.1
+    device = 'cpu'
 
-vocab = build_vocab_from_iterator(yield_tokens(train_iter), specials=["<unk>"])
-vocab.set_default_index(vocab["<unk>"])
+    # Create an instance of InputEmbedding
+    model = InputEmbedding(input_vocab_size, embed_len, dropout, device)
 
-# Function to process raw text into tensor
-def text_pipeline(text):
-    return vocab(tokenizer(text))
+    # Create a dummy input tensor with random integers in the range of the vocabulary size
+    dummy_input = torch.randint(0, input_vocab_size, (batch_size, seq_len)).to(device)
 
-# Function to process labels into tensor
-def label_pipeline(label):
-    return 1 if label == 'pos' else 0
+    # Forward pass
+    output = model(dummy_input)
 
-# Pad sequences to a fixed length
-def collate_batch(batch):
-    label_list, text_list, lengths = [], [], []
-    for (_label, _text) in batch:
-        label_list.append(label_pipeline(_label))
-        processed_text = torch.tensor(text_pipeline(_text), dtype=torch.int64)
-        text_list.append(processed_text)
-        lengths.append(processed_text.size(0))
-    # Pad sequences to the same length
-    text_list = pad_sequence(text_list, batch_first=True, padding_value=vocab['<pad>'])
-    label_list = torch.tensor(label_list, dtype=torch.int64)
-    return text_list.to(device), label_list.to(device)
+    # Check the output shape
+    assert output.shape == (batch_size, seq_len, embed_len), f"Expected output shape {(batch_size, seq_len, embed_len)}, but got {output.shape}"
 
-# Create DataLoaders
-train_iter, test_iter = IMDB()
-train_dataloader = DataLoader(list(train_iter), batch_size=8, shuffle=True, collate_fn=collate_batch)
-test_dataloader = DataLoader(list(test_iter), batch_size=8, shuffle=False, collate_fn=collate_batch)
+    # Check the output type
+    assert isinstance(output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
 
-# Define parameters
-num_encoder_layers = 6
-num_decoder_layers = 6
-embed_len = 64
-num_heads = 8
-seq_len = 20
-batch_size = 32
-vocab_size = 100
-dropout = 0.1
-device = 'cpu'
+    print("Test passed!")
 
-model=Transformer(num_encoder_layers, num_decoder_layers, embed_len, num_heads, batch_size, vocab_size, dropout, device)  # Have to mention parameters
+    return output.shape
 
-# Loss function and optimizer
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+# Run the test
+test_input_embedding()
 
-# Training loop with progress updates
-def train_model(model, train_dataloader, criterion, optimizer, num_epochs=1):
-    model.train()
-    total_steps = len(train_dataloader) * num_epochs
-    step = 0
-    
-    for epoch in range(num_epochs):
-        epoch_start_time = time.time()
-        total_loss = 0
-        
-        print(f"Epoch {epoch + 1}/{num_epochs} started")
-        
-        for batch_idx, (text, labels) in enumerate(train_dataloader):
-            batch_start_time = time.time()
-            
-            optimizer.zero_grad()
-            outputs = model(text)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-            
-            total_loss += loss.item()
-            step += 1
-            
-            # Print progress within the epoch
-            if batch_idx % 10 == 0 or batch_idx == len(train_dataloader) - 1:
-                elapsed = time.time() - batch_start_time
-                print(f"  Batch {batch_idx + 1}/{len(train_dataloader)} - Loss: {loss.item():.4f} - Elapsed: {elapsed:.2f}s")
-            
-            # Print overall progress
-            overall_progress = (step / total_steps) * 100
-            print(f"  Overall Progress: {overall_progress:.2f}% completed")
-        
-        epoch_duration = time.time() - epoch_start_time
-        print(f"Epoch {epoch + 1} completed in {epoch_duration:.2f}s with average loss {total_loss/len(train_dataloader):.4f}")
-        print("------------------------------------------------------")
-        
-    print("Training completed.")
+# Define the ScaledDotProduct class
+class ScaledDotProduct(nn.Module):
+    def __init__(self, embed_len, mask=None):
+        super(ScaledDotProduct, self).__init__()
+        self.embed_len = embed_len
+        self.mask = mask
+        self.dk = embed_len  # dimension of keys and queries
+        self.softmax = nn.Softmax(dim=-1)  # Apply softmax on the last dimension
 
-# Train the model with the updated interactive logging
-train_model(model, train_dataloader, criterion, optimizer)
+    def forward(self, queries, keys, values):
+        compatibility = torch.matmul(queries, keys.transpose(-2, -1))
+        compatibility = compatibility / math.sqrt(self.dk)
+        compatibility = self.softmax(compatibility)
 
-# Evaluation function
-def evaluate_model(model, test_dataloader):
-    model.eval()
-    correct, total = 0, 0
-    with torch.no_grad():
-        for text, labels in test_dataloader:
-            outputs = model(text)
-            _, predicted = torch.max(outputs, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-    accuracy = correct / total
-    print(f'Accuracy: {accuracy:.4f}')
+        if self.mask is not None:
+            compatibility = torch.tril(compatibility)
 
-evaluate_model(model, test_dataloader)
+        return torch.matmul(compatibility, values)
+
+# Test the ScaledDotProduct class
+def test_scaled_dot_product():
+    # Define parameters
+    embed_len = 64
+    seq_len = 10
+    batch_size = 32
+
+    # Create an instance of ScaledDotProduct
+    model = ScaledDotProduct(embed_len)
+
+    # Create dummy input tensors
+    queries = torch.rand(batch_size, seq_len, embed_len)
+    keys = torch.rand(batch_size, seq_len, embed_len)
+    values = torch.rand(batch_size, seq_len, embed_len)
+
+    # Forward pass
+    output = model(queries, keys, values)
+
+    # Check the output shape
+    assert output.shape == (batch_size, seq_len, embed_len), f"Expected output shape {(batch_size, seq_len, embed_len)}, but got {output.shape}"
+
+    # Check the output type
+    assert isinstance(output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
+
+    print("Test passed!")
+    return output.shape
+
+# Run the test
+test_scaled_dot_product()
+
+# Define the MultiHeadedAttention class
+class MultiHeadedAttention(nn.Module):
+    def __init__(self, num_heads, embed_len, batch_size, mask=None):
+        super(MultiHeadedAttention, self).__init__()
+        self.num_heads = num_heads
+        self.embed_len = embed_len
+        self.batch_size = batch_size
+        self.mask = mask
+        self.head_length = int(self.embed_len / self.num_heads)
+        self.q_in = self.v_in = self.k_in = self.embed_len
+
+        self.q_linear = nn.Linear(int(self.q_in), int(self.q_in))
+        self.k_linear = nn.Linear(int(self.k_in), int(self.k_in))
+        self.v_linear = nn.Linear(int(self.v_in), int(self.v_in))
+
+        if self.mask is not None:
+            self.attention = ScaledDotProduct(embed_len=self.head_length, mask=True)
+        else:
+            self.attention = ScaledDotProduct(embed_len=self.head_length)
+
+        self.output_linear = nn.Linear(self.q_in, self.q_in)
+
+    def forward(self, queries, keys, values):
+        queries = self.q_linear(queries).reshape(self.batch_size, -1, self.num_heads, self.head_length)
+        queries = queries.transpose(1, 2)
+
+        keys = self.k_linear(keys).reshape(self.batch_size, -1, self.num_heads, self.head_length)
+        keys = keys.transpose(1, 2)
+
+        values = self.v_linear(values).reshape(self.batch_size, -1, self.num_heads, self.head_length)
+        values = values.transpose(1, 2)
+
+        sdp_output = self.attention(queries, keys, values).transpose(1, 2).reshape(self.batch_size, -1, self.num_heads * self.head_length)
+
+        return self.output_linear(sdp_output)
+
+# Test the MultiHeadedAttention class
+def test_multi_headed_attention():
+    # Define parameters
+    num_heads = 8
+    embed_len = 64
+    seq_len = 10
+    batch_size = 32
+    mask = None
+
+    # Create an instance of MultiHeadedAttention
+    model = MultiHeadedAttention(num_heads, embed_len, batch_size, mask)
+
+    # Create dummy input tensors
+    queries = torch.rand(batch_size, seq_len, embed_len)
+    keys = torch.rand(batch_size, seq_len, embed_len)
+    values = torch.rand(batch_size, seq_len, embed_len)
+
+    # Forward pass
+    output = model(queries, keys, values)
+
+    # Check the output shape
+    assert output.shape == (batch_size, seq_len, embed_len), f"Expected output shape {(batch_size, seq_len, embed_len)}, but got {output.shape}"
+
+    # Check the output type
+    assert isinstance(output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
+
+    print("Test passed!")
+
+    return output.shape
+
+# Run the test
+test_multi_headed_attention()
+
+# Define the DataEncoding class
+class DataEncoding:
+    def __init__(self, num_wires):
+        self.num_wires = num_wires
+
+    def encode(self, x):
+        num_features = len(x)
+
+        # Squeezing gates
+        for i in range(0, min(num_features, self.num_wires * 2), 2):
+            qml.Squeezing(x[i], x[i + 1], wires=i // 2)
+
+        # Beamsplitter gates
+        for i in range(self.num_wires - 1):
+            idx = self.num_wires * 2 + i * 2
+            if idx + 1 < num_features:
+                qml.Beamsplitter(x[idx], x[idx + 1], wires=[i % self.num_wires, (i + 1) % self.num_wires])
+
+        # Rotation gates
+        for i in range(self.num_wires):
+            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + i
+            if idx < num_features:
+                qml.Rotation(x[idx], wires=i)
+
+        # Displacement gates
+        for i in range(self.num_wires):
+            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + i * 2
+            if idx + 1 < num_features:
+                qml.Displacement(x[idx], x[idx + 1], wires=i)
+
+        # Kerr gates
+        for i in range(self.num_wires):
+            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires * 2 + i
+            if idx < num_features:
+                qml.Kerr(x[idx], wires=i)
+
+        # Squeezing gates (second set)
+        for i in range(0, min(num_features - (self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires * 2 + self.num_wires), self.num_wires * 2), 2):
+            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires * 2 + self.num_wires + i
+            if idx + 1 < num_features:
+                qml.Squeezing(x[idx], x[idx + 1], wires=i // 2)
+
+        # Rotation gates (second set)
+        for i in range(self.num_wires):
+            idx = self.num_wires * 2 + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires * 2 + self.num_wires + self.num_wires * 2 + i
+            if idx < num_features:
+                qml.Rotation(x[idx], wires=i)
+
+# Define the QuantumLayer class
+class QuantumLayer:
+    def __init__(self, num_wires):
+        self.num_wires = num_wires
+
+    def apply_layer(self, v):
+        num_params = len(v)
+
+        # Interferometer 1
+        for i in range(self.num_wires - 1):
+            idx = i * 2
+            if idx + 1 < num_params:
+                theta = v[idx]
+                phi = v[idx + 1]
+                qml.Beamsplitter(theta, phi, wires=[i % self.num_wires, (i + 1) % self.num_wires])
+
+        for i in range(self.num_wires):
+            idx = (self.num_wires - 1) * 2 + i
+            if idx < num_params:
+                qml.Rotation(v[idx], wires=i)
+
+        # Squeezers
+        for i in range(self.num_wires):
+            idx = (self.num_wires - 1) * 2 + self.num_wires + i
+            if idx < num_params:
+                qml.Squeezing(v[idx], 0.0, wires=i)
+
+        # Interferometer 2
+        for i in range(self.num_wires - 1):
+            idx = (self.num_wires - 1) * 2 + self.num_wires + self.num_wires + i * 2
+            if idx + 1 < num_params:
+                theta = v[idx]
+                phi = v[idx + 1]
+                qml.Beamsplitter(theta, phi, wires=[i % self.num_wires, (i + 1) % self.num_wires])
+
+        for i in range(self.num_wires):
+            idx = (self.num_wires - 1) * 2 + self.num_wires + self.num_wires + (self.num_wires - 1) * 2 + i
+            if idx < num_params:
+                qml.Rotation(v[idx], wires=i)
+
+        # Bias addition
+        for i in range(self.num_wires):
+            idx = (self.num_wires - 1) * 2 + self.num_wires + self.num_wires + (self.num_wires - 1) * 2 + self.num_wires + i
+            if idx < num_params:
+                qml.Displacement(v[idx], 0.0, wires=i)
+
+        # Non-linear activation function
+        for i in range(self.num_wires):
+            idx = (self.num_wires - 1) * 2 + self.num_wires + self.num_wires + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires + i
+            if idx < num_params:
+                qml.Kerr(v[idx], wires=i)
+
+# Define the WeightInitializer class
+class WeightInitializer:
+    @staticmethod
+    def init_weights(layers, modes, active_sd=0.0001, passive_sd=0.1):
+        M = (modes - 1) * 2 + modes  # Number of interferometer parameters
+
+        int1_weights = np.random.normal(size=[layers, M], scale=passive_sd)
+        s_weights = np.random.normal(size=[layers, modes], scale=active_sd)
+        int2_weights = np.random.normal(size=[layers, M], scale=passive_sd)
+        dr_weights = np.random.normal(size=[layers, modes], scale=active_sd)
+        k_weights = np.random.normal(size=[layers, modes], scale=active_sd)
+
+        weights = np.concatenate([int1_weights, s_weights, int2_weights, dr_weights, k_weights], axis=1)
+
+        return weights
+
+# Think through the output
+num_modes = 6
+num_basis = 2
+
+# Select a device
+dev = qml.device("strawberryfields.fock", wires=num_modes, cutoff_dim=num_basis)
+
+@qml.qnode(dev, interface="torch")
+def quantum_nn(inputs, var):
+    num_wires = 6
+    encoder = DataEncoding(num_wires)
+    encoder.encode(inputs)
+
+    # Iterative quantum layers
+    q_layer = QuantumLayer(num_wires)
+    for v in var:
+        q_layer.apply_layer(v)
+
+    # Return the probabilities
+    return qml.probs(wires=[0, 1, 2, 3, 4, 5])
+
+num_layers = 2
+
+# Initialize weights for quantum layers
+weights = WeightInitializer.init_weights(num_layers, num_modes)
+
+# Convert the quantum layer to a Torch layer
+shape_tup = weights.shape
+weight_shapes = {'var': shape_tup}
+
+qlayer = qml.qnn.TorchLayer(quantum_nn, weight_shapes)
+layers = [qlayer]
+
+# Define the FeedForwardBlock class
+class FeedForwardBlock(nn.Module):
+    def __init__(self, embed_len, dropout=0.1):
+        super(FeedForwardBlock, self).__init__()
+        self.feed_forward = nn.Sequential(*layers)
+        self.dropout_layer = nn.Dropout(p=dropout)
+        self.layer_norm = nn.LayerNorm(embed_len)
+
+    def forward(self, x):
+        ff_output = self.feed_forward(x)
+        ff_output = self.dropout_layer(ff_output)
+        return self.layer_norm(ff_output + x)
+
+# Example usage
+embed_len = 64  # example value
+model = FeedForwardBlock(embed_len)
+
+# Calculate the number of parameters
+def count_parameters(module):
+    return sum(p.numel() for p in module.parameters() if p.requires_grad)
+
+total_params = count_parameters(model)
+print(f'Total number of parameters in FeedForwardBlock: {total_params}')
+
+# Test the FeedForwardBlock class
+def test_feed_forward_block():
+    # Define parameters
+    embed_len = 64
+    seq_len = 10
+    batch_size = 32
+    dropout = 0.1
+
+    # Create an instance of FeedForwardBlock
+    model = FeedForwardBlock(embed_len, dropout)
+
+    # Create a dummy input tensor
+    dummy_input = torch.rand(batch_size, seq_len, embed_len)
+
+    # Forward pass
+    output = model(dummy_input)
+
+    # Check the output shape
+    assert output.shape == (batch_size, seq_len, embed_len), f"Expected output shape {(batch_size, seq_len, embed_len)}, but got {output.shape}"
+
+    # Check the output type
+    assert isinstance(output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
+
+    print("Test passed!")
+
+    return output.shape
+
+# Run the test
+test_feed_forward_block()
+
+# Define the EncoderBlock class
+class EncoderBlock(nn.Module):
+    def __init__(self, embed_len, num_heads, batch_size, dropout=0.1, mask=None):
+        super(EncoderBlock, self).__init__()
+        self.embed_len = embed_len
+        self.multihead = MultiHeadedAttention(num_heads, embed_len, batch_size, mask)
+        self.first_norm = nn.LayerNorm(self.embed_len)
+        self.dropout_layer = nn.Dropout(p=dropout)
+        self.feed_forward_block = FeedForwardBlock(embed_len, dropout)
+
+    def forward(self, queries, keys, values):
+        attention_output = self.multihead(queries, keys, values)
+        attention_output = self.dropout_layer(attention_output)
+        first_sublayer_output = self.first_norm(attention_output + queries)
+        return self.feed_forward_block(first_sublayer_output)
+
+# Test the EncoderBlock class
+def test_encoder_block():
+    # Define parameters
+    embed_len = 64
+    num_heads = 8
+    seq_len = 10
+    batch_size = 32
+    dropout = 0.1
+    mask = None
+
+    # Create an instance of EncoderBlock
+    model = EncoderBlock(embed_len, num_heads, batch_size, dropout, mask)
+
+    # Create dummy input tensors
+    queries = torch.rand(batch_size, seq_len, embed_len)
+    keys = torch.rand(batch_size, seq_len, embed_len)
+    values = torch.rand(batch_size, seq_len, embed_len)
+
+    # Forward pass
+    output = model(queries, keys, values)
+
+    # Check the output shape
+    assert output.shape == (batch_size, seq_len, embed_len), f"Expected output shape {(batch_size, seq_len, embed_len)}, but got {output.shape}"
+
+    # Check the output type
+    assert isinstance(output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
+
+    print("Test passed!")
+
+    return output.shape
+
+# Run the test
+test_encoder_block()
+
+# Define the DecoderBlock class
+class DecoderBlock(nn.Module):
+    def __init__(self, embed_len, num_heads, batch_size, dropout=0.1, mask=None):
+        super(DecoderBlock, self).__init__()
+        self.embed_len = embed_len
+        self.multihead_self_attention = MultiHeadedAttention(num_heads, embed_len, batch_size, mask)
+        self.multihead_enc_dec_attention = MultiHeadedAttention(num_heads, embed_len, batch_size, mask)
+        self.first_norm = nn.LayerNorm(self.embed_len)
+        self.second_norm = nn.LayerNorm(self.embed_len)
+        self.third_norm = nn.LayerNorm(self.embed_len)
+        self.dropout_layer = nn.Dropout(p=dropout)
+        self.feed_forward_block = FeedForwardBlock(embed_len, dropout)
+
+    def forward(self, target, encoder_output):
+        # Self attention
+        self_attention_output = self.multihead_self_attention(target, target, target)
+        self_attention_output = self.dropout_layer(self_attention_output)
+        first_sublayer_output = self.first_norm(self_attention_output + target)
+
+        # Encoder-decoder attention
+        enc_dec_attention_output = self.multihead_enc_dec_attention(first_sublayer_output, encoder_output, encoder_output)
+        enc_dec_attention_output = self.dropout_layer(enc_dec_attention_output)
+        second_sublayer_output = self.second_norm(enc_dec_attention_output + first_sublayer_output)
+
+        # Feed-forward
+        return self.feed_forward_block(second_sublayer_output)
+
+# Test the DecoderBlock class
+def test_decoder_block():
+    # Define parameters
+    embed_len = 64
+    num_heads = 8
+    seq_len = 10
+    batch_size = 32
+    dropout = 0.1
+    mask = None
+
+    # Create an instance of DecoderBlock
+    model = DecoderBlock(embed_len, num_heads, batch_size, dropout, mask)
+
+    # Create dummy input tensors
+    target = torch.rand(batch_size, seq_len, embed_len)
+    encoder_output = torch.rand(batch_size, seq_len, embed_len)
+
+    # Forward pass
+    output = model(target, encoder_output)
+
+    # Check the output shape
+    assert output.shape == (batch_size, seq_len, embed_len), f"Expected output shape {(batch_size, seq_len, embed_len)}, but got {output.shape}"
+
+    # Check the output type
+    assert isinstance(output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
+
+    print("Test passed!")
+
+    return output.shape
+
+# Run the test
+test_decoder_block()
+
+# Define the Transformer class
+class Transformer(nn.Module):
+    def __init__(self, num_encoder_layers, num_decoder_layers, embed_len, num_heads, batch_size, vocab_size, dropout=0.1, device='cpu'):
+        super(Transformer, self).__init__()
+        self.embed_len = embed_len
+        self.device = device
+        self.embedding = InputEmbedding(vocab_size, embed_len, dropout, device).to(device)
+        self.encoder_layers = nn.ModuleList([EncoderBlock(embed_len, num_heads, batch_size, dropout).to(device) for _ in range(num_encoder_layers)])
+        self.decoder_layers = nn.ModuleList([DecoderBlock(embed_len, num_heads, batch_size, dropout).to(device) for _ in range(num_decoder_layers)])
+        self.output_linear = nn.Linear(embed_len, vocab_size).to(device)
+
+    def forward(self, src, tgt):
+        src_embedded = self.embedding(src)
+        tgt_embedded = self.embedding(tgt)
+
+        # Encoder forward pass
+        encoder_output = src_embedded
+        for layer in self.encoder_layers:
+            encoder_output = layer(encoder_output, encoder_output, encoder_output)
+
+        # Decoder forward pass
+        decoder_output = tgt_embedded
+        for layer in self.decoder_layers:
+            decoder_output = layer(decoder_output, encoder_output)
+
+        return self.output_linear(decoder_output)
+
+# Test the Transformer class
+def test_transformer():
+    # Define parameters
+    num_encoder_layers = 6
+    num_decoder_layers = 6
+    embed_len = 64
+    num_heads = 8
+    seq_len = 20
+    batch_size = 32
+    vocab_size = 100
+    dropout = 0.1
+    device = 'cpu'
+
+    # Create an instance of Transformer
+    model = Transformer(num_encoder_layers, num_decoder_layers, embed_len, num_heads, batch_size, vocab_size, dropout, device)
+
+    # Create dummy input tensors
+    src = torch.randint(0, vocab_size, (batch_size, seq_len))
+    tgt = torch.randint(0, vocab_size, (batch_size, seq_len))
+
+    # Forward pass
+    output = model(src, tgt)
+
+    # Check the output shape
+    assert output.shape == (batch_size, seq_len, vocab_size), f"Expected output shape {(batch_size, seq_len, vocab_size)}, but got {output.shape}"
+
+    # Check the output type
+    assert isinstance(output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
+
+    print("Test passed!")
+    return output.shape
+
+# Run the test
+test_transformer()
+
