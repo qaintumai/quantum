@@ -70,7 +70,7 @@ pip install -r requirements.txt
 or 
 
 ```sh
-/Users/sophiechoe/github/quantum/venv/bin/pip install --no-user -r requirements.txt
+/Users/<your_user_directory_name>/github/quantum/venv/bin/pip install --no-user -r requirements.txt
 ```
 
 ### Running
