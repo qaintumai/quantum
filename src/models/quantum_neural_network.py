@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+
+# Weight Initializer may not be necessary.
+
 import pennylane as qml
 import torch
 import sys
