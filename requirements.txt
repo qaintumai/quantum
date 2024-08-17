@@ -4,7 +4,7 @@ pandas==2.2.2
 PennyLane==0.29.1
 PennyLane-SF==0.29.1
 scikit_learn
-setuptools==65.5.0
 scipy==1.7.3
+setuptools==65.5.0
 torch==2.2.2
 torchvision==0.17.2
