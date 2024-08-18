@@ -32,7 +32,7 @@ from layers.qnn_circuit import qnn_circuit
 from utils.config import num_wires, num_basis, single_output, multi_output, probabilities
 
 class QuantumNeuralNetwork:
-    def __init__(self, qnn_circuit, num_layers=2, num_modes=6):
+    def __init__(self, num_layers=2, num_modes=6, qnn_circuit=None):
         """
         Initializes the quantum layer model by setting up the weights and converting
         the quantum neural network (qnn) into a Torch layer.
@@ -68,6 +68,6 @@ class QuantumNeuralNetwork:
 
 # Example usage
 num_layers = 2
-num_wires = 6
-qnn = QuantumNeuralNetwork(num_layers, num_wires, qnn_circuit)
+num_modes = 6
+qnn = QuantumNeuralNetwork(num_layers, num_modes, qnn_circuit=qnn_circuit)
 qnn_layers = qnn.qlayers  # This is a quantum model converted into a PyTorch model.
