@@ -31,25 +31,43 @@ from layers.qnn_circuit import qnn_circuit
 
 from utils.config import num_wires, num_basis, single_output, multi_output, probabilities
 
-class QuantumNeuralNetworkModel:
-    def __init__(self, num_layers, num_wires, inputs, var):
-        probabilities = True
-        self.num_layers = num_layers
-        self.num_wires = num_wires
-        self.quantum_nn = qnn_circuit(inputs, var)
-        self.model = self._build_model()
+class QuantumNeuralNetwork:
+    def __init__(self, qnn_circuit, num_layers=2, num_modes=6):
+        """
+        Initializes the quantum layer model by setting up the weights and converting
+        the quantum neural network (qnn) into a Torch layer.
 
-    def _build_model(self):
-        weights = WeightInitializer.init_weights(self.num_layers, self.num_wires)
-        shape_tup = weights.shape
+        Parameters:
+        - quantum_nn: The quantum neural network function to be converted.
+        - num_layers: Number of quantum layers.
+        - num_modes: Number of qumodes (wires) for the quantum circuit.
+        """
+        self.num_layers = num_layers
+        self.num_modes = num_modes
+        self.qnn_circuit = qnn_circuit
+
+        # Initialize weights for quantum layers
+        self.weights = WeightInitializer.init_weights(self.num_layers, self.num_modes)
+
+        # Convert the quantum layer to a Torch layer
+        self.qlayers = self._build_quantum_layers()
+
+    def _build_quantum_layers(self):
+        """
+        Converts the quantum neural network to a Torch layer and returns the layers as a list.
+        """
+        # Get the shape of the weights and pass them to TorchLayer
+        shape_tup = self.weights.shape
         weight_shapes = {'var': shape_tup}
-        qlayer = qml.qnn.TorchLayer(self.quantum_nn, weight_shapes)
-        model = [qlayer]
-        # model = torch.nn.Sequential(qlayer)
-        return model
+
+        # Create a TorchLayer from the quantum circuit
+        qlayers = qml.qnn.TorchLayer(self.qnn_circuit, weight_shapes)
+
+        # Store the quantum layer in a list (more layers can be added if needed)
+        return qlayers
 
 # Example usage
 num_layers = 2
 num_wires = 6
-qnn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit)
-model = qnn_model.model   # This is a quantum model converted into a PyTorch model.
+qnn = QuantumNeuralNetwork(num_layers, num_wires, qnn_circuit)
+qnn_layers = qnn.qlayers  # This is a quantum model converted into a PyTorch model.

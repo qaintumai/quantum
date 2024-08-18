@@ -15,14 +15,12 @@
 
 from .quantum_decoder import QuantumDecoder
 from .quantum_encoder import QuantumEncoder
-from .quantum_neural_network import QuantumNeuralNetworkModel
-from .quantum_transformer import Transformer
-from .hybrid_neural_network import ClassicalQuantumClassifier
+from .quantum_neural_network import QuantumNeuralNetwork
+from .quantum_transformer import QuantumTransformer
 
 __all__ = [
     "QuantumDecoder",
     "QuantumEncoder",
-    "QuantumNeuralNetworkModel",
-    "Transformer",
-    "ClassicalQuantumClassifier"
+    "QuantumNeuralNetwork",
+    "Transformer"
 ]
