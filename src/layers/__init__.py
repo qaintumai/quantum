@@ -30,7 +30,6 @@ from .input_embedding import InputEmbedding
 from .multi_headed_attention import MultiHeadedAttention
 from .qnn_circuit import qnn_circuit
 from .quantum_data_encoder import QuantumDataEncoder
-from .quantum_feed_forward import QuantumFeedForward
 from .qnn_layer import QuantumNeuralNetworkLayer
 from .scaled_dot_product import ScaledDotProduct
 from .weight_initializer import WeightInitializer
