@@ -15,6 +15,9 @@
 
 # Test the ScaledDotProduct class
 import torch
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from layers.scaled_dot_product import ScaledDotProduct
 
 
@@ -45,4 +48,12 @@ def test_scaled_dot_product():
         output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
 
     print("Test passed!")
-    return output.shape
+
+
+def main():
+    # Run all tests
+    test_scaled_dot_product()
+
+
+if __name__ == '__main__':
+    main()

@@ -23,7 +23,10 @@ Unit tests for the WeightInitializer class in weight_initializer.py.
 
 import unittest
 import numpy as np
-from src.layers.weight_initializer import WeightInitializer
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+from layers.weight_initializer import WeightInitializer
 
 class TestWeightInitializer(unittest.TestCase):
     

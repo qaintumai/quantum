@@ -15,7 +15,10 @@
 
 # Test the EncoderBlock class
 import torch
-from src.models import QuantumEncoder
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+from models import QuantumEncoder
 
 
 def test_encoder_block():
@@ -48,4 +51,12 @@ def test_encoder_block():
 
     print("Test passed!")
 
-    return output.shape
+
+def main():
+    # Run all tests
+    test_encoder_block()
+
+
+if __name__ == '__main__':
+    main()
+

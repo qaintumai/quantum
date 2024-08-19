@@ -1,10 +1,28 @@
+# Copyright 2024 The qAIntum.ai Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+
 import unittest
 import torch
 import pennylane as qml
-from quantum.src.layers.qnn_circuit import qnn_circuit
-from quantum.src.layers.quantum_data_encoder import QuantumDataEncoder
-from quantum.src.layers.qnn_layer import QuantumNeuralNetworkLayer
-from quantum.src.utils.config import num_wires, num_basis, single_output, multi_output, probabilities
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+from layers.qnn_circuit import qnn_circuit
+from layers.quantum_data_encoder import QuantumDataEncoder
+from layers.qnn_layer import QuantumNeuralNetworkLayer
+from utils.config import num_wires, num_basis, single_output, multi_output, probabilities
 
 
 class TestQNNCircuit(unittest.TestCase):
@@ -76,3 +94,12 @@ class TestQNNCircuit(unittest.TestCase):
         with self.assertRaises(Exception):
             # Provide invalid variable dimensions
             invalid_var = [torch.tensor([0.1] * (self.num_wires + 1)) for _ in range(3)]
+
+
+if __name__ == '__main__':
+    # Run the test suite
+    result = unittest.main(exit=False)
+    
+    # Check if all tests passed
+    if result.result.wasSuccessful():
+        print("Tests passed!")

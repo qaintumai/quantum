@@ -15,7 +15,10 @@
 
 # Test the DecoderBlock class
 import torch
-from src.models import QuantumDecoder
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+from models import QuantumDecoder
 
 
 def test_decoder_block():
@@ -47,4 +50,11 @@ def test_decoder_block():
 
     print("Test passed!")
 
-    return output.shape
+
+def main():
+    # Run all tests
+    test_decoder_block()
+
+
+if __name__ == '__main__':
+    main()
