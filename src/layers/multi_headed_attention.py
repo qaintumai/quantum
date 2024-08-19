@@ -14,7 +14,7 @@
 # ==============================================================================
 
 from torch import nn
-from .scaled_dot_product import ScaledDotProduct
+from layers.scaled_dot_product import ScaledDotProduct
 
 class MultiHeadedAttention(nn.Module):
     """
