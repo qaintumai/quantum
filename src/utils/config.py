@@ -17,6 +17,7 @@
 import torch
 
 num_wires = 8
+num_layers = 4
 num_basis = 2
 single_output = False
 multi_output = False

@@ -42,7 +42,8 @@ class QuantumFeedForward(nn.Module):
         self.quantum_nn = quantum_nn
         #TODO: circular imports, refactor
         from models.quantum_neural_network import QuantumNeuralNetwork
-        self.qnn_model = QuantumNeuralNetwork(num_layers=self.num_layers, num_wires=self.num_wires, qnn_circuit=quantum_nn)
+        #TODO: check if num_modes are num wires
+        self.qnn_model = QuantumNeuralNetwork(num_layers=self.num_layers, num_modes=self.num_wires, qnn_circuit=quantum_nn)
         self.quantum_feed_forward = nn.Sequential(self.qnn_model)
         self.dropout_layer = nn.Dropout(p=dropout)
         self.layer_norm = nn.LayerNorm(embed_len)
