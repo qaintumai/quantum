@@ -41,7 +41,7 @@ class QuantumFeedForward(nn.Module):
         self.num_layers = num_layers
         self.num_wires = num_wires
         self.quantum_nn = quantum_nn
-        self.qnn_model = QuantumNeuralNetwork(num_layers=self.num_layers, num_wires=self.num_wires, quantum_nn)
+        self.qnn_model = QuantumNeuralNetwork(self.num_layers, self.num_wires, self.quantum_nn).qlayers
         self.quantum_feed_forward = nn.Sequential(self.qnn_model)
         self.dropout_layer = nn.Dropout(p=dropout)
         self.layer_norm = nn.LayerNorm(embed_len)
@@ -61,23 +61,3 @@ class QuantumFeedForward(nn.Module):
         return self.layer_norm(ff_output + x)
 
 
-# Example usage
-embed_len = 64  # example value
-model = QuantumFeedForward(num_layers, num_wires, embed_len)
-
-# Calculate the number of parameters
-def count_parameters(module):
-    """
-    Counts the number of trainable parameters in a module.
-
-    Parameters:
-    - module (torch.nn.Module): The module to count parameters for.
-
-    Returns:
-    - int: Total number of trainable parameters.
-    """
-    return sum(p.numel() for p in module.parameters() if p.requires_grad)
-
-
-total_params = count_parameters(model)
-print(f'Total number of parameters in QuantumFeedForwardBlock: {total_params}')

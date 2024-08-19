@@ -37,7 +37,7 @@ src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if src_dir not in sys.path:
     sys.path.append(src_dir)
 
-from models.quantum_neural_network import QuantumNeuralNetworkModel  #Self-referential?
+from models.quantum_neural_network import QuantumNeuralNetwork  
 from layers.qnn_circuit import qnn_circuit
 from utils.utils import train_model, evaluate_model
 
@@ -80,7 +80,7 @@ def load_and_preprocess_data(file_path):
     return X_train, X_test, y_train, y_test
 
 # Accessing dataset from the 'data' directory
-financial_csv_path = os.path.abspath(os.path.join(script_dir, '..', 'src','data', 'financial.csv'))
+financial_csv_path = os.path.abspath(os.path.join(script_dir, '..','data', 'financial.csv'))
 X_train, X_test, y_train, y_test = load_and_preprocess_data(financial_csv_path)
 
 # For training
@@ -100,7 +100,8 @@ num_basis = 2
 num_layers = 2
 
 # Instantiate the QNN model
-quantum_nn_model = QuantumNeuralNetworkModel(num_layers, num_wires, qnn_circuit).model
+quantum_nn = QuantumNeuralNetwork(num_layers, num_wires, qnn_circuit).qlayers
+quantum_nn_model = torch.nn.Sequential(quantum_nn)
 
 # Define loss function and optimizer
 criterion = nn.MSELoss()
