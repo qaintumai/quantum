@@ -14,6 +14,9 @@
 # ==============================================================================
 
 import torch
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from layers.input_embedding import InputEmbedding
 from utils.config import get_device
 
