@@ -62,6 +62,16 @@ source venv/bin/activate
 ```sh
 pip install -r requirements.txt
 ```
+* Caution: Sometimes, pip may default to a user installation outside the virtual environment instead of installing packages within the virtual environment's site-packages. To avoid this, you can run
+
+```sh
+/Users/<your_user_directory_name>/github/quantum/venv/bin/pip install -r requirements.txt
+```
+or 
+
+```sh
+/Users/<your_user_directory_name>/github/quantum/venv/bin/pip install --no-user -r requirements.txt
+```
 
 ### Running
 

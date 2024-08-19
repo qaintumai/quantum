@@ -14,7 +14,7 @@
 # ==============================================================================
 
 from torch import nn
-# from src.models import ## Was left over from file conversion, what is the purpose?
+from models.quantum_neural_network import QuantumNeuralNetwork
 
 class QuantumFeedForward(nn.Module):
     """
@@ -29,7 +29,7 @@ class QuantumFeedForward(nn.Module):
     output = model(input_tensor)
     """
 
-    def __init__(self, embed_len, dropout=0.1):
+    def __init__(self, num_layers, num_wires, quantum_nn, embed_len, dropout=0.1):
         """
         Initializes the QuantumFeedForward class with the given parameters.
 
@@ -38,9 +38,11 @@ class QuantumFeedForward(nn.Module):
         - dropout (float, optional): Dropout rate for regularization. Default is 0.1.
         """
         super(QuantumFeedForward, self).__init__()
-
-        #TODO: pointer to which layers?
-        # self.feed_forward = nn.Sequential(*layers)
+        self.num_layers = num_layers
+        self.num_wires = num_wires
+        self.quantum_nn = quantum_nn
+        self.qnn_model = QuantumNeuralNetwork(num_layers=self.num_layers, num_wires=self.num_wires, quantum_nn)
+        self.quantum_feed_forward = nn.Sequential(self.qnn_model)
         self.dropout_layer = nn.Dropout(p=dropout)
         self.layer_norm = nn.LayerNorm(embed_len)
 
@@ -54,14 +56,14 @@ class QuantumFeedForward(nn.Module):
         Returns:
         - torch.Tensor: Output tensor after applying feedforward, dropout, and layer normalization.
         """
-        ff_output = self.feed_forward(x)
+        ff_output = self.quantum_feed_forward(x)
         ff_output = self.dropout_layer(ff_output)
         return self.layer_norm(ff_output + x)
 
 
 # Example usage
 embed_len = 64  # example value
-model = QuantumFeedForward(embed_len)
+model = QuantumFeedForward(num_layers, num_wires, embed_len)
 
 # Calculate the number of parameters
 def count_parameters(module):
@@ -78,4 +80,4 @@ def count_parameters(module):
 
 
 total_params = count_parameters(model)
-print(f'Total number of parameters in FeedForwardBlock: {total_params}')
+print(f'Total number of parameters in QuantumFeedForwardBlock: {total_params}')
