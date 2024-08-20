@@ -49,6 +49,10 @@ class QuantumNeuralNetwork:
         # Initialize weights for quantum layers
         self.weights = WeightInitializer.init_weights(self.num_layers, self.num_modes)
 
+
+        print("TESTING: size of weights:", self.weights.shape)
+        print("TESTING: visualizing weights:", self.weights)
+
         # Convert the quantum layer to a Torch layer
         self.qlayers = self._build_quantum_layers()
 
@@ -60,8 +64,14 @@ class QuantumNeuralNetwork:
         shape_tup = self.weights.shape
         weight_shapes = {'var': shape_tup}
 
+       # Print TESTING: print weight_shapes
+        print("TESTING: weight_shapes:", weight_shapes)
+
         # Create a TorchLayer from the quantum circuit
         qlayers = qml.qnn.TorchLayer(self.qnn_circuit, weight_shapes)
+
+        # Print TESTING: qlayers
+        print("TESTING: qlayers:", qlayers)
 
         # Store the quantum layer in a list (more layers can be added if needed)
         return qlayers

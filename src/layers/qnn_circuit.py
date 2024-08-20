@@ -46,12 +46,29 @@ def qnn_circuit(inputs, var):
     Returns:
     - list or float: The specified output type.
     """
+    print("====================================================================================")
+    print("======================================TESTING QNN_CIRCUIT===========================")
+    print("====================================================================================")
+    print(f"inputs: {inputs}")
+    print(f"inputs shape: {inputs.shape}")
+    print(f"inputs type: {type(inputs)}")
+    print(f"var: {var}")
+    print(f"var shape: {inputs.var}")
+    print(f"var type: {type(var)}")
+    print("num_wires variable: ", num_wires)
+
     encoder = QuantumDataEncoder(num_wires)
     encoder.encode(inputs)
 
+    print("TESTING encoder: ", encoder)
+    print(f"encoder type: {type(encoder)}")
+
     # Iterative quantum layers
     q_layer = QuantumNeuralNetworkLayer(num_wires)
+    count = 1
     for v in var:
+        print(f"V number {count} in var: {v}")
+        count += 1
         q_layer.apply(v)
 
     if multi_output:

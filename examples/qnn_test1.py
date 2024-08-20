@@ -66,16 +66,19 @@ print(f"Looking at the model: {qnn_model}")
 loss_fn = nn.BCELoss()  # binary cross entropy
 optimizer = optim.Adam(qnn_model.parameters(), lr=0.01)
 
-n_epochs = 3
-batch_size = 10
+n_epochs = 1
+batch_size = 2
  
 for epoch in range(n_epochs):
     for i in range(0, len(X), batch_size):
-        print(f"Batch number: {i} in Epoch {epoch}")
+        print("====================================================================================")
+        print(f"+++++++++++++++Batch number: {i} in Epoch {epoch}++++++++++++++++++++++++++++++++++")
+        print("====================================================================================")
+
         Xbatch = X[i:i+batch_size]
         print(f"Size of Xbatch: {Xbatch.size()}")
-        #ISSUE > > > Mismatching shapes
-        y_pred = qnn_model(Xbatch).reshape(-1, 1)  # Reshape y_pred to (10, 1)
+        #TODO: why are we reshaping??
+        y_pred = qnn_model(Xbatch).reshape(-1, 1)  
         print(f"Size of y_pred: {y_pred.size()}, Values: {y_pred}")
 
         ybatch = y[i:i+batch_size]
