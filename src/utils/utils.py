@@ -92,6 +92,8 @@ def evaluate_model(model, X_test, y_test):
         y_test = y_test.numpy()
         correct = [1 if p == p_true else 0 for p, p_true in zip(y_pred, y_test)]
         accuracy = sum(correct) / len(y_test)
+        print(y_pred)
+        print(y_test)
         print(f"Accuracy: {accuracy * 100:.2f}%")
 
 def evaluate_regression_model(model, X_test, y_test):
@@ -122,8 +124,24 @@ def evaluate_regression_model(model, X_test, y_test):
         'MSE': mse,
         'RMSE': rmse
     }
+    print(y_pred)
+    print(y_test)
     print(f"Mean Absolute Error (MAE): {mae:.4f}")
     print(f"Mean Squared Error (MSE): {mse:.4f}")
     print(f"Root Mean Squared Error (RMSE): {rmse:.4f}")
 
     return metrics
+
+
+# Calculate the number of parameters
+def count_parameters(module):
+    """
+    Counts the number of trainable parameters in a module.
+
+    Parameters:
+    - module (torch.nn.Module): The module to count parameters for.
+
+    Returns:
+    - int: Total number of trainable parameters.
+    """
+    return sum(p.numel() for p in module.parameters() if p.requires_grad)

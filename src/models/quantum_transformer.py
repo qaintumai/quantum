@@ -15,11 +15,11 @@
 
 # Define the Transformer class
 import torch.nn as nn
-from layers import InputEmbedding
-from models import QuantumEncoder, QuantumDecoder
+from layers.input_embedding import InputEmbedding
+from models.quantum_decoder import QuantumDecoder
+from models.quantum_encoder import QuantumEncoder
 
-
-class Transformer(nn.Module):
+class QuantumTransformer(nn.Module):
     def __init__(self, num_encoder_layers, num_decoder_layers, embed_len, num_heads, batch_size, vocab_size, dropout=0.1, device='cpu'):
         super(Transformer, self).__init__()
         self.embed_len = embed_len

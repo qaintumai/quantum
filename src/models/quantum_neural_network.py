@@ -65,9 +65,3 @@ class QuantumNeuralNetwork:
 
         # Store the quantum layer in a list (more layers can be added if needed)
         return qlayers
-
-# Example usage
-num_layers = 2
-num_modes = 6
-qnn = QuantumNeuralNetwork(num_layers, num_modes, qnn_circuit=qnn_circuit)
-qnn_layers = qnn.qlayers  # This is a quantum model converted into a PyTorch model.
