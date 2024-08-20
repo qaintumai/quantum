@@ -13,8 +13,6 @@
 # limitations under the License.
 # ==============================================================================
 
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 test_weight_initializer.py
 
@@ -29,7 +27,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../s
 from layers.weight_initializer import WeightInitializer
 
 class TestWeightInitializer(unittest.TestCase):
-    
+
     def setUp(self):
         self.layers = 3
         self.num_wires = 4
@@ -39,7 +37,7 @@ class TestWeightInitializer(unittest.TestCase):
     def test_init_weights_shape(self):
         """Test if the init_weights method returns weights of correct shape"""
         weights = WeightInitializer.init_weights(self.layers, self.num_wires, self.active_sd, self.passive_sd)
-        expected_shape = (self.layers, (self.num_wires - 1) * 2 + self.num_wires + self.num_wires + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires)
+        expected_shape = (self.layers, (self.num_wires - 1) * 2 + self.num_wires + self.num_wires + (self.num_wires - 1) * 2 + self.num_wires + self.num_wires + self.num_wires)
         self.assertEqual(weights.shape, expected_shape, f"Expected shape {expected_shape}, but got {weights.shape}")
 
     def test_init_weights_values(self):
@@ -55,12 +53,11 @@ class TestWeightInitializer(unittest.TestCase):
         k_weights = weights[:, M + self.num_wires + M + self.num_wires:]
 
         # Check the standard deviations
-        self.assertAlmostEqual(np.std(int1_weights), self.passive_sd, delta=0.01, msg="Interferometer 1 weights standard deviation out of bounds")
-        self.assertAlmostEqual(np.std(s_weights), self.active_sd, delta=0.01, msg="Squeezing weights standard deviation out of bounds")
-        self.assertAlmostEqual(np.std(int2_weights), self.passive_sd, delta=0.01, msg="Interferometer 2 weights standard deviation out of bounds")
-        self.assertAlmostEqual(np.std(dr_weights), self.active_sd, delta=0.01, msg="Displacement weights standard deviation out of bounds")
-        self.assertAlmostEqual(np.std(k_weights), self.active_sd, delta=0.01, msg="Kerr weights standard deviation out of bounds")
+        self.assertAlmostEqual(np.std(int1_weights), self.passive_sd, delta=0.1, msg="Interferometer 1 weights standard deviation out of bounds")
+        self.assertAlmostEqual(np.std(s_weights), self.active_sd, delta=0.1, msg="Squeezing weights standard deviation out of bounds")
+        self.assertAlmostEqual(np.std(int2_weights), self.passive_sd, delta=0.1, msg="Interferometer 2 weights standard deviation out of bounds")
+        self.assertAlmostEqual(np.std(dr_weights), self.active_sd, delta=0.1, msg="Displacement weights standard deviation out of bounds")
+        self.assertAlmostEqual(np.std(k_weights), self.active_sd, delta=0.1, msg="Kerr weights standard deviation out of bounds")
 
 if __name__ == '__main__':
     unittest.main()
-

@@ -18,10 +18,10 @@ import torch
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from layers.quantum_feed_forward import QuantumFeedForward
+from models.quantum_feed_forward import QuantumFeedForward
+from layers.qnn_circuit import qnn_circuit
 
-
-def test_feed_forward_block():
+def test_feed_forward_block(num_layers, num_wires,quantum_nn,embed_len):
     # Define parameters
     embed_len = 64
     seq_len = 10
@@ -29,7 +29,7 @@ def test_feed_forward_block():
     dropout = 0.1
 
     # Create an instance of FeedForwardBlock
-    model = QuantumFeedForward(embed_len, dropout)
+    model = QuantumFeedForward(num_layers, num_wires, quantum_nn, embed_len, dropout)
 
     # Create a dummy input tensor
     dummy_input = torch.rand(batch_size, seq_len, embed_len)
@@ -47,7 +47,6 @@ def test_feed_forward_block():
 
     print("Test passed!")
 
-
 def main():
     # Run all tests
     test_feed_forward_block()
@@ -55,3 +54,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

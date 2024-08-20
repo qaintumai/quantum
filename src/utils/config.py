@@ -25,4 +25,8 @@ probabilities = False
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 def get_device():
+<<<<<<< HEAD
     return device
+=======
+    return device
+>>>>>>> main

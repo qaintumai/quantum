@@ -13,15 +13,14 @@
 # limitations under the License.
 # ==============================================================================
 
-# Test the ScaledDotProduct class
 import torch
+import time
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from layers.scaled_dot_product import ScaledDotProduct
 
 
-# Test the ScaledDotProduct class
 def test_scaled_dot_product():
     # Define parameters
     embed_len = 64
@@ -37,23 +36,62 @@ def test_scaled_dot_product():
     values = torch.rand(batch_size, seq_len, embed_len)
 
     # Forward pass
+    start_time = time.time()
     output = model(queries, keys, values)
+    elapsed_time = time.time() - start_time
 
     # Check the output shape
     assert output.shape == (
         batch_size, seq_len, embed_len), f"Expected output shape {(batch_size, seq_len, embed_len)}, but got {output.shape}"
 
     # Check the output type
-    assert isinstance(
-        output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
+    assert isinstance(output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
+
+    # Check performance: Assert the forward pass is reasonably fast
+    assert elapsed_time < 1.0, f"Forward pass took too long: {elapsed_time:.4f} seconds"
 
     print("Test passed!")
 
+    return output.shape
 
-def main():
-    # Run all tests
-    test_scaled_dot_product()
+
+def test_edge_cases():
+    # Edge case: Small tensors
+    embed_len = 1
+    seq_len = 1
+    batch_size = 1
+
+    model = ScaledDotProduct(embed_len)
+
+    queries = torch.rand(batch_size, seq_len, embed_len)
+    keys = torch.rand(batch_size, seq_len, embed_len)
+    values = torch.rand(batch_size, seq_len, embed_len)
+
+    output = model(queries, keys, values)
+
+    assert output.shape == (
+        batch_size, seq_len, embed_len), f"Expected output shape {(batch_size, seq_len, embed_len)}, but got {output.shape}"
+    print("Edge case for small tensors passed!")
+
+    # Edge case: Large tensors
+    embed_len = 512
+    seq_len = 1000
+    batch_size = 64
+
+    model = ScaledDotProduct(embed_len)
+
+    queries = torch.rand(batch_size, seq_len, embed_len)
+    keys = torch.rand(batch_size, seq_len, embed_len)
+    values = torch.rand(batch_size, seq_len, embed_len)
+
+    output = model(queries, keys, values)
+
+    assert output.shape == (
+        batch_size, seq_len, embed_len), f"Expected output shape {(batch_size, seq_len, embed_len)}, but got {output.shape}"
+    print("Edge case for large tensors passed!")
 
 
 if __name__ == '__main__':
-    main()
+    shape = test_scaled_dot_product()
+    test_edge_cases()
+
