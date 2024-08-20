@@ -15,7 +15,7 @@
 
 # Define the EncoderBlock class
 from torch import nn
-from layer.multi_headed_attention import MultiHeadedAttention
+from layers.multi_headed_attention import MultiHeadedAttention
 from models.quantum_feed_forward import QuantumFeedForward
 
 class QuantumEncoder(nn.Module):
