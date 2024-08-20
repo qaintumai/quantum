@@ -17,9 +17,9 @@
 import torch
 
 num_wires = 8
-num_layers = 4
+num_layers = 2
 num_basis = 2
-single_output = False
+single_output = True
 multi_output = False
 probabilities = False
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
@@ -27,3 +27,20 @@ device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 def get_device():
     return device
 
+def set_config_variable(name, value):
+    """
+    Set the value of a configuration variable by name.
+
+    Args:
+        name (str): The name of the configuration variable.
+        value (any): The value to set the configuration variable to.
+    """
+    global num_wires, num_layers, num_basis, single_output, multi_output, probabilities, device
+    if name in globals():
+        globals()[name] = value
+    else:
+        raise ValueError(f"Config variable '{name}' does not exist.")
+
+# Example usage:
+# set_config_variable('single_output', True)
+# set_config_variable('num_layers', 6)
