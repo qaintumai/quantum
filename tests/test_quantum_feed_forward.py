@@ -17,13 +17,8 @@
 import torch
 import sys
 import os
-
-# Add the src directory to the Python path
-script_dir = os.path.dirname(__file__)
-src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
-if src_dir not in sys.path:
-    sys.path.append(src_dir)
-from layers.quantum_feed_forward import QuantumFeedForward
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+from models.quantum_feed_forward import QuantumFeedForward
 from layers.qnn_circuit import qnn_circuit
 
 def test_feed_forward_block(num_layers, num_wires,quantum_nn,embed_len):
@@ -52,6 +47,11 @@ def test_feed_forward_block(num_layers, num_wires,quantum_nn,embed_len):
 
     print("Test passed!")
 
-    return output.shape
+def main():
+    # Run all tests
+    test_feed_forward_block()
 
-test_feed_forward_block(num_layers=2, num_wires=6,quantum_nn=qnn_circuit,embed_len=64)
+
+if __name__ == '__main__':
+    main()
+

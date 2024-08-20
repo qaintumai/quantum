@@ -51,6 +51,7 @@ def test_scaled_dot_product():
     assert elapsed_time < 1.0, f"Forward pass took too long: {elapsed_time:.4f} seconds"
 
     print("Test passed!")
+
     return output.shape
 
 
@@ -91,5 +92,6 @@ def test_edge_cases():
 
 
 if __name__ == '__main__':
-    test_scaled_dot_product()
+    shape = test_scaled_dot_product()
     test_edge_cases()
+

@@ -17,6 +17,8 @@
 from torch import nn
 from layers.multi_headed_attention import MultiHeadedAttention
 from models.quantum_feed_forward import QuantumFeedForward
+from utils.config import num_layers, num_wires
+from layers.qnn_circuit import qnn_circuit
 
 class QuantumEncoder(nn.Module):
     def __init__(self, embed_len, num_heads, batch_size, dropout=0.1, mask=None):
@@ -26,7 +28,8 @@ class QuantumEncoder(nn.Module):
             num_heads, embed_len, batch_size, mask)
         self.first_norm = nn.LayerNorm(self.embed_len)
         self.dropout_layer = nn.Dropout(p=dropout)
-        self.quantum_feed_forward = QuantumFeedForward(embed_len, dropout)
+        #editted 
+        self.quantum_feed_forward = QuantumFeedForward(num_layers, num_wires, qnn_circuit, embed_len, dropout)
 
     def forward(self, queries, keys, values):
         attention_output = self.multihead(queries, keys, values)

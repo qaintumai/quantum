@@ -85,3 +85,4 @@ if __name__ == '__main__':
     # Check if all tests passed
     if result.result.wasSuccessful():
         print("Tests passed!")
+
