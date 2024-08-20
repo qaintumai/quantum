@@ -15,8 +15,16 @@
 
 # Test the Transformer class
 import torch
-from models.quantum_transformer import Transformer
+import sys
+import os
 
+# Add the src directory to the Python path
+script_dir = os.path.dirname(__file__)
+src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
+if src_dir not in sys.path:
+    sys.path.append(src_dir)
+from models.quantum_transformer import QuantumTransformer
+from layers import qnn_circuit
 
 def test_transformer():
     # Define parameters
@@ -24,15 +32,18 @@ def test_transformer():
     num_decoder_layers = 6
     embed_len = 64
     num_heads = 8
-    seq_len = 20
-    batch_size = 32
+    num_layers = 2
+    num_wires = 6
+    quantum_nn = qnn_circuit
+    seq_len = 64
+    batch_size = 64
     vocab_size = 100
     dropout = 0.1
     device = 'cpu'
 
     # Create an instance of Transformer
-    model = Transformer(num_encoder_layers, num_decoder_layers,
-                        embed_len, num_heads, batch_size, vocab_size, dropout, device)
+    model = QuantumTransformer(num_encoder_layers, num_decoder_layers,
+                        embed_len, num_heads, num_layers, num_wires, quantum_nn, batch_size, vocab_size, dropout, device)
 
     # Create dummy input tensors
     src = torch.randint(0, vocab_size, (batch_size, seq_len))
@@ -51,3 +62,5 @@ def test_transformer():
 
     print("Test passed!")
     return output.shape
+
+test_transformer()
