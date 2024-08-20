@@ -15,6 +15,7 @@
 
 from torch import nn
 from layers.scaled_dot_product import ScaledDotProduct
+import torch
 
 class MultiHeadedAttention(nn.Module):
     """
@@ -47,7 +48,7 @@ class MultiHeadedAttention(nn.Module):
         self.head_length = int(self.embed_len / self.num_heads)
         self.q_in = self.v_in = self.k_in = self.embed_len
 
-        # Define linear layers for queries, keys, and values
+        # Define linear layers for queries, keys, and values (with bias enabled by default)
         self.q_linear = nn.Linear(self.q_in, self.q_in)
         self.k_linear = nn.Linear(self.k_in, self.k_in)
         self.v_linear = nn.Linear(self.v_in, self.v_in)
@@ -55,7 +56,7 @@ class MultiHeadedAttention(nn.Module):
         # Define the scaled dot-product attention mechanism with optional masking
         self.attention = ScaledDotProduct(embed_len=self.head_length, mask=self.mask is not None)
 
-        # Define the output linear layer
+        # Define the output linear layer (with bias enabled by default)
         self.output_linear = nn.Linear(self.q_in, self.q_in)
 
     def forward(self, queries, keys, values):
