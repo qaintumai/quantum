@@ -35,15 +35,14 @@ def test_transformer():
     num_layers = 2
     num_wires = 6
     quantum_nn = qnn_circuit
-    seq_len = 64
-    batch_size = 64
+    seq_len = 20
+    batch_size = 32
     vocab_size = 100
     dropout = 0.1
     device = 'cpu'
 
     # Create an instance of Transformer
-    model = QuantumTransformer(num_encoder_layers, num_decoder_layers,
-                        embed_len, num_heads, num_layers, num_wires, quantum_nn, batch_size, vocab_size, dropout, device)
+    model = QuantumTransformer(num_encoder_layers, num_decoder_layers, embed_len, num_heads, num_layers, num_wires, quantum_nn, batch_size, vocab_size)
 
     # Create dummy input tensors
     src = torch.randint(0, vocab_size, (batch_size, seq_len))

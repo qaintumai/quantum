@@ -23,14 +23,14 @@ script_dir = os.path.dirname(__file__)
 src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if src_dir not in sys.path:
     sys.path.append(src_dir)
-from models.quantum_feed_forward import QuantumFeedForward
-from layers.qnn_circuit import qnn_circuit
+from models import QuantumFeedForward
+from layers import qnn_circuit
 
 def test_feed_forward_block(num_layers, num_wires,quantum_nn,embed_len):
     # Define parameters
     embed_len = 64
-    seq_len = 64
-    batch_size = 64
+    seq_len = 10
+    batch_size = 32
     dropout = 0.1
 
     # Create an instance of FeedForwardBlock
@@ -54,5 +54,4 @@ def test_feed_forward_block(num_layers, num_wires,quantum_nn,embed_len):
 
     return output.shape
 
-shape_=test_feed_forward_block(num_layers=2, num_wires=6,quantum_nn=qnn_circuit,embed_len=64)
-print(shape_)
+test_feed_forward_block(num_layers=2, num_wires=6,quantum_nn=qnn_circuit,embed_len=64)

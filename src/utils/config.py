@@ -16,12 +16,12 @@
 #Variables to access across project . . .
 import torch
 
-num_wires = 8
-num_layers = 4
+num_wires = 6
+num_layers = 2
 num_basis = 2
 single_output = False
 multi_output = False
-probabilities = False
+probabilities = True
 device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
 def get_device():
