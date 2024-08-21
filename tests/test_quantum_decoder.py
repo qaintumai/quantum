@@ -15,20 +15,32 @@
 
 # Test the DecoderBlock class
 import torch
-from src.models import QuantumDecoder
+import sys
+import os
 
+# Add the src directory to the Python path
+script_dir = os.path.dirname(__file__)
+src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
+if src_dir not in sys.path:
+    sys.path.append(src_dir)
+
+from models import QuantumDecoder
+from layers import qnn_circuit
 
 def test_decoder_block():
     # Define parameters
     embed_len = 64
     num_heads = 8
+    num_layers = 2
+    num_wires = 6
+    quantum_nn = qnn_circuit
     seq_len = 10
     batch_size = 32
     dropout = 0.1
     mask = None
 
     # Create an instance of DecoderBlock
-    model = QuantumDecoder(embed_len, num_heads, batch_size, dropout, mask)
+    model = QuantumDecoder(embed_len, num_heads, num_layers, num_wires, quantum_nn, batch_size, dropout, mask)
 
     # Create dummy input tensors
     target = torch.rand(batch_size, seq_len, embed_len)
@@ -48,3 +60,5 @@ def test_decoder_block():
     print("Test passed!")
 
     return output.shape
+
+test_decoder_block()

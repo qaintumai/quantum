@@ -23,8 +23,8 @@ script_dir = os.path.dirname(__file__)
 src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
 if src_dir not in sys.path:
     sys.path.append(src_dir)
-from layers.quantum_feed_forward import QuantumFeedForward
-from layers.qnn_circuit import qnn_circuit
+from models import QuantumFeedForward
+from layers import qnn_circuit
 
 def test_feed_forward_block(num_layers, num_wires,quantum_nn,embed_len):
     # Define parameters

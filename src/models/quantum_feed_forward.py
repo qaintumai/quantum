@@ -58,4 +58,6 @@ class QuantumFeedForward(nn.Module):
         """
         ff_output = self.quantum_feed_forward(x)
         ff_output = self.dropout_layer(ff_output)
-        return self.layer_norm(ff_output + x)
+        print(ff_output.shape)
+        print(x.shape)
+        return self.layer_norm(ff_output + x) #TODO: Dimensions of ff_output and x dont match
