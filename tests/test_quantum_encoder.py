@@ -17,21 +17,30 @@
 import torch
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from models import QuantumEncoder
 
+# Add the src directory to the Python path
+script_dir = os.path.dirname(__file__)
+src_dir = os.path.abspath(os.path.join(script_dir, '..', 'src'))
+if src_dir not in sys.path:
+    sys.path.append(src_dir)
+
+from models import QuantumEncoder
+from layers import qnn_circuit
 
 def test_encoder_block():
     # Define parameters
     embed_len = 64
     num_heads = 8
+    num_layers = 2
+    num_wires = 6
+    quantum_nn = qnn_circuit
     seq_len = 10
     batch_size = 32
     dropout = 0.1
     mask = None
 
     # Create an instance of EncoderBlock
-    model = QuantumEncoder(embed_len, num_heads, batch_size, dropout, mask)
+    model = QuantumEncoder(embed_len, num_heads, num_layers, num_wires, quantum_nn, batch_size, dropout, mask)
 
     # Create dummy input tensors
     queries = torch.rand(batch_size, seq_len, embed_len)
@@ -51,12 +60,6 @@ def test_encoder_block():
 
     print("Test passed!")
 
+    return output.shape
 
-def main():
-    # Run all tests
-    test_encoder_block()
-
-
-if __name__ == '__main__':
-    main()
-
+test_encoder_block()

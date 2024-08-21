@@ -14,8 +14,8 @@
 # ==============================================================================
 
 import pennylane as qml
-from layers.quantum_data_encoder import QuantumDataEncoder
-from layers.qnn_layer import QuantumNeuralNetworkLayer
+from layers import QuantumDataEncoder
+from layers import QuantumNeuralNetworkLayer
 import sys
 import os
 
@@ -60,7 +60,7 @@ def qnn_circuit(inputs, var):
 
     if probabilities:
         wires = list(range(num_wires))
-        return [qml.probs(wires=wires)]
+        return qml.probs(wires=wires)
 
     #else model output type is single
     return qml.expval(qml.X(0))
