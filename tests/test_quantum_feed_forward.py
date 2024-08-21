@@ -26,6 +26,7 @@ if src_dir not in sys.path:
 from models import QuantumFeedForward
 from layers import qnn_circuit
 
+
 def test_feed_forward_block(num_layers, num_wires,quantum_nn,embed_len):
     # Define parameters
     embed_len = 64
@@ -52,6 +53,11 @@ def test_feed_forward_block(num_layers, num_wires,quantum_nn,embed_len):
 
     print("Test passed!")
 
-    return output.shape
+def main():
+    # Run all tests
+    test_feed_forward_block()
 
-test_feed_forward_block(num_layers=2, num_wires=6,quantum_nn=qnn_circuit,embed_len=64)
+
+if __name__ == '__main__':
+    main()
+

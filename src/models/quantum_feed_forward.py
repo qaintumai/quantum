@@ -14,7 +14,6 @@
 # ==============================================================================
 
 from torch import nn
-from models.quantum_neural_network import QuantumNeuralNetwork
 
 class QuantumFeedForward(nn.Module):
     """
@@ -41,6 +40,8 @@ class QuantumFeedForward(nn.Module):
         self.num_layers = num_layers
         self.num_wires = num_wires
         self.quantum_nn = quantum_nn
+        #TODO: circular imports, refactor
+        from models.quantum_neural_network import QuantumNeuralNetwork
         self.qnn_model = QuantumNeuralNetwork(self.num_layers, self.num_wires, self.quantum_nn).qlayers
         self.quantum_feed_forward = nn.Sequential(self.qnn_model)
         self.dropout_layer = nn.Dropout(p=dropout)
@@ -58,6 +59,5 @@ class QuantumFeedForward(nn.Module):
         """
         ff_output = self.quantum_feed_forward(x)
         ff_output = self.dropout_layer(ff_output)
-        print(ff_output.shape)
-        print(x.shape)
-        return self.layer_norm(ff_output + x) #TODO: Dimensions of ff_output and x dont match
+        return self.layer_norm(ff_output + x)
+

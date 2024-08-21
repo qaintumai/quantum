@@ -60,6 +60,8 @@ def test_transformer():
         output, torch.Tensor), f"Expected output type torch.Tensor, but got {type(output)}"
 
     print("Test passed!")
+    
     return output.shape
 
 test_transformer()
+

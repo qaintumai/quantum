@@ -1,9 +1,26 @@
-# This is based on Digital Quantum Computing. This needs to be modified to an Analog QC version.
+# Copyright 2024 The qAIntum.ai Authors. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
 
+# This is based on Digital Quantum Computing. This needs to be modified to an Analog QC version.
 import unittest
 import pennylane as qml
 import torch
-from quantum.src.layers.quantum_data_encoder import QuantumDataEncoder
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+from layers.quantum_data_encoder import QuantumDataEncoder
 
 class TestQuantumDataEncoder(unittest.TestCase):
 
@@ -16,7 +33,9 @@ class TestQuantumDataEncoder(unittest.TestCase):
         self.encoder = QuantumDataEncoder(num_wires=self.num_wires)
 
         # Use PennyLane's default.qubit simulator for testing
-        self.dev = qml.device("default.qubit", wires=self.num_wires)
+        # self.dev = qml.device("default.qubit", wires=self.num_wires)
+        self.dev = qml.device("strawberryfields.fock", wires=self.num_wires, cutoff_dim=2)
+
 
     def test_encoding_applies_gates(self):
         """
@@ -29,7 +48,8 @@ class TestQuantumDataEncoder(unittest.TestCase):
         @qml.qnode(self.dev)
         def circuit(input_data):
             self.encoder.encode(input_data)
-            return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+            return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
         # Run the circuit
         output = circuit(input_data)
@@ -47,7 +67,9 @@ class TestQuantumDataEncoder(unittest.TestCase):
         @qml.qnode(self.dev)
         def circuit(insufficient_data):
             self.encoder.encode(insufficient_data)
-            return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+            wires = list(range(self.num_wires))
+            return [qml.probs(wires=wires)]
 
         # Run the circuit and ensure no errors are raised
         output = circuit(insufficient_data)
@@ -63,7 +85,9 @@ class TestQuantumDataEncoder(unittest.TestCase):
         @qml.qnode(self.dev)
         def circuit(exact_data):
             self.encoder.encode(exact_data)
-            return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+            wires = list(range(self.num_wires))
+            return [qml.probs(wires=wires)]
 
         output = circuit(exact_data)
         self.assertEqual(len(output), self.num_wires)
@@ -78,7 +102,9 @@ class TestQuantumDataEncoder(unittest.TestCase):
         @qml.qnode(self.dev)
         def circuit(multiple_rounds_data):
             self.encoder.encode(multiple_rounds_data)
-            return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+            wires = list(range(self.num_wires))
+            return [qml.probs(wires=wires)]
 
         output = circuit(multiple_rounds_data)
         self.assertEqual(len(output), self.num_wires)
@@ -93,7 +119,9 @@ class TestQuantumDataEncoder(unittest.TestCase):
             @qml.qnode(self.dev)
             def circuit(invalid_data):
                 self.encoder.encode(invalid_data)
-                return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+                # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
+                wires = list(range(self.num_wires))
+                return [qml.probs(wires=wires)]
 
             circuit(invalid_data)
 
