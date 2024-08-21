@@ -48,6 +48,7 @@ print(f"Size of Y tensor: {y.size()} and first element of Y: {y[0]}")
 
 
 #CREATING MODEL
+
 set_config_variable('single_output', True)
 set_config_variable('num_layers', 2)
 set_config_variable('num_wires', 8)
