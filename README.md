@@ -44,10 +44,16 @@ git checkout -b <new_branch_name>
 ```
 
 ### Virtual Environment
+ 
 ```shell
 python3 -m venv venv
+```
+For mac os use the following:
+```shell
 source venv/bin/activate
 ```
+For Windows use the following:
+.\venv\Scripts\activate
 
 ### Dependency Installation
 
@@ -74,9 +80,11 @@ or
 ```
 
 ### Running
-
+This is a optional step :
 ```sh
 pip install -e .
+
+To run/execute each files use the following: 
 ./examples/qnn_binary_classifier.py
 ```
 
