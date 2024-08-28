@@ -22,7 +22,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="quantum",
     version="0.1.0",
-    author="Sophie Choe, Alexander Olivas, Arjun Subedi, Max Ivry, Nikilesh B R",
+    author="Sophie Choe, Alexander Olivas, Arjun Subedi, Max Ivry, Nikilesh B R, Raghuram Nataraja",
     author_email="contact@qaintum.ai",
     description="A project containing Quantum Neural Networks and Quantum Transformers.",
     long_description=long_description,

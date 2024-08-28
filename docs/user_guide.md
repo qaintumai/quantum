@@ -70,10 +70,17 @@ Ensure you have the following installed:
     cd quantum
     ```
 2. Create and activate a virtual environment:
+* For mac os:
     ```bash
     python3 -m venv venv
     source venv/bin/activate
     ```
+  * For windows os:
+    ```bash
+    python3 -m venv venv
+    .\venv\Scripts\activate
+    ```
+  
 3. Install the required packages:
     ```bash
     pip install -r requirements.txt
@@ -97,10 +104,10 @@ The configuration file (qnn_config.json) should specify the necessary parameters
 
 #### **Evaluating a QNN Model**
 
-To evaluate a trained QNN model, use the evaluate_qnn.py script:
+To evaluate a trained QNN model, use the evaluate_model.py script:
 
 ```bash
-python scripts/evaluate_qnn.py --model_path models/qnn_model.pth --config configs/qnn_config.json
+python scripts/evaluate_model.py --model_path models/qnn_model.pth --config configs/qnn_config.json
 ```
 ### **Quantum Transformers**
 
@@ -109,7 +116,7 @@ python scripts/evaluate_qnn.py --model_path models/qnn_model.pth --config config
 To train a QT model, use the train_qt.py script:
 
 ```bash
-python scripts/train_qt.py --config configs/qt_config.json
+python scripts/train_qtransformer.py --config configs/qt_config.json
 ```
 The configuration file (qt_config.json) should specify the necessary parameters for training.
 
@@ -118,7 +125,7 @@ The configuration file (qt_config.json) should specify the necessary parameters 
 To evaluate a trained QT model, use the evaluate_qt.py script:
 
 ```bash
-python scripts/evaluate_qt.py --model_path models/qt_model.pth --config configs/qt_config.json
+python scripts/evaluate_model.py --model_path models/qt_model.pth --config configs/qt_config.json
 ```
 
 ---
@@ -127,8 +134,15 @@ python scripts/evaluate_qt.py --model_path models/qt_model.pth --config configs/
 
 The /tutorials directory contains Jupyter notebooks for exploration and experimentation. These notebooks provide examples of how to use the models and layers in the project.
 
-- `qnn_binary_classifier.ipynb`: Photonic Analog (PA) QNN for binary classification. This is an application of the original work ["Continuous Variable Quantum Neural Networks"](https://arxiv.org/abs/1806.06871).
-- `n_qumode_classifier.ipynb`: Photonic Analog (PA) QNN for multi output classification. This is an application of the original work ["Continuous Variable Quantum MNIST Classifiers"](https://arxiv.org/abs/2204.01194).
+- `.ipynb_checkpoints`:This subdirectory stores auto-saved versions of the Jupyter notebooks. These checkpoints are created by Jupyter to prevent data loss during notebook editing. They allow users to recover previous versions of their work. 
+
+- `data Directory`: The data directory contains datasets used for training and evaluating quantum neural networks in the provided tutorials. It includes raw data files from the MNIST dataset, which is a popular dataset for image classification tasks.
+
+- `Subdirectory`:` \MNIST\raw`: Stores the raw MNIST dataset files used for training and evaluating models in the tutorials.
+
+- `QNN_binary_classifier.ipynb`: Photonic Analog (PA) QNN for binary classification. This is an application of the original work ["Continuous Variable Quantum Neural Networks"](https://arxiv.org/abs/1806.06871).
+
+- `4_qumode_classifier.ipynb`: Photonic Analog (PA) QNN for multi output classification. This is an application of the original work ["Continuous Variable Quantum MNIST Classifiers"](https://arxiv.org/abs/2204.01194).
 ---
 
 ## Documentation

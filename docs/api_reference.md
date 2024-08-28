@@ -48,9 +48,25 @@ For quantum transformers, most of the components are the same as classical trans
 
 The Models module provides the implementation of quantum neural networks and quantum transformers. Quantum encoders and quantum decoders are used to build quantum transformers.
 
+* quantum_decoder.py: Implements the quantum decoder module for processing and transforming input data using quantum operations, typically as part of a sequence-to-sequence model or a transformer architecture.
+
+* quantum_encoder.py: Defines the quantum encoder component, responsible for encoding input data into quantum states, capturing important features and contextual information for downstream tasks.
+
+* quantum_feed_forward.py: Contains the implementation of a quantum feed-forward neural network layer, which applies non-linear transformations to input quantum data to enhance model capacity and learning.
+
+* quantum_neural_network.py: Provides the structure and functionality for constructing a quantum neural network (QNN), combining various quantum layers and circuits to perform tasks like classification or regression.
+
+* quantum_transformer.py: Implements the quantum transformer model, leveraging quantum attention mechanisms and layers to perform sequence modeling tasks with quantum-enhanced capabilities.
+
 #### Utilities
 
 The Utilities module contains shared utilities used across the project.
+
+* config.py: Contains configuration settings and parameters, such as model hyperparameters, file paths, and environment settings, which are used across different parts of the project to maintain consistency.
+
+* data_loader.py: Implements data loading and preprocessing functions that read datasets from files, apply necessary transformations, and prepare the data for training and evaluation in quantum neural networks.
+
+* utils.py: Provides various utility functions and helper methods for common tasks, such as training loops, model evaluation, logging, and other repetitive operations needed throughout the project
 
 ### Layers API
 #### input_embedding.py
