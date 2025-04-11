@@ -15,8 +15,8 @@
 
 # Define the QuantumDecoder class
 from torch import nn
-from layers.multi_headed_attention import MultiHeadedAttention
-from models.quantum_feed_forward import QuantumFeedForward
+from qt-container.qt.layers.multi_headed_attention import MultiHeadedAttention
+from qt-container.qt.models.quantum_feed_forward import QuantumFeedForward
 
 class QuantumDecoder(nn.Module):
     def __init__(self, embed_len, num_heads, num_layers, num_wires, quantum_nn, dropout=0.1, mask=None):

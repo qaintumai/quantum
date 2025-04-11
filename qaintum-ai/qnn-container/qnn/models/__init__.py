@@ -13,16 +13,18 @@
 # limitations under the License.
 # ==============================================================================
 
-from .quantum_decoder import QuantumDecoder
-from .quantum_encoder import QuantumEncoder
-from .quantum_feed_forward import QuantumFeedForward
-from .quantum_neural_network import QuantumNeuralNetwork
-from .quantum_transformer import QuantumTransformer
+"""
+This module initializes and defines the public API for the models package.
+The package contains the Quantum Neural Network (QNN) model,
+allowing users to design and implement their own quantum learning models.
 
-__all__ = [
-    "QuantumDecoder",
-    "QuantumEncoder",
-    "QuantumFeedForward",
-    "QuantumNeuralNetwork",
-    "QuantumTransformer",
-]
+Usage:
+To import the Quantum Neural Network model:
+    from QNN.models import *
+
+"""
+
+from .quantum_neural_network import QuantumNeuralNetwork
+
+__all__ = ["QuantumNeuralNetwork"]
+

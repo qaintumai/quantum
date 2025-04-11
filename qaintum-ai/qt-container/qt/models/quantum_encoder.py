@@ -15,16 +15,15 @@
 
 # Define the EncoderBlock class
 from torch import nn
-from layers.multi_headed_attention import MultiHeadedAttention
-from models.quantum_feed_forward import QuantumFeedForward
-from utils.config import num_layers, num_wires
-from layers.qnn_circuit import qnn_circuit
+from qt-container.qt.layers.multi_headed_attention import MultiHeadedAttention
+from qt-container.qt.models.quantum_feed_forward import QuantumFeedForward
+# from qt-container.qt.layers.qnn_circuit import qnn_circuit
 
 class QuantumEncoder(nn.Module):
     def __init__(self, embed_len, num_heads, num_layers, num_wires, quantum_nn, dropout=0.1, mask=None):
         super(QuantumEncoder, self).__init__()
         self.embed_len = embed_len
-        self.multihead = MultiHeadedAttention(num_heads, embed_len, mask) 
+        self.multihead = MultiHeadedAttention(num_heads, embed_len, mask)
         self.first_norm = nn.LayerNorm(self.embed_len)
         self.dropout_layer = nn.Dropout(p=dropout)
         self.quantum_feed_forward = QuantumFeedForward(num_layers, num_wires, quantum_nn, embed_len, dropout)

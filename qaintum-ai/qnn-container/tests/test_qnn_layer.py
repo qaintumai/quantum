@@ -16,10 +16,8 @@
 import unittest
 import pennylane as qml
 import torch
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from layers.qnn_layer import QuantumNeuralNetworkLayer
+
+from qnn.layers.qnn_layer import QuantumNeuralNetworkLayer
 
 class TestQuantumNeuralNetworkLayer(unittest.TestCase):
 
@@ -28,24 +26,21 @@ class TestQuantumNeuralNetworkLayer(unittest.TestCase):
         Initialize a quantum device and a QuantumNeuralNetworkLayer instance for testing.
         """
         self.num_wires = 4  # Example number of wires
+        self.required_params = 9 * self.num_wires - 4  # Total number of required parameters
         self.qnn_layer = QuantumNeuralNetworkLayer(num_wires=self.num_wires)
 
-        # # Use PennyLane's default.qubit simulator for testing
-        # self.dev = qml.device("default.qubit", wires=self.num_wires)
-
+        # Use Strawberry Fields' Fock device for continuous-variable quantum computing
         self.dev = qml.device("strawberryfields.fock", wires=self.num_wires, cutoff_dim=2)
 
     def test_layer_applies_correct_operations(self):
         """
         Test that the QuantumNeuralNetworkLayer applies the correct operations based on the parameters.
         """
-        params = torch.tensor([0.1] * (self.num_wires * 5))  # Example parameters
+        params = torch.tensor([0.1] * self.required_params)  # Exact number of required parameters
 
-        # Quantum circuit to apply the layer
         @qml.qnode(self.dev)
         def circuit(params):
             self.qnn_layer.apply(params)
-            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
             return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
         output = circuit(params)
@@ -53,58 +48,48 @@ class TestQuantumNeuralNetworkLayer(unittest.TestCase):
         # Assert that the circuit ran successfully and returns an output of expected size
         self.assertEqual(len(output), self.num_wires)
 
-    def test_circuit_with_varied_params(self):
+    def test_circuit_with_shorter_params(self):
         """
-        Test that the QuantumNeuralNetworkLayer can handle varying parameter lengths.
+        Test that the QuantumNeuralNetworkLayer handles shorter parameter lists by zero-padding.
         """
-        params_short = torch.tensor([0.1] * (self.num_wires * 3))  # Shorter list of parameters
-        params_long = torch.tensor([0.1] * (self.num_wires * 7))   # Longer list of parameters
+        short_params = torch.tensor([0.1] * (self.required_params - 5))  # Shorter than required
 
         @qml.qnode(self.dev)
         def circuit(params):
             self.qnn_layer.apply(params)
-            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
             return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
-        output_short = circuit(params_short)
-        output_long = circuit(params_long)
+        output = circuit(short_params)
 
-        # Ensure both circuits run successfully with different parameter lengths
-        self.assertEqual(len(output_short), self.num_wires)
-        self.assertEqual(len(output_long), self.num_wires)
+        # Ensure the circuit runs successfully despite the shorter input
+        self.assertEqual(len(output), self.num_wires)
 
-    def test_apply_invalid_params(self):
+    def test_circuit_with_longer_params(self):
         """
-        Test that an error is raised when invalid parameters are passed to the apply function.
+        Test that the QuantumNeuralNetworkLayer handles longer parameter lists by truncation.
         """
-        # Create a set of parameters that do not fit the expected structure
-        invalid_params = torch.tensor([0.1] * (self.num_wires * 2))  # Not enough parameters
+        long_params = torch.tensor([0.1] * (self.required_params + 5))  # Longer than required
 
         @qml.qnode(self.dev)
         def circuit(params):
             self.qnn_layer.apply(params)
-            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
-            # wires = list(range(self.num_wires))
-            # return [qml.probs(wires=wires)]
             return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
-        # Expecting an exception due to invalid parameter length
-        with self.assertRaises(IndexError):
-            circuit(invalid_params)
+        output = circuit(long_params)
+
+        # Ensure the circuit runs successfully despite the longer input
+        self.assertEqual(len(output), self.num_wires)
 
     def test_apply_edge_case_params(self):
         """
         Test the application of edge-case parameters, such as zeros or extreme values.
         """
-        zero_params = torch.zeros(self.num_wires * 5)
-        extreme_params = torch.tensor([100.0] * (self.num_wires * 5))  # Extreme parameter values
+        zero_params = torch.zeros(self.required_params)  # All parameters are zero
+        extreme_params = torch.tensor([100.0] * self.required_params)  # Extreme parameter values
 
         @qml.qnode(self.dev)
         def circuit(params):
             self.qnn_layer.apply(params)
-            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
-            # wires = list(range(self.num_wires))
-            # return [qml.probs(wires=wires)]
             return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
         output_zero = circuit(zero_params)

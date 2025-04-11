@@ -14,32 +14,28 @@
 # ==============================================================================
 
 """
-This module initializes and defines the public API for the layers package. The package
-contains various classes and functions used for the quantum transfomer and QNN, including
-embedding layers, attention mechanisms, quantum neural networks, and utility functions
-for initializing weights and encoding data. This API is intended to allow users to design
-their own Quantum learning models using the libraries below.
+This module initializes and defines the public API for the layers package in the Quantum Transformer (QT).
+It provides essential components for building quantum transformers, including:
+
+- **InputEmbedding**: Converts input data into a quantum-compatible representation.
+- **MultiHeadedAttention**: Implements a quantum-enhanced multi-head attention mechanism.
+- **ScaledDotProduct**: Computes attention scores for efficient sequence learning.
+
+These layers form the foundation for embedding and attention mechanisms in quantum transformers.
+This API enables users to design and customize their own quantum learning models.
 
 Usage:
-To import the entire API from layers:
-    from layers import *
+To import all available layers:
+    from QT.layers import *
 """
-
 
 from .input_embedding import InputEmbedding
 from .multi_headed_attention import MultiHeadedAttention
-from .qnn_circuit import qnn_circuit
-from .quantum_data_encoder import QuantumDataEncoder
-from .qnn_layer import QuantumNeuralNetworkLayer
 from .scaled_dot_product import ScaledDotProduct
-from .weight_initializer import WeightInitializer
 
 __all__ = [
     "InputEmbedding",
     "MultiHeadedAttention",
-    "qnn_circuit",
-    "QuantumDataEncoder",
-    "QuantumNeuralNetworkLayer",
     "ScaledDotProduct",
-    "WeightInitializer",
 ]
+

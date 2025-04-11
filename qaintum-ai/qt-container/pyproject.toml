@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qt"
+version = "0.1.0"
+description = "Quantum Transformer (QT) framework for quantum-enhanced sequence learning."
+authors = [
+    {name = "Sophie Choe", email = "sophie.choe@qaintum.ai"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+dependencies = [
+    "qnn>=0.1.0",
+    "torch==2.2.2",
+    "torchvision==0.17.2",
+    "PennyLane==0.29.1",
+    "PennyLane-SF==0.29.1",
+    "numpy==1.23.5",
+    "scipy==1.10.1",
+    "sympy>=1.10",
+    "setuptools==65.5.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8",
+    "mypy",
+    "pre-commit"
+]
+
+[tool.setuptools]
+packages = ["qt"]
+
+[tool.black]
+line-length = 88
+
+[tool.flake8]
+max-line-length = 88
+exclude = [".git", "__pycache__", "build", "dist"]
+
+[tool.mypy]
+ignore_missing_imports = true
