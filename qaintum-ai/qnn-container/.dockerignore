@@ -1,0 +1,39 @@
+# Ignore Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment and dependency files
+.env
+venv/
+*.venv
+pip-wheel-metadata/
+*.egg-info/
+*.dist-info/
+
+# Ignore virtual environments and package manager caches
+*.pip/
+.pip/
+.pip-cache/
+poetry.lock
+Pipfile.lock
+
+# Ignore Git-related files
+.git/
+.gitignore
+
+# Ignore Docker-related files that shouldn't be copied
+.dockerignore
+Dockerfile
+
+# Ignore editor and OS-specific files
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Ignore build artifacts
+build/
+dist/

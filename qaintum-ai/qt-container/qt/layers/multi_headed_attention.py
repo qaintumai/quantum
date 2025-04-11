@@ -14,7 +14,7 @@
 # ==============================================================================
 
 from torch import nn
-from layers.scaled_dot_product import ScaledDotProduct
+from qt-container.qt.layers.scaled_dot_product import ScaledDotProduct
 import torch
 
 class MultiHeadedAttention(nn.Module):

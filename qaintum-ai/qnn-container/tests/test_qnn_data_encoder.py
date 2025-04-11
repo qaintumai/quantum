@@ -13,14 +13,16 @@
 # limitations under the License.
 # ==============================================================================
 
-# This is based on Digital Quantum Computing. This needs to be modified to an Analog QC version.
 import unittest
 import pennylane as qml
 import torch
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from layers.quantum_data_encoder import QuantumDataEncoder
+
+try:
+    from qnn.layers.qnn_data_encoder import QuantumDataEncoder
+    print("Import successful!")
+except ImportError as e:
+    print("Import failed:", e)
+    raise
 
 class TestQuantumDataEncoder(unittest.TestCase):
 
@@ -32,46 +34,35 @@ class TestQuantumDataEncoder(unittest.TestCase):
         self.num_wires = 4  # Example number of wires
         self.encoder = QuantumDataEncoder(num_wires=self.num_wires)
 
-        # Use PennyLane's default.qubit simulator for testing
-        # self.dev = qml.device("default.qubit", wires=self.num_wires)
+        # Use Fock basis for Continuous Variable Model of Quantum Computing
         self.dev = qml.device("strawberryfields.fock", wires=self.num_wires, cutoff_dim=2)
-
 
     def test_encoding_applies_gates(self):
         """
         Test that the QuantumDataEncoder applies the expected quantum gates.
         """
-        # Create example input data
         num_params = 8 * self.num_wires - 2
-        input_data = torch.randn(num_params)  # Random input data for the encoder
+        input_data = torch.randn(num_params).tolist()  # Convert to Python list
 
         @qml.qnode(self.dev)
         def circuit(input_data):
             self.encoder.encode(input_data)
-            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
             return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
-        # Run the circuit
         output = circuit(input_data)
-
-        # Ensure the circuit ran successfully and returns the expected number of outputs
         self.assertEqual(len(output), self.num_wires)
 
     def test_encoder_with_insufficient_data(self):
         """
         Test that the QuantumDataEncoder handles cases where there is insufficient data.
         """
-        # Insufficient data, less than the required number of parameters
-        insufficient_data = torch.randn(8 * self.num_wires - 4)
+        insufficient_data = torch.randn(2 * self.num_wires - 1).tolist()  # Convert to Python list
 
         @qml.qnode(self.dev)
         def circuit(insufficient_data):
             self.encoder.encode(insufficient_data)
-            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
-            wires = list(range(self.num_wires))
-            return [qml.probs(wires=wires)]
+            return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
-        # Run the circuit and ensure no errors are raised
         output = circuit(insufficient_data)
         self.assertEqual(len(output), self.num_wires)
 
@@ -79,15 +70,12 @@ class TestQuantumDataEncoder(unittest.TestCase):
         """
         Test that the QuantumDataEncoder works correctly when the number of features is exactly divisible.
         """
-        # Exactly enough data for one round of encoding
-        exact_data = torch.randn(8 * self.num_wires - 2)
+        exact_data = torch.randn(8 * self.num_wires - 2).tolist()  # Convert to Python list
 
         @qml.qnode(self.dev)
         def circuit(exact_data):
             self.encoder.encode(exact_data)
-            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
-            wires = list(range(self.num_wires))
-            return [qml.probs(wires=wires)]
+            return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
         output = circuit(exact_data)
         self.assertEqual(len(output), self.num_wires)
@@ -96,15 +84,12 @@ class TestQuantumDataEncoder(unittest.TestCase):
         """
         Test that the QuantumDataEncoder can handle multiple rounds of encoding.
         """
-        # Multiple rounds of encoding
-        multiple_rounds_data = torch.randn((8 * self.num_wires - 2) * 2)  # Enough data for two rounds
+        multiple_rounds_data = torch.randn((8 * self.num_wires - 2) * 2).tolist()  # Convert to Python list
 
         @qml.qnode(self.dev)
         def circuit(multiple_rounds_data):
             self.encoder.encode(multiple_rounds_data)
-            # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
-            wires = list(range(self.num_wires))
-            return [qml.probs(wires=wires)]
+            return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
         output = circuit(multiple_rounds_data)
         self.assertEqual(len(output), self.num_wires)
@@ -119,9 +104,7 @@ class TestQuantumDataEncoder(unittest.TestCase):
             @qml.qnode(self.dev)
             def circuit(invalid_data):
                 self.encoder.encode(invalid_data)
-                # return [qml.expval(qml.PauliZ(i)) for i in range(self.num_wires)]
-                wires = list(range(self.num_wires))
-                return [qml.probs(wires=wires)]
+                return [qml.expval(qml.X(wire)) for wire in range(self.num_wires)]
 
             circuit(invalid_data)
 
